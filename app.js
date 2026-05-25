@@ -1,4 +1,62 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    // Coloca este bloque dentro de document.addEventListener('DOMContentLoaded', () => { ... });
+
+function updateLiveSchedule() {
+    const now = new Date();
+    // Convertimos la hora actual del sistema a minutos totales transcurridos en el día
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    const scheduleCards = document.querySelectorAll('.schedule-card');
+
+    scheduleCards.forEach(card => {
+        const startStr = card.getAttribute('data-start');
+        const endStr = card.getAttribute('data-end');
+
+        if (!startStr || !endStr) return;
+
+        // Desestructuramos y convertimos "HH:MM" a números
+        const [startHours, startSplitMinutes] = startStr.split(':').map(Number);
+        let [endHours, endSplitMinutes] = endStr.split(':').map(Number);
+
+        const startMinutes = startHours * 60 + startSplitMinutes;
+        
+        // Caso especial: Si el programa termina a las 00:00, equivale al final del día (minuto 1440)
+        if (endHours === 0 && endSplitMinutes === 0) {
+            endHours = 24;
+        }
+        const endMinutes = endHours * 60 + endSplitMinutes;
+
+        // Buscamos si la tarjeta ya posee el badge de "Al Aire"
+        const existingBadge = card.querySelector('.current-badge');
+
+        // Evaluamos si la hora actual cae dentro del rango del bloque
+        if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
+            // Activa el diseño destacado de la tarjeta
+            card.classList.add('current');
+            
+            // Si el badge no existe, lo creamos e insertamos dinámicamente
+            if (!existingBadge) {
+                const badge = document.createElement('span');
+                badge.classList.add('current-badge');
+                badge.textContent = 'Al Aire';
+                card.appendChild(badge);
+            }
+        } else {
+            // Remueve el diseño destacado y el badge si el bloque ya pasó o no ha empezado
+            card.classList.remove('current');
+            if (existingBadge) {
+                existingBadge.remove();
+            }
+        }
+    });
+}
+
+// Inicializa la verificación inmediatamente al cargar la web
+updateLiveSchedule();
+
+// Configura un temporizador para comprobar el horario automáticamente cada 60 segundos (60000 ms)
+setInterval(updateLiveSchedule, 60000);
     
     // ==========================================
     // PARÁMETROS DE CONFIGURACIÓN DE TU EMISORA
