@@ -1,13 +1,21 @@
 /* RESET & VARIABLES GLOBALES */
 :root {
-    --bg-color: #0d131a;
-    --surface-color: #16222f;
-    --surface-light: #223447;
-    --primary-color: #00e5ff;
-    --primary-hover: #00b3cc;
-    --text-color: #f5f7fa;
-    --text-muted: #8ea1b4;
-    --border-color: #2a3f54;
+    /* Paleta inspirada en el logo - Dark Mode Profesional */
+    --bg-color: #0a0e0a;         /* Negro bosque profundo para el fondo total */
+    --surface-color: #121a12;    /* Verde oscuro muy sutil para contenedores */
+    --surface-light: #1b261b;    /* Verde grisáceo para tarjetas y elementos destacados */
+    
+    /* El verde de tu logo como primario */
+    --primary-color: #28601c;    
+    --primary-hover: #3d8f2b;    /* Un tono más vibrante para el hover */
+    
+    /* Textos */
+    --text-color: #e8ede8;       /* Blanco roto, más suave para la vista */
+    --text-muted: #a0b0a0;       /* Gris verdoso para textos secundarios */
+    
+    /* Bordes y acentos */
+    --border-color: #2d3d2d;     /* Borde oscuro que no rompe la armonía */
+    
     --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --spacing: 20px;
 }
