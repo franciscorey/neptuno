@@ -63,10 +63,10 @@ setInterval(updateLiveSchedule, 60000);
     // ==========================================
     const ZENO_CONFIG = {
         // 1. URL de tu stream de audio de Zeno (Asegúrate de incluir el ID de tu stream al final)
-        streamUrl: "https://stream.zeno.fm/TU_STREAM_ID_AQUI",
+        streamUrl: "https://stream.zeno.fm/lqnwrpclo7hvv",
         
         // 2. ID de tu estación en Zeno (Se usa para consultar los metadatos en vivo)
-        stationId: "TU_STATION_ID_AQUI",
+        stationId: "lqnwrpclo7hvv",
         
         // Intervalo de actualización de metadatos en milisegundos (ej: 15000 = 15 segundos)
         updateInterval: 15000 
