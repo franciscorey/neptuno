@@ -1,79 +1,186 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // LOGICA MENU DESPLEGABLE (MOBILE)
+    // ==========================================
+    // PARÁMETROS DE CONFIGURACIÓN DE TU EMISORA
+    // ==========================================
+    const ZENO_CONFIG = {
+        // 1. URL de tu stream de audio de Zeno (Asegúrate de incluir el ID de tu stream al final)
+        streamUrl: "https://stream.zeno.fm/TU_STREAM_ID_AQUI",
+        
+        // 2. ID de tu estación en Zeno (Se usa para consultar los metadatos en vivo)
+        stationId: "TU_STATION_ID_AQUI",
+        
+        // Intervalo de actualización de metadatos en milisegundos (ej: 15000 = 15 segundos)
+        updateInterval: 15000 
+    };
+
+    // Elementos del DOM del Menú
     const menuToggle = document.getElementById('menuToggle');
     const mainNav = document.getElementById('mainNav');
 
-    menuToggle.addEventListener('click', () => {
-        mainNav.classList.toggle('open');
-        const icon = menuToggle.querySelector('i');
-        if(mainNav.classList.contains('open')) {
-            icon.classList.replace('fa-bars', 'fa-times');
-        } else {
-            icon.classList.replace('fa-times', 'fa-bars');
-        }
-    });
-
-    // INTEGRACIÓN REPRODUCTOR ZENO.FM (API NATIVA DE AUDIO)
+    // Elementos del DOM del Reproductor
     const audio = document.getElementById('zenoAudio');
     const playBtn = document.getElementById('playBtn');
     const playIcon = document.getElementById('playIcon');
     const streamStatus = document.getElementById('stream-status');
     const volumeSlider = document.getElementById('volumeSlider');
+    
+    // Elementos de Metadatos
+    const trackTitle = document.getElementById('trackTitle');
+    const trackArtist = document.getElementById('trackArtist');
+    const playerCover = document.getElementById('playerCover');
+    const playerDefaultIcon = document.getElementById('playerDefaultIcon');
 
     let isPlaying = false;
+    let metadataTimer = null;
 
-    // Manejo de Reproducción / Pausa
+    // Asignar URL del stream al elemento de audio
+    audio.src = ZENO_CONFIG.streamUrl;
+
+    // Lógica del menú desplegable (Mobile)
+    if (menuToggle && mainNav) {
+        menuToggle.addEventListener('click', () => {
+            mainNav.classList.toggle('open');
+            const icon = menuToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+    }
+
+    // ==========================================
+    // LÓGICA DEL REPRODUCTOR AUDIO HTML5
+    // ==========================================
     playBtn.addEventListener('click', () => {
         if (!isPlaying) {
-            // Cargar el stream al hacer click evita consumo innecesario de datos previo
-            if(audio.readyState === 0) {
-                streamStatus.textContent = "Cargando señal...";
-            }
+            streamStatus.textContent = "Conectando...";
             
             audio.play()
                 .then(() => {
                     isPlaying = true;
                     playIcon.classList.replace('fa-play', 'fa-pause');
-                    streamStatus.textContent = "Escuchando en vivo";
+                    streamStatus.textContent = "En vivo";
+                    
+                    // Iniciar la consulta de metadatos cuando empiece a sonar
+                    fetchZenoMetadata();
+                    metadataTimer = setInterval(fetchZenoMetadata, ZENO_CONFIG.updateInterval);
                 })
                 .catch(error => {
                     console.error("Error al reproducir el stream:", error);
-                    streamStatus.textContent = "Error de conexión. Reintente.";
+                    streamStatus.textContent = "Error de conexión";
                 });
         } else {
-            // Para streams en vivo, "pausar" acumula retraso. 
-            // Es mejor vaciar el src o hacer un 'load' para que al dar play reconecte en tiempo real.
+            // Detener por completo el buffer en streams en vivo para evitar delays al retomar
             audio.pause();
             audio.load(); 
             isPlaying = false;
             playIcon.classList.replace('fa-pause', 'fa-play');
-            streamStatus.textContent = "Transmisión en pausa";
+            streamStatus.textContent = "Señal en pausa";
+            
+            // Detener las peticiones de metadatos para optimizar rendimiento
+            clearInterval(metadataTimer);
+            resetMetadataUI();
         }
     });
 
-    // Control de Volumen
+    // Control de volumen
     volumeSlider.addEventListener('input', (e) => {
         audio.volume = e.target.value;
     });
 
-    // Control de eventos nativos del elemento Audio para robustez de la UI
+    // Eventos del elemento de audio para feedback visual inmediato
     audio.addEventListener('waiting', () => {
-        streamStatus.textContent = "Buffer/Amortiguando...";
+        if (isPlaying) streamStatus.textContent = "Sincronizando...";
     });
 
     audio.addEventListener('playing', () => {
-        streamStatus.textContent = "Escuchando en vivo";
+        if (isPlaying) streamStatus.textContent = "En vivo";
     });
 
-    // Highlight automático de la navegación al hacer scroll
+    // ==========================================
+    // EXTRACCIÓN DE METADATOS (API ZENO + DEEZER)
+    // ==========================================
+    function fetchZenoMetadata() {
+        if (!ZENO_CONFIG.stationId || ZENO_CONFIG.stationId.includes("TU_STATION_ID")) return;
+
+        // Endpoint público de metadatos de Zeno Radio
+        const zenoApiUrl = `https://api.zeno.fm/public/v2/store/station/${ZENO_CONFIG.stationId}/current-track`;
+
+        fetch(zenoApiUrl)
+            .then(response => {
+                if (!response.ok) throw new Error('Error al conectar con la API de Zeno');
+                return response.json();
+            })
+            .then(data => {
+                // Estructura típica de respuesta de Zeno: data.title y data.artist
+                if (data && (data.title || data.artist)) {
+                    const songTitle = data.title || "Radio Neptuno";
+                    const songArtist = data.artist || "Señal Online";
+
+                    // Si cambiaron los metadatos respecto a lo que se muestra, actualizamos e invocamos a Deezer
+                    if (trackTitle.textContent !== songTitle || trackArtist.textContent !== songArtist) {
+                        trackTitle.textContent = songTitle;
+                        trackArtist.textContent = songArtist;
+                        fetchAlbumArt(songArtist, songTitle);
+                    }
+                }
+            })
+            .catch(err => {
+                console.warn("No se pudieron obtener metadatos de Zeno:", err);
+            });
+    }
+
+    // Buscar carátula en la API pública de Deezer mediante JSONP/CORS Proxy alternativo incorporado por la API
+    function fetchAlbumArt(artist, title) {
+        const query = encodeURIComponent(`${artist} ${title}`);
+        // Usamos la API de búsqueda pública de Deezer
+        const deezerUrl = `https://api.deezer.com/search?q=${query}&limit=1&output=jsonp`;
+
+        // Crear una petición JSONP nativa para saltar restricciones de CORS de la API de Deezer
+        const scriptId = 'deezer_jsonp_callback';
+        const oldScript = document.getElementById(scriptId);
+        if (oldScript) oldScript.remove();
+
+        window.deezerCallback = (data) => {
+            if (data && data.data && data.data.length > 0) {
+                const albumCover = data.data[0].album.cover_medium;
+                displayCover(albumCover);
+            } else {
+                displayDefaultIcon();
+            }
+            delete window.deezerCallback;
+        };
+
+        const script = document.createElement('script');
+        script.id = scriptId;
+        script.src = `${deezerUrl}&callback=deezerCallback`;
+        document.body.appendChild(script);
+    }
+
+    function displayCover(url) {
+        playerCover.src = url;
+        playerCover.style.display = 'block';
+        playerDefaultIcon.style.display = 'none';
+    }
+
+    function displayDefaultIcon() {
+        playerCover.style.display = 'none';
+        playerDefaultIcon.style.display = 'block';
+    }
+
+    function resetMetadataUI() {
+        trackTitle.textContent = "Radio Neptuno";
+        trackArtist.textContent = "Señal Online";
+        displayDefaultIcon();
+    }
+
+    // Highlight automático del menú basado en la sección visible durante el scroll
     const sections = document.querySelectorAll('section[id]');
     window.addEventListener('scroll', () => {
         const scrollY = window.pageYOffset;
         
         sections.forEach(current => {
             const sectionHeight = current.offsetHeight;
-            const sectionTop = current.offsetTop - 100;
+            const sectionTop = current.offsetTop - 110;
             const sectionId = current.getAttribute('id');
             const navLink = document.querySelector(`.main-nav a[href*=${sectionId}]`);
 
