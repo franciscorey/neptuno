@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Neptuno | Voz Comunitaria de la Costa</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="#">RADIO <span>NEPTUNO</span></a>
+            </div>
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="#inicio" class="active">Radio</a></li>
+                    <li><a href="#programacion">Programa</a></li>
+                    <li><a href="#noticias">Noticias</a></li>
+                    <li><a href="#productos">Productos</a></li>
+                </ul>
+            </nav>
+            <div class="social-header">
+                <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://youtube.com" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="inicio" class="hero-section">
+            <div class="hero-content">
+                <span class="badge">Transmitiendo en Vivo</span>
+                <h1>Sintoniza la corriente comunitaria</h1>
+                <p>Radio Neptuno es un espacio de encuentro, cultura y música independiente creado por y para la comunidad.</p>
+                <a href="#reproductor-anchor" class="btn-primary"><i class="fas fa-play"></i> Escuchar Ahora</a>
+            </div>
+        </section>
+
+        <div id="reproductor-anchor" class="player-sticky-zone">
+            <section class="player-container">
+                <div class="player-info">
+                    <div class="player-album-art">
+                        <i class="fas fa-radio"></i>
+                    </div>
+                    <div class="player-status">
+                        <span class="player-title">Señal Online</span>
+                        <span class="player-subtitle" id="stream-status">Conectando con Zeno.fm...</span>
+                    </div>
+                </div>
+                
+                <div class="player-controls">
+                    <button id="playBtn" class="btn-play" aria-label="Reproducir">
+                        <i class="fas fa-play" id="playIcon"></i>
+                    </button>
+                    <div class="volume-container">
+                        <i class="fas fa-volume-up"></i>
+                        <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.8" aria-label="Volumen">
+                    </div>
+                </div>
+                
+                <audio id="zenoAudio" src="https://stream.zeno.fm/YOUR_STREAM_ID" preload="none"></audio>
+            </section>
+        </div>
+
+        <section class="about-section">
+            <div class="section-container">
+                <div class="about-grid">
+                    <div class="about-text">
+                        <h2>Sobre Radio Neptuno</h2>
+                        <hr class="divider">
+                        <p>Nacimos con la convicción de amplificar las voces locales, rescatar la identidad de nuestra zona y ofrecer una alternativa radial libre, transparente y autogestionada.</p>
+                        <p>A través de nuestra plataforma online, conectamos las historias, la música emergente y las problemáticas de nuestro entorno con el mundo entero.</p>
+                    </div>
+                    <div class="about-stats">
+                        <div class="stat-card">
+                            <h3>24/7</h3>
+                            <p>Transmisión Ininterrumpida</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>100%</h3>
+                            <p>Contenido Local y Autogestionado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="programacion" class="schedule-section">
+            <div class="section-container">
+                <h2 class="section-title">Parrilla de Programación</h2>
+                <p class="section-subtitle">Acompaña tu día con nuestro contenido seleccionado</p>
+                
+                <div class="schedule-grid">
+                    <div class="schedule-card current">
+                        <span class="time">09:00 - 11:00</span>
+                        <h3>Marea Matinal</h3>
+                        <p>Actualidad, debate local y la mejor selección musical para comenzar la jornada.</p>
+                        <span class="current-badge">Al Aire</span>
+                    </div>
+                    <div class="schedule-card">
+                        <span class="time">14:00 - 16:00</span>
+                        <h3>Ecos del Tabo</h3>
+                        <p>Espacio cultural dedicado a la historia, literatura y entrevistas a creadores de la región.</p>
+                    </div>
+                    <div class="schedule-card">
+                        <span class="time">18:00 - 20:00</span>
+                        <h3>Corriente Alterna</h3>
+                        <p>Lanzamientos independientes, rock, synth-pop y los sonidos que no escuchas en el dial masivo.</p>
+                    </div>
+                    <div class="schedule-card">
+                        <span class="time">22:00 - 00:00</span>
+                        <h3>Neptuno Nocturno</h3>
+                        <p>Sesión ambiental, lo-fi y paisajes sonoros para cerrar el día en sintonía marina.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ads-section">
+            <div class="ads-container">
+                <div class="ad-banner">
+                    <h4>¿Quieres que tu proyecto o comercio suene aquí?</h4>
+                    <p>Apoya a la radio comunitaria y llega a toda nuestra audiencia local. Tarifas solidarias para emprendedores.</p>
+                    <a href="mailto:contacto@radioneptuno.cl" class="btn-secondary">Escríbenos Hoy</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="noticias" class="news-section">
+            <div class="section-container">
+                <h2 class="section-title">Últimas Noticias</h2>
+                
+                <div class="news-grid">
+                    <article class="news-card">
+                        <div class="news-img-placeholder">
+                            <i class="far fa-newspaper"></i>
+                        </div>
+                        <div class="news-body">
+                            <span class="news-tag">Comunidad</span>
+                            <h3>Festival de Música Independiente anuncia sus fechas</h3>
+                            <p>El próximo mes se darán cita más de 15 bandas locales en el anfiteatro de la ciudad...</p>
+                            <a href="#" class="news-link">Leer artículo completo <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </article>
+
+                    <article class="news-card">
+                        <div class="news-img-placeholder">
+                            <i class="far fa-newspaper"></i>
+                        </div>
+                        <div class="news-body">
+                            <span class="news-tag">Cultura</span>
+                            <h3>Ciclo de radioteatros recupera la memoria histórica</h3>
+                            <p>Una producción original de Radio Neptuno revive los relatos orales de los fundadores del puerto...</p>
+                            <a href="#" class="news-link">Leer artículo completo <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="productos" class="products-section">
+            <div class="section-container">
+                <h2 class="section-title">Productos de la Tienda</h2>
+                <p class="section-subtitle">Sostén este proyecto independiente vistiendo la identidad de la radio.</p>
+                
+                <div class="products-grid">
+                    <div class="product-card">
+                        <div class="product-visual"><i class="fas fa-tshirt"></i></div>
+                        <div class="product-info">
+                            <h3>Polera Oficial Neptuno</h3>
+                            <p class="price">$15.000</p>
+                            <a href="#" class="btn-product">Comprar</a>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-visual"><i class="fas fa-coffee"></i></div>
+                        <div class="product-info">
+                            <h3>Tazón Cerámico Retro</h3>
+                            <p class="price">$7.500</p>
+                            <a href="#" class="btn-product">Comprar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>RADIO NEPTUNO</h3>
+                <p>La frecuencia del mar, la voz de nuestra gente.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="#inicio">Radio</a></li>
+                    <li><a href="#programacion">Programa</a></li>
+                    <li><a href="#noticias">Noticias</a></li>
+                    <li><a href="#productos">Productos</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h4>Sígannos en redes</h4>
+                <div class="social-icons">
+                    <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="https://youtube.com" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i> YouTube</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Radio Neptuno. Hecho con ❤️ para la comunidad.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
