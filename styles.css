@@ -1,21 +1,21 @@
 /* RESET & VARIABLES GLOBALES */
 :root {
-    /* Paleta inspirada en el logo - Dark Mode Profesional */
-    --bg-color: #0a0e0a;         /* Negro bosque profundo para el fondo total */
-    --surface-color: #121a12;    /* Verde oscuro muy sutil para contenedores */
-    --surface-light: #1b261b;    /* Verde grisáceo para tarjetas y elementos destacados */
-    
-    /* El verde de tu logo como primario */
-    --primary-color: #28601c;    
-    --primary-hover: #3d8f2b;    /* Un tono más vibrante para el hover */
-    
-    /* Textos */
-    --text-color: #e8ede8;       /* Blanco roto, más suave para la vista */
-    --text-muted: #a0b0a0;       /* Gris verdoso para textos secundarios */
-    
-    /* Bordes y acentos */
-    --border-color: #2d3d2d;     /* Borde oscuro que no rompe la armonía */
-    
+    /* Fondos oscuros base (Mantenidos) */
+    --bg-color: #0a0e0a;         /* Negro bosque profundo */
+    --surface-color: #121a12;    /* Verde oscuro sutil */
+    --surface-light: #1b261b;    /* Tarjetas y destacados */
+
+    /* NUEVOS Verdes Primarios (Mucho más vibrantes y 'eléctricos') */
+    --primary-color: #4CAF50;    /* Verde bosque vibrante */
+    --primary-hover: #66BB6A;    /* Tono más claro y activo para hover */
+
+    /* Textos (Mantenidos para legibilidad) */
+    --text-color: #e8ede8;       /* Blanco roto */
+    --text-muted: #a0b0a0;       /* Gris verdoso */
+
+    /* NUEVO Color de Borde y Acentos (Mucho más presente) */
+    --border-color: #388E3C;     /* Un verde medio/oscuro que "enciende" los bordes */
+
     --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --spacing: 20px;
 }
