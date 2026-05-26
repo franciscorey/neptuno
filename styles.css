@@ -662,3 +662,27 @@ ul {
         gap: 30px;
     }
 }
+
+/* ========================================== */
+/* ESTILOS DEL ENRUTADOR SPA                  */
+/* ========================================== */
+.view-section {
+    display: none;
+    animation: fadeIn 0.4s ease-in-out forwards;
+}
+
+.view-section.active {
+    display: block;
+}
+
+/* Animación de entrada suave para las vistas */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
