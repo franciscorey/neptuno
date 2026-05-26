@@ -7,6 +7,7 @@
 
     /* Acentos vibrantes */
     --primary-color: #4CAF50;    /* Verde para acciones principales */
+    --primary-hover: #66BB6A;
     --accent-color: #FF5CFF;     /* Púrpura vibrante para detalles visuales */
     --accent-hover: #FF8AFF;     /* Púrpura más claro para hovers */
 
@@ -172,8 +173,8 @@ ul {
 
 .badge {
     background-color: rgba(0, 229, 255, 0.1);
-    color: var(--primary-color);
-    border: 1px solid var(--primary-color);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
     padding: 4px 12px;
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -321,7 +322,7 @@ ul {
     background-color: var(--surface-color);
     padding: 25px;
     border-radius: 6px;
-    border-left: 4px solid var(--primary-color);
+    border-left: 4px solid var(--accent-color);
 }
 
 .stat-card h3 {
@@ -453,7 +454,7 @@ ul {
 }
 
 .news-tag {
-    color: var(--primary-color);
+    color: var(--accent-color);
     font-size: 0.8rem;
     text-transform: uppercase;
     font-weight: bold;
