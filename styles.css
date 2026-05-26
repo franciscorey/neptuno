@@ -7,8 +7,8 @@
 
     /* Acentos vibrantes */
     --primary-color: #4CAF50;    /* Verde para acciones principales */
-    --accent-color: #8A2BE2;     /* Púrpura vibrante para detalles visuales */
-    --accent-hover: #9b4dff;     /* Púrpura más claro para hovers */
+    --accent-color: #FF5CFF;     /* Púrpura vibrante para detalles visuales */
+    --accent-hover: #FF8AFF;     /* Púrpura más claro para hovers */
 
     /* Textos */
     --text-color: #e8ede8;
