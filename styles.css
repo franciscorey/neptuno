@@ -1,20 +1,19 @@
 /* RESET & VARIABLES GLOBALES */
 :root {
-    /* Fondos oscuros base (Mantenidos) */
-    --bg-color: #0a0e0a;         /* Negro bosque profundo */
-    --surface-color: #121a12;    /* Verde oscuro sutil */
-    --surface-light: #1b261b;    /* Tarjetas y destacados */
+/* Fondos */
+    --bg-color: #0a0e0a;
+    --surface-color: #121a12;
+    --surface-light: #1b261b;
 
-    /* NUEVOS Verdes Primarios (Mucho más vibrantes y 'eléctricos') */
-    --primary-color: #4CAF50;    /* Verde bosque vibrante */
-    --primary-hover: #66BB6A;    /* Tono más claro y activo para hover */
+    /* Acentos vibrantes */
+    --primary-color: #4CAF50;    /* Verde para acciones principales */
+    --accent-color: #8A2BE2;     /* Púrpura vibrante para detalles visuales */
+    --accent-hover: #9b4dff;     /* Púrpura más claro para hovers */
 
-    /* Textos (Mantenidos para legibilidad) */
-    --text-color: #e8ede8;       /* Blanco roto */
-    --text-muted: #a0b0a0;       /* Gris verdoso */
-
-    /* NUEVO Color de Borde y Acentos (Mucho más presente) */
-    --border-color: #388E3C;     /* Un verde medio/oscuro que "enciende" los bordes */
+    /* Textos */
+    --text-color: #e8ede8;
+    --text-muted: #a0b0a0;
+    --border-color: #388E3C;
 
     --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --spacing: 20px;
