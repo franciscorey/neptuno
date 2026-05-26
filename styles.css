@@ -326,7 +326,7 @@ ul {
 
 .stat-card h3 {
     font-size: 2rem;
-    color: var(--primary-color);
+    color: var(--accent-color);
     margin-bottom: 5px;
 }
 
@@ -352,7 +352,7 @@ ul {
 
 .schedule-card .time {
     display: block;
-    color: var(--primary-color);
+    color: var(--accent-color);
     font-weight: bold;
     margin-bottom: 10px;
     font-size: 0.9rem;
@@ -372,7 +372,7 @@ ul {
     position: absolute;
     top: 15px;
     right: 15px;
-    background-color: #ff3366;
+    background-color: var(--accent-color);
     color: #fff;
     font-size: 0.7rem;
     padding: 2px 8px;
@@ -515,7 +515,7 @@ ul {
 }
 
 .product-info .price {
-    color: var(--primary-color);
+    color: var(--accent-color);
     font-weight: bold;
     font-size: 1.2rem;
     margin-bottom: 15px;
@@ -538,7 +538,7 @@ ul {
 /* FOOTER CONSOLIDADO */
 .site-footer {
     background-color: #080c11;
-    border-top: 1px solid var(--border-color);
+    border-top: 2px solid var(--accent-color);
     padding: 50px var(--spacing) 20px var(--spacing);
     margin-top: auto;
 }
