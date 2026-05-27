@@ -791,6 +791,19 @@ ul {
     display: block !important;
 }
 
+/* Sección Sobre Radio - solo visible cuando inicio está activo */
+#sobre-radio.view-section {
+    display: none;
+}
+#sobre-radio.view-section.active {
+    display: block !important;
+}
+
+/* Sección Ads - siempre visible */
+#ads-section.view-section {
+    display: block !important;
+}
+
 /* Asegurar que los contenedores internos tengan el layout correcto */
 #programacion.view-section.active .section-container,
 #noticias.view-section.active .section-container,

@@ -36,45 +36,19 @@
     </header>
 
     <main>
+        <!-- VISTA: INICIO -->
         <section id="inicio" class="hero-section view-section active">
             <div class="hero-bg-overlay"></div>
             <div class="hero-content">
                 <span class="badge">Transmitiendo en Vivo</span>
                 <h1>Navega y Sintoniza la corriente</h1>
                 <p>Radio Neptuno es un espacio de difusión, cultura y música independiente.</p>
-                <a href="#reproductor-anchor" class="btn-primary"><i class="fas fa-play"></i> Escuchar Ahora</a>
+                <a href="#reproductor-anchor" class="btn-primary" onclick="event.stopPropagation();"><i class="fas fa-play"></i> Escuchar Ahora</a>
             </div>
         </section>
 
-        <div id="reproductor-anchor" class="player-sticky-zone">
-    <section class="player-container">
-        <div class="player-info">
-            <div class="player-album-art" id="playerCoverContainer">
-                <img id="playerCover" src="" alt="Portada" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
-                <i class="fas fa-radio" id="playerDefaultIcon"></i>
-            </div>
-            <div class="player-status">
-                <span class="player-title" id="trackTitle">Radio Neptuno</span>
-                <span class="player-subtitle" id="trackArtist">Señal Online</span>
-                <span class="player-live-status" id="stream-status">Señal en pausa</span>
-            </div>
-        </div>
-        
-        <div class="player-controls">
-            <button id="playBtn" class="btn-play" aria-label="Reproducir">
-                <i class="fas fa-play" id="playIcon"></i>
-            </button>
-            <div class="volume-container">
-                <i class="fas fa-volume-up"></i>
-                <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.8" aria-label="Volumen">
-            </div>
-        </div>
-        
-        <audio id="zenoAudio" preload="none"></audio>
-    </section>
-</div>
-
-        <section class="about-section" id="sobre-radio">
+        <!-- Sección Sobre Radio (solo visible en inicio) -->
+        <section class="about-section view-section" id="sobre-radio">
             <div class="section-container">
                 <div class="about-grid">
                     <div class="about-text">
@@ -90,57 +64,58 @@
             </div>
         </section>
 
+        <!-- VISTA: PROGRAMACION -->
         <section id="programacion" class="schedule-section view-section">
-    <div class="section-container">
-        <h2 class="section-title">Parrilla de Programación</h2>
-        <p class="section-subtitle">Acompaña tu día con nuestro contenido seleccionado</p>
-        
-        <div class="schedule-grid">
-            <div class="schedule-card" data-start="06:00" data-end="09:00">
-                <span class="time"><i class="fas fa-sun"></i> 06:00 - 09:00</span>
-                <h3>Amanecer Neptuno</h3>
-                <p>Música ambiental y sonidos relajantes para comenzar el día con energía positiva.</p>
+            <div class="section-container">
+                <h2 class="section-title">Parrilla de Programación</h2>
+                <p class="section-subtitle">Acompaña tu día con nuestro contenido seleccionado</p>
+                
+                <div class="schedule-grid">
+                    <div class="schedule-card" data-start="06:00" data-end="09:00">
+                        <span class="time"><i class="fas fa-sun"></i> 06:00 - 09:00</span>
+                        <h3>Amanecer Neptuno</h3>
+                        <p>Música ambiental y sonidos relajantes para comenzar el día con energía positiva.</p>
+                    </div>
+                    <div class="schedule-card" data-start="09:00" data-end="11:00">
+                        <span class="time"><i class="fas fa-coffee"></i> 09:00 - 11:00</span>
+                        <h3>Marea Matinal</h3>
+                        <p>Actualidad, debate local y la mejor selección musical para comenzar la jornada.</p>
+                    </div>
+                    <div class="schedule-card" data-start="11:00" data-end="14:00">
+                        <span class="time"><i class="fas fa-music"></i> 11:00 - 14:00</span>
+                        <h3>Conexión Musical</h3>
+                        <p>Un recorrido por los clásicos del rock y pop internacional de todas las épocas.</p>
+                    </div>
+                    <div class="schedule-card" data-start="14:00" data-end="16:00">
+                        <span class="time"><i class="fas fa-newspaper"></i> 14:00 - 16:00</span>
+                        <h3>Corriente Continua</h3>
+                        <p>El programa de actualidad local. Resumen de noticias del día e Información del tránsito.</p>
+                    </div>
+                    <div class="schedule-card" data-start="16:00" data-end="18:00">
+                        <span class="time"><i class="fas fa-guitar"></i> 16:00 - 18:00</span>
+                        <h3>Tarde de Vinilos</h3>
+                        <p>Los grandes álbumes de la historia reproducidos completos en su formato original.</p>
+                    </div>
+                    <div class="schedule-card" data-start="18:00" data-end="20:00">
+                        <span class="time"><i class="fas fa-bolt"></i> 18:00 - 20:00</span>
+                        <h3>La Fosa</h3>
+                        <p>Lanzamientos independientes, rock, synth-pop y los sonidos que no escuchas en el dial masivo.</p>
+                    </div>
+                    <div class="schedule-card" data-start="20:00" data-end="22:00">
+                        <span class="time"><i class="fas fa-microphone"></i> 20:00 - 22:00</span>
+                        <h3>Radio Teatro Vivo</h3>
+                        <p>Dramatizados, cuentos sonoros y la memoria histórica de nuestra comunidad.</p>
+                    </div>
+                    <div class="schedule-card" data-start="22:00" data-end="00:00">
+                        <span class="time"><i class="fas fa-moon"></i> 22:00 - 00:00</span>
+                        <h3>Neptuno Nocturno</h3>
+                        <p>Sesión ambiental, lo-fi y paisajes sonoros para cerrar el día en sintonía.</p>
+                    </div>
+                </div>
             </div>
-            <div class="schedule-card" data-start="09:00" data-end="11:00">
-                <span class="time"><i class="fas fa-coffee"></i> 09:00 - 11:00</span>
-                <h3>Marea Matinal</h3>
-                <p>Actualidad, debate local y la mejor selección musical para comenzar la jornada.</p>
-            </div>
-            <div class="schedule-card" data-start="11:00" data-end="14:00">
-                <span class="time"><i class="fas fa-music"></i> 11:00 - 14:00</span>
-                <h3>Conexión Musical</h3>
-                <p>Un recorrido por los clásicos del rock y pop internacional de todas las épocas.</p>
-            </div>
-            <div class="schedule-card" data-start="14:00" data-end="16:00">
-                <span class="time"><i class="fas fa-newspaper"></i> 14:00 - 16:00</span>
-                <h3>Corriente Continua</h3>
-                <p>El programa de actualidad local. Resumen de noticias del día e Información del tránsito.</p>
-            </div>
-            <div class="schedule-card" data-start="16:00" data-end="18:00">
-                <span class="time"><i class="fas fa-guitar"></i> 16:00 - 18:00</span>
-                <h3>Tarde de Vinilos</h3>
-                <p>Los grandes álbumes de la historia reproducidos completos en su formato original.</p>
-            </div>
-            <div class="schedule-card" data-start="18:00" data-end="20:00">
-                <span class="time"><i class="fas fa-bolt"></i> 18:00 - 20:00</span>
-                <h3>La Fosa</h3>
-                <p>Lanzamientos independientes, rock, synth-pop y los sonidos que no escuchas en el dial masivo.</p>
-            </div>
-            <div class="schedule-card" data-start="20:00" data-end="22:00">
-                <span class="time"><i class="fas fa-microphone"></i> 20:00 - 22:00</span>
-                <h3>Radio Teatro Vivo</h3>
-                <p>Dramatizados, cuentos sonoros y la memoria histórica de nuestra comunidad.</p>
-            </div>
-            <div class="schedule-card" data-start="22:00" data-end="00:00">
-                <span class="time"><i class="fas fa-moon"></i> 22:00 - 00:00</span>
-                <h3>Neptuno Nocturno</h3>
-                <p>Sesión ambiental, lo-fi y paisajes sonoros para cerrar el día en sintonía.</p>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
 
-
+        <!-- VISTA: NOTICIAS -->
         <section id="noticias" class="news-section view-section">
             <div class="section-container">
                 <h2 class="section-title">Últimas Noticias</h2>
@@ -151,7 +126,7 @@
             </div>
         </section>
 
-        <!-- Sección de Detalle de Noticia (SPA) -->
+        <!-- VISTA: DETALLE NOTICIA -->
         <section id="noticia-detalle" class="news-detail-section view-section">
             <div class="section-container" style="padding: 60px 20px;">
                 <div id="article-root">
@@ -160,18 +135,11 @@
             </div>
         </section>
 
+        <!-- VISTA: PRODUCTOS -->
         <section id="productos" class="products-section view-section">
             <div class="section-container">
                 <h2 class="section-title">Productos de la Tienda</h2>
                 <p class="section-subtitle">Sostén este proyecto independiente con nuestra Merch.</p>
-                <div class="product-card">
-                <div class="product-visual"><i class="fas fa-compact-disc"></i></div>
-                <div class="product-info">
-                    <h3>Neptuno Edit: Sesión inmersiva de clásicos</h3>
-                    <p class="price">$1.200</p>
-                    <a href="#" class="btn-product">Descargar Digital</a>
-                </div>
-            </div>
                 <div class="products-grid">
                     <div class="product-card">
                         <div class="product-visual"><i class="fas fa-tshirt"></i></div>
@@ -189,11 +157,20 @@
                             <a href="#" class="btn-product">Comprar</a>
                         </div>
                     </div>
+                    <div class="product-card">
+                        <div class="product-visual"><i class="fas fa-compact-disc"></i></div>
+                        <div class="product-info">
+                            <h3>Neptuno Edit: Sesión inmersiva de clásicos</h3>
+                            <p class="price">$1.200</p>
+                            <a href="#" class="btn-product">Descargar Digital</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="ads-section">
+        <!-- VISTA: PUBLICIDAD (siempre visible dentro del main) -->
+        <section class="ads-section view-section" id="ads-section">
             <div class="ads-container">
                 <div class="ad-banner">
                     <h4>¿Quieres que tu proyecto o comercio suene aquí?</h4>
@@ -203,6 +180,35 @@
             </div>
         </section>
     </main>
+
+    <!-- Reproductor Sticky (fuera del sistema SPA, siempre visible) -->
+    <div id="reproductor-anchor" class="player-sticky-zone">
+        <section class="player-container">
+            <div class="player-info">
+                <div class="player-album-art" id="playerCoverContainer">
+                    <img id="playerCover" src="" alt="Portada" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
+                    <i class="fas fa-radio" id="playerDefaultIcon"></i>
+                </div>
+                <div class="player-status">
+                    <span class="player-title" id="trackTitle">Radio Neptuno</span>
+                    <span class="player-subtitle" id="trackArtist">Señal Online</span>
+                    <span class="player-live-status" id="stream-status">Señal en pausa</span>
+                </div>
+            </div>
+            
+            <div class="player-controls">
+                <button id="playBtn" class="btn-play" aria-label="Reproducir">
+                    <i class="fas fa-play" id="playIcon"></i>
+                </button>
+                <div class="volume-container">
+                    <i class="fas fa-volume-up"></i>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.8" aria-label="Volumen">
+                </div>
+            </div>
+            
+            <audio id="zenoAudio" preload="none"></audio>
+        </section>
+    </div>
 
     <footer class="site-footer">
         <div class="footer-container">

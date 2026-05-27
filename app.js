@@ -23,13 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
             currentSection = sectionId;
         }
         
-        // Mostrar/ocultar sección "Sobre Radio Neptuno" solo en vista inicio
+        // Manejo especial para la sección "Sobre Radio Neptuno"
+        // Solo debe ser visible cuando estamos en la vista 'inicio'
         const aboutSection = document.getElementById('sobre-radio');
         if (aboutSection) {
             if (sectionId === 'inicio') {
-                aboutSection.style.display = 'block';
+                aboutSection.classList.add('active');
             } else {
-                aboutSection.style.display = 'none';
+                aboutSection.classList.remove('active');
             }
         }
         
