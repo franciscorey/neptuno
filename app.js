@@ -58,7 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
             link.classList.remove('active');
         });
         
-        const activeLink = document.querySelector(`.main-nav a[href="#${sectionId}"]`);
+        // Mapeo especial para la sección de detalle de noticia
+        const navSectionId = sectionId === 'noticia-detalle' ? 'noticias' : sectionId;
+        
+        const activeLink = document.querySelector(`.main-nav a[onclick*="'${navSectionId}'"]`);
         if (activeLink) {
             activeLink.classList.add('active');
         }
@@ -330,13 +333,30 @@ setInterval(updateLiveSchedule, 60000);
     // Asignar URL del stream al elemento de audio
     audio.src = ZENO_CONFIG.streamUrl;
 
-    // Lógica del menú desplegable (Mobile)
+    // Lógica del menú desplegable (Mobile) - Mejorado
     if (menuToggle && mainNav) {
         menuToggle.addEventListener('click', () => {
             mainNav.classList.toggle('open');
             const icon = menuToggle.querySelector('i');
             icon.classList.toggle('fa-bars');
             icon.classList.toggle('fa-times');
+            
+            // Toggle aria-expanded para accesibilidad
+            const isExpanded = mainNav.classList.contains('open');
+            menuToggle.setAttribute('aria-expanded', isExpanded);
+        });
+        
+        // Cerrar menú al hacer clic en un enlace (mejora UX móvil)
+        mainNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    mainNav.classList.remove('open');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.add('fa-bars');
+                    icon.classList.remove('fa-times');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
         });
     }
 
