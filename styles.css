@@ -159,12 +159,20 @@ ul {
 .hero-section {
     position: relative;
     min-height: 50vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     text-align: center;
     padding: 60px var(--spacing);
     overflow: hidden;
+}
+
+/* CORRECCIÓN CRÍTICA: Control total del display vía clases SPA */
+#inicio.view-section {
+    display: none;
+}
+
+#inicio.view-section.active {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Override para cuando hero-section está oculto por SPA */
@@ -763,24 +771,31 @@ ul {
     animation: fadeIn 0.4s ease-in-out forwards;
 }
 
+/* Regla general para secciones activas - display block por defecto */
 .view-section.active {
-    display: block;
-}
-
-/* Hero section necesita display flex cuando está activa */
-#inicio.view-section.active {
-    display: flex !important;
-}
-
-/* Programación y noticias usan display block con grids internos */
-#programacion.view-section.active,
-#noticias.view-section.active,
-#noticia-detalle.view-section.active {
     display: block !important;
 }
 
-/* Productos usa display block con grid interno */
+/* Hero section (#inicio) necesita display flex cuando está activa */
+#inicio.view-section.active {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Secciones específicas con display block */
+#programacion.view-section.active,
+#noticias.view-section.active,
+#noticia-detalle.view-section.active,
 #productos.view-section.active {
+    display: block !important;
+}
+
+/* Asegurar que los contenedores internos tengan el layout correcto */
+#programacion.view-section.active .section-container,
+#noticias.view-section.active .section-container,
+#productos.view-section.active .section-container,
+#noticia-detalle.view-section.active .section-container {
     display: block !important;
 }
 
