@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "titulo": "Festival de Música Independiente",
+    "imagen": "img1.jpg",
+    "extracto": "Más de 15 bandas locales se darán cita...",
+    "cuerpo": "<p>Aquí va el texto completo y desarrollado del artículo...</p><p>Más contenido sobre el festival...</p>"
+  },
+  {
+    "id": 2,
+    "titulo": "Ciclo de radioteatros",
+    "imagen": "img2.jpg",
+    "extracto": "Una producción original que revive relatos...",
+    "cuerpo": "<p>El radioteatro vuelve a la vida en Radio Neptuno...</p>"
+  }
+]
