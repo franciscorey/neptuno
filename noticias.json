@@ -1,16 +1,29 @@
 [
   {
     "id": 1,
-    "titulo": "Festival de Música Independiente",
-    "imagen": "img1.jpg",
-    "extracto": "Más de 15 bandas locales se darán cita...",
-    "cuerpo": "<p>Aquí va el texto completo y desarrollado del artículo...</p><p>Más contenido sobre el festival...</p>"
+    "fecha": "2026-01-15",
+    "categoria": "Comunidad",
+    "titulo": "Festival de Música Independiente anuncia sus fechas",
+    "imagen": "assets/imagen.jpg",
+    "extracto": "El próximo mes se darán cita más de 15 bandas locales en el anfiteatro de la ciudad...",
+    "cuerpo": "<p>El esperado Festival de Música Independiente ha anunciado oficialmente su programación para el próximo mes. Más de 15 bandas locales se darán cita en el anfiteatro de la ciudad en un evento que promete ser histórico para la escena musical independiente.</p><p>Entre los géneros destacados se encuentran el rock alternativo, indie pop, synth-pop y electrónica experimental. Los organizadores han confirmado que habrá escenarios distribuidos por diferentes puntos de la ciudad, permitiendo a los asistentes disfrutar de una experiencia inmersiva.</p><p>Las entradas estarán disponibles a partir de la próxima semana en puntos seleccionados y en línea. Radio Neptuno será parte oficial del evento como medio colaborador, transmitiendo en vivo desde los distintos escenarios.</p>"
   },
   {
     "id": 2,
-    "titulo": "Ciclo de radioteatros",
-    "imagen": "img2.jpg",
-    "extracto": "Una producción original que revive relatos...",
-    "cuerpo": "<p>El radioteatro vuelve a la vida en Radio Neptuno...</p>"
+    "fecha": "2026-01-12",
+    "categoria": "Cultura",
+    "titulo": "Ciclo de radioteatros recupera la memoria histórica",
+    "imagen": "assets/imagen.jpg",
+    "extracto": "Una producción original de Radio Neptuno revive los relatos orales de los fundadores del puerto...",
+    "cuerpo": "<p>El radioteatro vuelve a la vida en Radio Neptuno con una producción original que busca recuperar la memoria histórica de nuestra comunidad. Este ciclo especial revive los relatos orales de los fundadores del puerto, transportando a los oyentes a épocas pasadas llenas de historias fascinantes.</p><p>Cada episodio está cuidadosamente producido con efectos de sonido ambientales y actuaciones de actores locales, creando una experiencia sonora única. Los guiones fueron investigados durante meses, basándose en archivos históricos y testimonios de residentes mayores.</p><p>La emisión se realizará todos los domingos a las 20:00 horas, con repeticiones durante la semana. Los oyentes pueden solicitar episodios anteriores a través de nuestras redes sociales.</p>"
+  },
+  {
+    "id": 3,
+    "fecha": "2026-01-10",
+    "categoria": "Música",
+    "titulo": "Nueva sesión inmersiva: clásicos del synth-pop",
+    "imagen": "assets/imagen.jpg",
+    "extracto": "Radio Neptuno presenta una selección especial de los mejores temas synth-pop de todas las épocas...",
+    "cuerpo": "<p>En nuestra nueva sesión inmersiva, exploramos los sonidos icónicos del synth-pop que definieron décadas enteras de música. Desde los pioneros de los años 80 hasta las producciones modernas que mantienen vivo el género.</p><p>Esta sesión especial incluye temas de Depeche Mode, New Order, Pet Shop Boys, y artistas contemporáneos que continúan la tradición del sintetizador como instrumento principal. La curación musical ha sido realizada por el equipo de 'La Fosa', nuestro programa de música independiente.</p><p>Puedes descargar esta sesión digitalmente desde nuestra tienda o escucharla en streaming durante todo el mes. Próximamente anunciaremos nuevas sesiones dedicadas a otros géneros emblemáticos.</p>"
   }
 ]

@@ -33,7 +33,8 @@
     </header>
 
     <main>
-        <section id="inicio" class="hero-section">
+        <section id="inicio" class="hero-section view-section active">
+            <div class="hero-bg-overlay"></div>
             <div class="hero-content">
                 <span class="badge">Transmitiendo en Vivo</span>
                 <h1>Navega y Sintoniza la corriente</h1>
@@ -79,21 +80,14 @@
                         <p>En el vasto mas de información, Radio Neptuno emerge como un proyecto jóven, autogestionado dedicado a traer lo mejor de la música de todas las épocas.</p>
                         <p>Somos la frecuencia donde tu voz también tiene espacio, conectamos relatos, el pulso de la ciudad con una propuesta auténtica.</p>
                     </div>
-                    <div class="about-stats">
-                        <div class="stat-card">
-                            <h3>24/7</h3>
-                            <p>Transmisión Ininterrumpida</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>100%</h3>
-                            <p>Contenido Local y Autogestionado</p>
-                        </div>
+                    <div class="about-image">
+                        <img src="assets/radio.png" alt="Radio Neptuno" class="radio-illustration">
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="programacion" class="schedule-section">
+        <section id="programacion" class="schedule-section view-section">
     <div class="section-container">
         <h2 class="section-title">Parrilla de Programación</h2>
         <p class="section-subtitle">Acompaña tu día con nuestro contenido seleccionado</p>
@@ -133,39 +127,26 @@
             </div>
         </section>
 
-        <section id="noticias" class="news-section">
+        <section id="noticias" class="news-section view-section">
             <div class="section-container">
                 <h2 class="section-title">Últimas Noticias</h2>
                 
-                <div class="news-grid">
-                    <article class="news-card">
-                        <div class="news-img-placeholder">
-                            <i class="far fa-newspaper"></i>
-                        </div>
-                        <div class="news-body">
-                            <span class="news-tag">Comunidad</span>
-                            <h3>Festival de Música Independiente anuncia sus fechas</h3>
-                            <p>El próximo mes se darán cita más de 15 bandas locales en el anfiteatro de la ciudad...</p>
-                            <a href="#" class="news-link">Leer artículo completo <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </article>
-
-                    <article class="news-card">
-                        <div class="news-img-placeholder">
-                            <i class="far fa-newspaper"></i>
-                        </div>
-                        <div class="news-body">
-                            <span class="news-tag">Cultura</span>
-                            <h3>Ciclo de radioteatros recupera la memoria histórica</h3>
-                            <p>Una producción original de Radio Neptuno revive los relatos orales de los fundadores del puerto...</p>
-                            <a href="#" class="news-link">Leer artículo completo <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </article>
+                <div class="news-grid" id="newsGrid">
+                    <!-- Las noticias se cargan dinámicamente desde noticias.json -->
                 </div>
             </div>
         </section>
 
-        <section id="productos" class="products-section">
+        <!-- Sección de Detalle de Noticia (SPA) -->
+        <section id="noticia-detalle" class="news-detail-section view-section">
+            <div class="section-container" style="padding: 60px 20px;">
+                <div id="article-root">
+                    <!-- El contenido de la noticia se carga dinámicamente -->
+                </div>
+            </div>
+        </section>
+
+        <section id="productos" class="products-section view-section">
             <div class="section-container">
                 <h2 class="section-title">Productos de la Tienda</h2>
                 <p class="section-subtitle">Sostén este proyecto independiente con nuestra Merch.</p>
