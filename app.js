@@ -65,22 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mapeo especial para la sección de detalle de noticia
         const navSectionId = sectionId === 'noticia-detalle' ? 'noticias' : sectionId;
         
-        const activeLink = document.querySelector(`.main-nav a[onclick*="'${navSectionId}'"]`);
+        const activeLink = document.querySelector(`.main-nav a[data-section="${navSectionId}"]`);
         if (activeLink) {
             activeLink.classList.add('active');
         }
     }
 
-    // Manejar navegación desde enlaces del header
-    document.querySelectorAll('.main-nav a').forEach(link => {
+    // Manejar navegación desde enlaces del header con data-section
+    document.querySelectorAll('.main-nav a[data-section]').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            const href = link.getAttribute('href');
-            
-            if (href.startsWith('#')) {
-                const sectionId = href.substring(1);
-                showSection(sectionId);
-            }
+            const sectionId = link.getAttribute('data-section');
+            showSection(sectionId);
         });
     });
 

@@ -175,11 +175,6 @@ ul {
     justify-content: center;
 }
 
-/* Override para cuando hero-section está oculto por SPA */
-#inicio.view-section:not(.active) {
-    display: none !important;
-}
-
 .hero-bg-overlay {
     position: absolute;
     top: 0;
