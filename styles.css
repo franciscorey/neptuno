@@ -197,6 +197,7 @@ ul {
     position: relative;
     z-index: 2;
     max-width: 700px;
+    margin: 0 auto;
 }
 
 .badge {
