@@ -51,6 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
             history.pushState({ section: sectionId }, '', `?view=${sectionId}`);
         }
     }
+    
+    // Exponer showSection al scope global para que funcione desde los onclick del HTML
+    window.showSection = showSection;
 
     // Actualizar clase active en el menú de navegación
     function updateNavActive(sectionId) {
@@ -130,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 
-    // Cargar detalle de artículo
+    // Cargar detalle de artículo con sanitización básica para prevenir XSS
     async function loadArticleDetail(articleId) {
         const articleRoot = document.getElementById('article-root');
         if (!articleRoot) return;
@@ -173,57 +176,130 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentUrl = encodeURIComponent(window.location.href);
             const encodedTitle = encodeURIComponent(article.titulo);
 
-            articleRoot.innerHTML = `
-                <nav class="breadcrumb">
-                    <a href="#" onclick="event.preventDefault(); showSection('noticias');">← Volver a Noticias</a>
-                </nav>
-                
-                <img src="${article.imagen}" alt="${article.titulo}" class="article-image">
-                
-                <div class="article-header">
-                    <span class="article-category">${article.categoria}</span>
-                    <span class="article-date">${formattedDate}</span>
-                    <h1 class="article-title">${article.titulo}</h1>
-                </div>
-                
-                <div class="article-body">
-                    ${article.cuerpo}
-                </div>
-                
-                <div class="share-block">
-                    <p>Compartir esta noticia:</p>
-                    <div class="share-buttons">
-                        <a href="https://twitter.com/intent/tweet?text=${encodedTitle}&url=${currentUrl}" 
-                           class="btn-share twitter" 
-                           target="_blank" 
-                           rel="noopener noreferrer">
-                            <i class="fab fa-twitter"></i> Twitter
-                        </a>
-                        <a href="https://wa.me/?text=${encodedTitle}%20${currentUrl}" 
-                           class="btn-share whatsapp" 
-                           target="_blank" 
-                           rel="noopener noreferrer">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="article-navigation">
-                    ${prevArticle ? `
-                        <a href="#" class="nav-article prev" onclick="event.preventDefault(); showSection('noticia-detalle', ${prevArticle.id});">
-                            <span class="nav-label">← Anterior</span>
-                            <span class="nav-title">${prevArticle.titulo}</span>
-                        </a>
-                    ` : '<div></div>'}
-                    
-                    ${nextArticle ? `
-                        <a href="#" class="nav-article next" onclick="event.preventDefault(); showSection('noticia-detalle', ${nextArticle.id});">
-                            <span class="nav-label">Siguiente →</span>
-                            <span class="nav-title">${nextArticle.titulo}</span>
-                        </a>
-                    ` : ''}
-                </div>
-            `;
+            // Sanitización básica: crear elementos DOM en lugar de insertar HTML crudo
+            // Esto previene XSS al evitar que se ejecuten scripts maliciosos
+            const articleContainer = document.createElement('div');
+            
+            // Crear breadcrumb
+            const breadcrumb = document.createElement('nav');
+            breadcrumb.className = 'breadcrumb';
+            const backLink = document.createElement('a');
+            backLink.href = '#';
+            backLink.textContent = '← Volver a Noticias';
+            backLink.onclick = (e) => { e.preventDefault(); showSection('noticias'); };
+            breadcrumb.appendChild(backLink);
+            articleContainer.appendChild(breadcrumb);
+
+            // Crear imagen del artículo
+            const img = document.createElement('img');
+            img.src = article.imagen || '';
+            img.alt = article.titulo || 'Imagen del artículo';
+            img.className = 'article-image';
+            articleContainer.appendChild(img);
+
+            // Crear header del artículo
+            const header = document.createElement('div');
+            header.className = 'article-header';
+            
+            const category = document.createElement('span');
+            category.className = 'article-category';
+            category.textContent = article.categoria || '';
+            header.appendChild(category);
+
+            const dateSpan = document.createElement('span');
+            dateSpan.className = 'article-date';
+            dateSpan.textContent = formattedDate;
+            header.appendChild(dateSpan);
+
+            const title = document.createElement('h1');
+            title.className = 'article-title';
+            title.textContent = article.titulo || '';
+            header.appendChild(title);
+            
+            articleContainer.appendChild(header);
+
+            // Crear cuerpo del artículo - USAR textContent para seguridad
+            const bodyDiv = document.createElement('div');
+            bodyDiv.className = 'article-body';
+            // Si el cuerpo es HTML seguro, podemos usar innerHTML, pero para máxima seguridad usamos textContent
+            // o un parser DOM que elimine scripts
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = article.cuerpo || '';
+            // Eliminar cualquier script potencial
+            const scripts = tempDiv.querySelectorAll('script');
+            scripts.forEach(script => script.remove());
+            // Eliminar eventos on* (onclick, onerror, etc.)
+            const allElements = tempDiv.querySelectorAll('*');
+            allElements.forEach(el => {
+                Array.from(el.attributes).forEach(attr => {
+                    if (attr.name.startsWith('on')) {
+                        el.removeAttribute(attr.name);
+                    }
+                });
+            });
+            bodyDiv.innerHTML = tempDiv.innerHTML;
+            articleContainer.appendChild(bodyDiv);
+
+            // Bloque de compartir
+            const shareBlock = document.createElement('div');
+            shareBlock.className = 'share-block';
+            const shareText = document.createElement('p');
+            shareText.textContent = 'Compartir esta noticia:';
+            shareBlock.appendChild(shareText);
+
+            const shareButtons = document.createElement('div');
+            shareButtons.className = 'share-buttons';
+
+            // Botón Twitter
+            const twitterBtn = document.createElement('a');
+            twitterBtn.href = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${currentUrl}`;
+            twitterBtn.className = 'btn-share twitter';
+            twitterBtn.target = '_blank';
+            twitterBtn.rel = 'noopener noreferrer';
+            twitterBtn.innerHTML = '<i class="fab fa-twitter"></i> Twitter';
+            shareButtons.appendChild(twitterBtn);
+
+            // Botón WhatsApp
+            const whatsappBtn = document.createElement('a');
+            whatsappBtn.href = `https://wa.me/?text=${encodedTitle}%20${currentUrl}`;
+            whatsappBtn.className = 'btn-share whatsapp';
+            whatsappBtn.target = '_blank';
+            whatsappBtn.rel = 'noopener noreferrer';
+            whatsappBtn.innerHTML = '<i class="fab fa-whatsapp"></i> WhatsApp';
+            shareButtons.appendChild(whatsappBtn);
+
+            shareBlock.appendChild(shareButtons);
+            articleContainer.appendChild(shareBlock);
+
+            // Navegación entre artículos
+            const navDiv = document.createElement('div');
+            navDiv.className = 'article-navigation';
+
+            if (prevArticle) {
+                const prevLink = document.createElement('a');
+                prevLink.href = '#';
+                prevLink.className = 'nav-article prev';
+                prevLink.onclick = (e) => { e.preventDefault(); showSection('noticia-detalle', prevArticle.id); };
+                prevLink.innerHTML = `<span class="nav-label">← Anterior</span><span class="nav-title">${prevArticle.titulo}</span>`;
+                navDiv.appendChild(prevLink);
+            } else {
+                navDiv.appendChild(document.createElement('div'));
+            }
+
+            if (nextArticle) {
+                const nextLink = document.createElement('a');
+                nextLink.href = '#';
+                nextLink.className = 'nav-article next';
+                nextLink.onclick = (e) => { e.preventDefault(); showSection('noticia-detalle', nextArticle.id); };
+                nextLink.innerHTML = `<span class="nav-label">Siguiente →</span><span class="nav-title">${nextArticle.titulo}</span>`;
+                navDiv.appendChild(nextLink);
+            }
+
+            articleContainer.appendChild(navDiv);
+
+            // Limpiar y agregar el contenido sanitizado
+            articleRoot.innerHTML = '';
+            articleRoot.appendChild(articleContainer);
         } catch (error) {
             console.error('Error cargando artículo:', error);
             articleRoot.innerHTML = `
@@ -238,63 +314,64 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar carga de noticias
     loadNews();
     
-    // Coloca este bloque dentro de document.addEventListener('DOMContentLoaded', () => { ... });
+    // ==========================================
+    // SISTEMA DE PROGRAMACIÓN EN VIVO
+    // ==========================================
+    function updateLiveSchedule() {
+        const now = new Date();
+        // Convertimos la hora actual del sistema a minutos totales transcurridos en el día
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-function updateLiveSchedule() {
-    const now = new Date();
-    // Convertimos la hora actual del sistema a minutos totales transcurridos en el día
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        const scheduleCards = document.querySelectorAll('.schedule-card');
 
-    const scheduleCards = document.querySelectorAll('.schedule-card');
+        scheduleCards.forEach(card => {
+            const startStr = card.getAttribute('data-start');
+            const endStr = card.getAttribute('data-end');
 
-    scheduleCards.forEach(card => {
-        const startStr = card.getAttribute('data-start');
-        const endStr = card.getAttribute('data-end');
+            if (!startStr || !endStr) return;
 
-        if (!startStr || !endStr) return;
+            // Desestructuramos y convertimos "HH:MM" a números
+            const [startHours, startSplitMinutes] = startStr.split(':').map(Number);
+            let [endHours, endSplitMinutes] = endStr.split(':').map(Number);
 
-        // Desestructuramos y convertimos "HH:MM" a números
-        const [startHours, startSplitMinutes] = startStr.split(':').map(Number);
-        let [endHours, endSplitMinutes] = endStr.split(':').map(Number);
-
-        const startMinutes = startHours * 60 + startSplitMinutes;
-        
-        // Caso especial: Si el programa termina a las 00:00, equivale al final del día (minuto 1440)
-        if (endHours === 0 && endSplitMinutes === 0) {
-            endHours = 24;
-        }
-        const endMinutes = endHours * 60 + endSplitMinutes;
-
-        // Buscamos si la tarjeta ya posee el badge de "Al Aire"
-        const existingBadge = card.querySelector('.current-badge');
-
-        // Evaluamos si la hora actual cae dentro del rango del bloque
-        if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
-            // Activa el diseño destacado de la tarjeta
-            card.classList.add('current');
+            const startMinutes = startHours * 60 + startSplitMinutes;
             
-            // Si el badge no existe, lo creamos e insertamos dinámicamente
-            if (!existingBadge) {
-                const badge = document.createElement('span');
-                badge.classList.add('current-badge');
-                badge.textContent = 'Al Aire';
-                card.appendChild(badge);
+            // Caso especial: Si el programa termina a las 00:00, equivale al final del día (minuto 1440)
+            if (endHours === 0 && endSplitMinutes === 0) {
+                endHours = 24;
             }
-        } else {
-            // Remueve el diseño destacado y el badge si el bloque ya pasó o no ha empezado
-            card.classList.remove('current');
-            if (existingBadge) {
-                existingBadge.remove();
+            const endMinutes = endHours * 60 + endSplitMinutes;
+
+            // Buscamos si la tarjeta ya posee el badge de "Al Aire"
+            const existingBadge = card.querySelector('.current-badge');
+
+            // Evaluamos si la hora actual cae dentro del rango del bloque
+            if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
+                // Activa el diseño destacado de la tarjeta
+                card.classList.add('current');
+                
+                // Si el badge no existe, lo creamos e insertamos dinámicamente
+                if (!existingBadge) {
+                    const badge = document.createElement('span');
+                    badge.classList.add('current-badge');
+                    badge.textContent = 'Al Aire';
+                    card.appendChild(badge);
+                }
+            } else {
+                // Remueve el diseño destacado y el badge si el bloque ya pasó o no ha empezado
+                card.classList.remove('current');
+                if (existingBadge) {
+                    existingBadge.remove();
+                }
             }
-        }
-    });
-}
+        });
+    }
 
-// Inicializa la verificación inmediatamente al cargar la web
-updateLiveSchedule();
+    // Inicializa la verificación inmediatamente al cargar la web
+    updateLiveSchedule();
 
-// Configura un temporizador para comprobar el horario automáticamente cada 60 segundos (60000 ms)
-setInterval(updateLiveSchedule, 60000);
+    // Configura un temporizador para comprobar el horario automáticamente cada 60 segundos (60000 ms)
+    setInterval(updateLiveSchedule, 60000);
     
     // ==========================================
     // PARÁMETROS DE CONFIGURACIÓN DE TU EMISORA

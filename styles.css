@@ -659,7 +659,7 @@ ul {
         display: block;
         background: transparent;
         border: none;
-        color: var(--text-primary);
+        color: var(--text-color);
         font-size: 1.5rem;
         cursor: pointer;
         padding: 5px;
