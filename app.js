@@ -398,6 +398,56 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+        
+        // Actualizar también el widget flotante
+        updateWidgetSchedule(currentMinutes);
+    }
+    
+    // Función para actualizar la información del widget flotante
+    function updateWidgetSchedule(currentMinutes) {
+        const scheduleCards = document.querySelectorAll('.schedule-card');
+        let currentShow = null;
+        
+        scheduleCards.forEach(card => {
+            const startStr = card.getAttribute('data-start');
+            const endStr = card.getAttribute('data-end');
+            
+            if (!startStr || !endStr) return;
+            
+            const [startHours, startSplitMinutes] = startStr.split(':').map(Number);
+            let [endHours, endSplitMinutes] = endStr.split(':').map(Number);
+            
+            const startMinutes = startHours * 60 + startSplitMinutes;
+            
+            if (endHours === 0 && endSplitMinutes === 0) {
+                endHours = 24;
+            }
+            const endMinutes = endHours * 60 + endSplitMinutes;
+            
+            if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
+                const showName = card.querySelector('h3')?.textContent || 'Programa en curso';
+                currentShow = {
+                    name: showName,
+                    start: startStr,
+                    end: endStr
+                };
+            }
+        });
+        
+        // Actualizar elementos del widget
+        const widgetShowName = document.getElementById('widgetShowName');
+        const widgetShowTime = document.getElementById('widgetShowTime');
+        const widgetMiniStatus = document.getElementById('widgetMiniStatus');
+        
+        if (widgetShowName && widgetShowTime && widgetMiniStatus) {
+            if (currentShow) {
+                widgetShowName.textContent = currentShow.name;
+                widgetShowTime.textContent = `${currentShow.start} - ${currentShow.end}`;
+            } else {
+                widgetShowName.textContent = 'Sin programación';
+                widgetShowTime.textContent = '--:-- - --:--';
+            }
+        }
     }
 
     // Inicializa la verificación inmediatamente al cargar la web
@@ -424,24 +474,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('menuToggle');
     const mainNav = document.getElementById('mainNav');
 
-    // Elementos del DOM del Reproductor
+    // Elementos del DOM del Reproductor (usando el mismo audio que antes)
     const audio = document.getElementById('zenoAudio');
-    const playBtn = document.getElementById('playBtn');
-    const playIcon = document.getElementById('playIcon');
-    const streamStatus = document.getElementById('stream-status');
-    const volumeSlider = document.getElementById('volumeSlider');
     
-    // Elementos de Metadatos
-    const trackTitle = document.getElementById('trackTitle');
-    const trackArtist = document.getElementById('trackArtist');
-    const playerCover = document.getElementById('playerCover');
-    const playerDefaultIcon = document.getElementById('playerDefaultIcon');
+    // Elementos del widget flotante
+    const radioWidget = document.getElementById('radio-widget');
+    const widgetExpandBtn = document.getElementById('widgetExpandBtn');
+    const widgetCollapseBtn = document.getElementById('widgetCollapseBtn');
+    const widgetPlayBtn = document.getElementById('widgetPlayBtn');
+    const widgetPlayIcon = document.getElementById('widgetPlayIcon');
+    const widgetVolumeSlider = document.getElementById('widgetVolumeSlider');
+    const widgetMuteBtn = document.getElementById('widgetMuteBtn');
+    const widgetVolumeIcon = document.getElementById('widgetVolumeIcon');
+    const widgetMiniStatus = document.getElementById('widgetMiniStatus');
+    const widgetLiveBadge = document.getElementById('widgetLiveBadge');
+    
+    // Elementos de Metadatos del widget
+    const widgetTrackTitle = document.getElementById('widgetTrackTitle');
+    const widgetTrackArtist = document.getElementById('widgetTrackArtist');
+    const widgetCover = document.getElementById('widgetCover');
+    const widgetDefaultIcon = document.getElementById('widgetDefaultIcon');
 
     let isPlaying = false;
+    let isMuted = false;
+    let lastVolume = 0.8;
     let metadataTimer = null;
 
     // Asignar URL del stream al elemento de audio
     audio.src = ZENO_CONFIG.streamUrl;
+    audio.volume = lastVolume;
 
     // Lógica del menú desplegable (Mobile) - Mejorado
     if (menuToggle && mainNav) {
@@ -473,50 +534,111 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // LÓGICA DEL REPRODUCTOR AUDIO HTML5
     // ==========================================
-    playBtn.addEventListener('click', () => {
-        if (!isPlaying) {
-            streamStatus.textContent = "Conectando...";
-            
-            audio.play()
-                .then(() => {
-                    isPlaying = true;
-                    playIcon.classList.replace('fa-play', 'fa-pause');
-                    streamStatus.textContent = "En vivo";
-                    
-                    // Iniciar la consulta de metadatos cuando empiece a sonar
-                    fetchZenoMetadata();
-                    metadataTimer = setInterval(fetchZenoMetadata, ZENO_CONFIG.updateInterval);
-                })
-                .catch(error => {
-                    console.error("Error al reproducir el stream:", error);
-                    streamStatus.textContent = "Error de conexión";
-                });
-        } else {
-            // Detener por completo el buffer en streams en vivo para evitar delays al retomar
-            audio.pause();
-            audio.load(); 
-            isPlaying = false;
-            playIcon.classList.replace('fa-pause', 'fa-play');
-            streamStatus.textContent = "Señal en pausa";
-            
-            // Detener las peticiones de metadatos para optimizar rendimiento
-            clearInterval(metadataTimer);
-            resetMetadataUI();
-        }
-    });
+    
+    // Control de expansión/colapso del widget
+    if (widgetExpandBtn && radioWidget) {
+        widgetExpandBtn.addEventListener('click', () => {
+            radioWidget.classList.remove('widget-minimized');
+            radioWidget.classList.add('widget-expanded');
+        });
+    }
+    
+    if (widgetCollapseBtn && radioWidget) {
+        widgetCollapseBtn.addEventListener('click', () => {
+            radioWidget.classList.remove('widget-expanded');
+            radioWidget.classList.add('widget-minimized');
+        });
+    }
+    
+    // Control de reproducción desde el widget
+    if (widgetPlayBtn) {
+        widgetPlayBtn.addEventListener('click', () => {
+            if (!isPlaying) {
+                if (widgetMiniStatus) widgetMiniStatus.textContent = "CONECTANDO...";
+                
+                audio.play()
+                    .then(() => {
+                        isPlaying = true;
+                        widgetPlayIcon.classList.replace('fa-play', 'fa-pause');
+                        if (widgetMiniStatus) widgetMiniStatus.textContent = "ON";
+                        if (widgetLiveBadge) widgetLiveBadge.style.display = 'inline-block';
+                        
+                        // Iniciar la consulta de metadatos cuando empiece a sonar
+                        fetchZenoMetadata();
+                        metadataTimer = setInterval(fetchZenoMetadata, ZENO_CONFIG.updateInterval);
+                    })
+                    .catch(error => {
+                        console.error("Error al reproducir el stream:", error);
+                        if (widgetMiniStatus) widgetMiniStatus.textContent = "ERROR";
+                    });
+            } else {
+                // Detener por completo el buffer en streams en vivo para evitar delays al retomar
+                audio.pause();
+                audio.load(); 
+                isPlaying = false;
+                widgetPlayIcon.classList.replace('fa-pause', 'fa-play');
+                if (widgetMiniStatus) widgetMiniStatus.textContent = "OFF";
+                if (widgetLiveBadge) widgetLiveBadge.style.display = 'none';
+                
+                // Detener las peticiones de metadatos para optimizar rendimiento
+                clearInterval(metadataTimer);
+                resetMetadataUI();
+            }
+        });
+    }
 
-    // Control de volumen
-    volumeSlider.addEventListener('input', (e) => {
-        audio.volume = e.target.value;
-    });
+    // Control de volumen desde el widget
+    if (widgetVolumeSlider) {
+        widgetVolumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value;
+            lastVolume = e.target.value;
+            isMuted = (e.target.value == 0);
+            updateVolumeIcon();
+        });
+    }
+    
+    // Control de mute desde el widget
+    if (widgetMuteBtn) {
+        widgetMuteBtn.addEventListener('click', () => {
+            if (isMuted) {
+                audio.volume = lastVolume > 0 ? lastVolume : 0.8;
+                widgetVolumeSlider.value = audio.volume;
+                isMuted = false;
+            } else {
+                lastVolume = audio.volume;
+                audio.volume = 0;
+                widgetVolumeSlider.value = 0;
+                isMuted = true;
+            }
+            updateVolumeIcon();
+        });
+    }
+    
+    function updateVolumeIcon() {
+        if (!widgetVolumeIcon) return;
+        
+        widgetVolumeIcon.classList.remove('fa-volume-up', 'fa-volume-down', 'fa-volume-mute');
+        
+        if (isMuted || audio.volume === 0) {
+            widgetVolumeIcon.classList.add('fa-volume-mute');
+        } else if (audio.volume < 0.5) {
+            widgetVolumeIcon.classList.add('fa-volume-down');
+        } else {
+            widgetVolumeIcon.classList.add('fa-volume-up');
+        }
+    }
 
     // Eventos del elemento de audio para feedback visual inmediato
     audio.addEventListener('waiting', () => {
-        if (isPlaying) streamStatus.textContent = "Sincronizando...";
+        if (isPlaying && widgetMiniStatus) widgetMiniStatus.textContent = "SINC...";
     });
 
     audio.addEventListener('playing', () => {
-        if (isPlaying) streamStatus.textContent = "En vivo";
+        if (isPlaying && widgetMiniStatus) widgetMiniStatus.textContent = "ON";
+    });
+    
+    audio.addEventListener('error', () => {
+        if (widgetMiniStatus) widgetMiniStatus.textContent = "ERROR";
     });
 
     // ==========================================
@@ -540,9 +662,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const songArtist = data.artist || "Señal Online";
 
                     // Si cambiaron los metadatos respecto a lo que se muestra, actualizamos e invocamos a Deezer
-                    if (trackTitle.textContent !== songTitle || trackArtist.textContent !== songArtist) {
-                        trackTitle.textContent = songTitle;
-                        trackArtist.textContent = songArtist;
+                    if (widgetTrackTitle.textContent !== songTitle || widgetTrackArtist.textContent !== songArtist) {
+                        widgetTrackTitle.textContent = songTitle;
+                        widgetTrackArtist.textContent = songArtist;
                         fetchAlbumArt(songArtist, songTitle);
                     }
                 }
@@ -580,19 +702,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayCover(url) {
-        playerCover.src = url;
-        playerCover.style.display = 'block';
-        playerDefaultIcon.style.display = 'none';
+        widgetCover.src = url;
+        widgetCover.style.display = 'block';
+        widgetDefaultIcon.style.display = 'none';
     }
 
     function displayDefaultIcon() {
-        playerCover.style.display = 'none';
-        playerDefaultIcon.style.display = 'block';
+        widgetCover.style.display = 'none';
+        widgetDefaultIcon.style.display = 'block';
     }
 
     function resetMetadataUI() {
-        trackTitle.textContent = "Radio Neptuno";
-        trackArtist.textContent = "Señal Online";
+        widgetTrackTitle.textContent = "Radio Neptuno";
+        widgetTrackArtist.textContent = "Señal Online";
         displayDefaultIcon();
     }
 
