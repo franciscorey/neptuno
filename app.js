@@ -67,17 +67,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Actualizar clase active en el menú de navegación
     function updateNavActive(sectionId) {
-        document.querySelectorAll('.main-nav a').forEach(link => {
+        // Remover active de TODOS los enlaces de navegación (header y footer)
+        document.querySelectorAll('.main-nav a, .footer-links a').forEach(link => {
             link.classList.remove('active');
         });
         
         // Mapeo especial para la sección de detalle de noticia
         const navSectionId = sectionId === 'noticia-detalle' ? 'noticias' : sectionId;
         
-        const activeLink = document.querySelector(`.main-nav a[onclick*="'${navSectionId}'"]`);
-        if (activeLink) {
-            activeLink.classList.add('active');
-        }
+        // Buscar y activar enlaces en header y footer que coincidan con la sección
+        document.querySelectorAll(`.main-nav a[onclick*="'${navSectionId}'"], .footer-links a[onclick*="'${navSectionId}'"]`).forEach(link => {
+            link.classList.add('active');
+        });
     }
 
     // Manejar navegación desde enlaces del header
@@ -411,6 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Actualizar elemento en el reproductor sticky
         const showInfoElement = document.getElementById('showInfo');
         if (showInfoElement) {
             if (currentShowName) {
@@ -419,6 +421,17 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 showInfoElement.textContent = '';
                 showInfoElement.style.display = 'none';
+            }
+        }
+        
+        // También actualizar la variable showInfo si existe
+        if (typeof showInfo !== 'undefined' && showInfo) {
+            if (currentShowName) {
+                showInfo.textContent = `Al aire: ${currentShowName}`;
+                showInfo.style.display = 'block';
+            } else {
+                showInfo.textContent = '';
+                showInfo.style.display = 'none';
             }
         }
     }
@@ -455,15 +468,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const playIcon = document.getElementById('playIcon');
     const streamStatus = document.getElementById('stream-status');
     const volumeSlider = document.getElementById('volumeSlider');
+    const togglePlayerBtn = document.getElementById('togglePlayer');
+    const playerContainer = document.getElementById('playerContainer');
     
     // Elementos de Metadatos
     const trackTitle = document.getElementById('trackTitle');
     const trackArtist = document.getElementById('trackArtist');
     const playerCover = document.getElementById('playerCover');
     const playerDefaultIcon = document.getElementById('playerDefaultIcon');
+    const showInfo = document.getElementById('showInfo');
 
     let isPlaying = false;
     let metadataTimer = null;
+    let isPlayerCollapsed = false;
+
+    // Toggle para minimizar/expandir reproductor
+    if (togglePlayerBtn && playerContainer) {
+        togglePlayerBtn.addEventListener('click', () => {
+            isPlayerCollapsed = !isPlayerCollapsed;
+            playerContainer.classList.toggle('collapsed', isPlayerCollapsed);
+            togglePlayerBtn.classList.toggle('collapsed', isPlayerCollapsed);
+            
+            const icon = togglePlayerBtn.querySelector('i');
+            if (isPlayerCollapsed) {
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        });
+    }
 
     // Asignar URL del stream al elemento de audio
     audio.src = ZENO_CONFIG.streamUrl;
