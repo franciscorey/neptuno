@@ -23,14 +23,23 @@ document.addEventListener('DOMContentLoaded', () => {
             currentSection = sectionId;
         }
         
-        // Manejo especial para la sección "Sobre Radio Neptuno"
-        // Solo debe ser visible cuando estamos en la vista 'inicio'
+        // Manejo especial para la sección "Sobre Radio Neptuno" y "Explora"
+        // Solo deben ser visibles cuando estamos en la vista 'inicio'
         const aboutSection = document.getElementById('sobre-radio');
         if (aboutSection) {
             if (sectionId === 'inicio') {
                 aboutSection.classList.add('active');
             } else {
                 aboutSection.classList.remove('active');
+            }
+        }
+        
+        const exploreSection = document.getElementById('explora');
+        if (exploreSection) {
+            if (sectionId === 'inicio') {
+                exploreSection.classList.add('active');
+            } else {
+                exploreSection.classList.remove('active');
             }
         }
         
@@ -368,11 +377,59 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ==========================================
+    // INFORMACIÓN DEL PROGRAMA EN VIVO
+    // ==========================================
+    function updateShowInfo() {
+        const now = new Date();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        
+        const scheduleCards = document.querySelectorAll('.schedule-card');
+        let currentShowName = null;
+
+        scheduleCards.forEach(card => {
+            const startStr = card.getAttribute('data-start');
+            const endStr = card.getAttribute('data-end');
+
+            if (!startStr || !endStr) return;
+
+            const [startHours, startSplitMinutes] = startStr.split(':').map(Number);
+            let [endHours, endSplitMinutes] = endStr.split(':').map(Number);
+
+            const startMinutes = startHours * 60 + startSplitMinutes;
+            
+            if (endHours === 0 && endSplitMinutes === 0) {
+                endHours = 24;
+            }
+            const endMinutes = endHours * 60 + endSplitMinutes;
+
+            if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
+                const showTitle = card.querySelector('h3');
+                if (showTitle) {
+                    currentShowName = showTitle.textContent;
+                }
+            }
+        });
+
+        const showInfoElement = document.getElementById('showInfo');
+        if (showInfoElement) {
+            if (currentShowName) {
+                showInfoElement.textContent = `Al aire: ${currentShowName}`;
+                showInfoElement.style.display = 'block';
+            } else {
+                showInfoElement.textContent = '';
+                showInfoElement.style.display = 'none';
+            }
+        }
+    }
+
     // Inicializa la verificación inmediatamente al cargar la web
     updateLiveSchedule();
+    updateShowInfo();
 
     // Configura un temporizador para comprobar el horario automáticamente cada 60 segundos (60000 ms)
     setInterval(updateLiveSchedule, 60000);
+    setInterval(updateShowInfo, 60000);
     
     // ==========================================
     // PARÁMETROS DE CONFIGURACIÓN DE TU EMISORA

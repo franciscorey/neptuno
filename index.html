@@ -47,6 +47,31 @@
             </div>
         </section>
 
+        <!-- Sección Explora (solo visible en inicio) -->
+        <section class="explore-section view-section active" id="explora">
+            <div class="section-container">
+                <h2 class="section-title">Explora</h2>
+                <p class="section-subtitle">Descubre todo nuestro contenido</p>
+                <div class="explore-grid">
+                    <a href="#" onclick="showSection('programacion'); return false;" class="explore-card">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Programación</h3>
+                        <p>Conoce nuestra parrilla de programas y horarios</p>
+                    </a>
+                    <a href="#" onclick="showSection('noticias'); return false;" class="explore-card">
+                        <i class="fas fa-newspaper"></i>
+                        <h3>Noticias</h3>
+                        <p>Mantente informado con las últimas novedades</p>
+                    </a>
+                    <a href="#" onclick="showSection('productos'); return false;" class="explore-card">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h3>Productos</h3>
+                        <p>Adquiere nuestro merchandising oficial</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
         <!-- Sección Sobre Radio (solo visible en inicio) -->
         <section class="about-section view-section" id="sobre-radio">
             <div class="section-container">
@@ -67,6 +92,9 @@
         <!-- VISTA: PROGRAMACION -->
         <section id="programacion" class="schedule-section view-section">
             <div class="section-container">
+                <div class="section-banner">
+                    <img src="assets/estudio.png" alt="Estudio de Radio Neptuno" class="banner-image">
+                </div>
                 <h2 class="section-title">Parrilla de Programación</h2>
                 <p class="section-subtitle">Acompaña tu día con nuestro contenido seleccionado</p>
                 
@@ -118,6 +146,9 @@
         <!-- VISTA: NOTICIAS -->
         <section id="noticias" class="news-section view-section">
             <div class="section-container">
+                <div class="section-banner">
+                    <img src="assets/estudio.png" alt="Estudio de Radio Neptuno" class="banner-image">
+                </div>
                 <h2 class="section-title">Últimas Noticias</h2>
                 
                 <div class="news-grid" id="newsGrid">
@@ -138,6 +169,9 @@
         <!-- VISTA: PRODUCTOS -->
         <section id="productos" class="products-section view-section">
             <div class="section-container">
+                <div class="section-banner">
+                    <img src="assets/estudio.png" alt="Estudio de Radio Neptuno" class="banner-image">
+                </div>
                 <h2 class="section-title">Productos de la Tienda</h2>
                 <p class="section-subtitle">Sostén este proyecto independiente con nuestra Merch.</p>
                 <div class="products-grid">
@@ -193,6 +227,7 @@
                     <span class="player-title" id="trackTitle">Radio Neptuno</span>
                     <span class="player-subtitle" id="trackArtist">Señal Online</span>
                     <span class="player-live-status" id="stream-status">Señal en pausa</span>
+                    <span class="player-show-info" id="showInfo"></span>
                 </div>
             </div>
             
@@ -219,10 +254,10 @@
             <div class="footer-links">
                 <h4>Navegación</h4>
                 <ul>
-                    <li><a href="#inicio">Radio</a></li>
-                    <li><a href="#programacion">Programa</a></li>
-                    <li><a href="#noticias">Noticias</a></li>
-                    <li><a href="#productos">Productos</a></li>
+                    <li><a href="#" onclick="showSection('inicio'); return false;">Radio</a></li>
+                    <li><a href="#" onclick="showSection('programacion'); return false;">Programa</a></li>
+                    <li><a href="#" onclick="showSection('noticias'); return false;">Noticias</a></li>
+                    <li><a href="#" onclick="showSection('productos'); return false;">Productos</a></li>
                 </ul>
             </div>
             <div class="footer-social">
