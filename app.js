@@ -23,15 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
             currentSection = sectionId;
         }
         
-        // Manejo especial para la sección "Sobre Radio Neptuno"
-        // Solo debe ser visible cuando estamos en la vista 'inicio'
+        // Manejo especial para la sección "Sobre Radio Neptuno" y "Explora"
+        // Solo deben ser visibles cuando estamos en la vista 'inicio'
         const aboutSection = document.getElementById('sobre-radio');
-        if (aboutSection) {
-            if (sectionId === 'inicio') {
-                aboutSection.classList.add('active');
-            } else {
-                aboutSection.classList.remove('active');
-            }
+        const exploreSection = document.getElementById('explora');
+        
+        if (sectionId === 'inicio') {
+            if (aboutSection) aboutSection.classList.add('active');
+            if (exploreSection) exploreSection.classList.add('active');
+        } else {
+            if (aboutSection) aboutSection.classList.remove('active');
+            if (exploreSection) exploreSection.classList.remove('active');
         }
         
         // Actualizar navegación activa en el menú
@@ -76,6 +78,15 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const sectionId = link.getAttribute('data-section');
+            showSection(sectionId);
+        });
+    });
+    
+    // Manejar navegación desde tarjetas de exploración (explore-card)
+    document.querySelectorAll('.explore-card[data-section]').forEach(card => {
+        card.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sectionId = card.getAttribute('data-section');
             showSection(sectionId);
         });
     });
