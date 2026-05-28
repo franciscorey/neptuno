@@ -215,38 +215,59 @@
         </section>
     </main>
 
-    <!-- Reproductor Sticky (fuera del sistema SPA, siempre visible) -->
-    <div id="reproductor-anchor" class="player-sticky-zone">
-        <section class="player-container" id="playerContainer">
-            <button class="btn-toggle-player" id="togglePlayer" aria-label="Minimizar reproductor">
-                <i class="fas fa-chevron-down"></i>
+    <!-- Widget Flotante de Radio -->
+    <div id="radio-widget" class="radio-widget widget-minimized">
+        <!-- Estado Minimizado -->
+        <div class="widget-minimized-view" id="widgetMinimizedView">
+            <div class="widget-mini-content">
+                <i class="fas fa-radio widget-mini-icon"></i>
+                <span class="widget-mini-status" id="widgetMiniStatus">OFF</span>
+            </div>
+            <button class="widget-expand-btn" id="widgetExpandBtn" aria-label="Expandir reproductor">
+                <i class="fas fa-chevron-up"></i>
             </button>
-            <div class="player-info">
-                <div class="player-album-art" id="playerCoverContainer">
-                    <img id="playerCover" src="" alt="Portada" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
-                    <i class="fas fa-radio" id="playerDefaultIcon"></i>
+        </div>
+
+        <!-- Estado Expandido -->
+        <div class="widget-expanded-view" id="widgetExpandedView">
+            <div class="widget-header">
+                <div class="widget-show-info">
+                    <span class="widget-live-badge" id="widgetLiveBadge">EN VIVO</span>
+                    <h4 class="widget-show-name" id="widgetShowName">Selecciona un programa</h4>
+                    <p class="widget-show-time" id="widgetShowTime">--:-- - --:--</p>
                 </div>
-                <div class="player-status">
-                    <span class="player-title" id="trackTitle">Radio Neptuno</span>
-                    <span class="player-subtitle" id="trackArtist">Señal Online</span>
-                    <span class="player-live-status" id="stream-status">Señal en pausa</span>
-                    <span class="player-show-info" id="showInfo"></span>
-                </div>
-            </div>
-            
-            <div class="player-controls">
-                <button id="playBtn" class="btn-play" aria-label="Reproducir">
-                    <i class="fas fa-play" id="playIcon"></i>
+                <button class="widget-collapse-btn" id="widgetCollapseBtn" aria-label="Minimizar reproductor">
+                    <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="volume-container">
-                    <i class="fas fa-volume-up"></i>
-                    <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.8" aria-label="Volumen">
+            </div>
+
+            <div class="widget-main-content">
+                <div class="widget-album-art" id="widgetCoverContainer">
+                    <img id="widgetCover" src="" alt="Portada" style="display: none;">
+                    <i class="fas fa-radio" id="widgetDefaultIcon"></i>
+                </div>
+                <div class="widget-track-info">
+                    <span class="widget-track-title" id="widgetTrackTitle">Radio Neptuno</span>
+                    <span class="widget-track-artist" id="widgetTrackArtist">Señal Online</span>
                 </div>
             </div>
-            
-            <audio id="zenoAudio" preload="none"></audio>
-        </section>
+
+            <div class="widget-controls">
+                <button id="widgetPlayBtn" class="widget-btn-play" aria-label="Reproducir">
+                    <i class="fas fa-play" id="widgetPlayIcon"></i>
+                </button>
+                <div class="widget-volume-container">
+                    <button id="widgetMuteBtn" class="widget-mute-btn" aria-label="Silenciar">
+                        <i class="fas fa-volume-up" id="widgetVolumeIcon"></i>
+                    </button>
+                    <input type="range" id="widgetVolumeSlider" min="0" max="1" step="0.05" value="0.8" aria-label="Volumen">
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Elemento de audio oculto -->
+    <audio id="zenoAudio" preload="none"></audio>
 
     <footer class="site-footer">
         <div class="footer-container">
