@@ -91,6 +91,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Manejar navegación desde enlaces del footer con data-section
+    document.querySelectorAll('.footer-links a[data-section]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sectionId = link.getAttribute('data-section');
+            showSection(sectionId);
+        });
+    });
+
+    // Manejar clic en el logo del header para volver al inicio
+    const logoLink = document.querySelector('.logo a');
+    if (logoLink) {
+        logoLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('inicio');
+        });
+    }
+
     // Manejar botón "Volver" y navegación del historial
     window.addEventListener('popstate', (e) => {
         if (e.state) {

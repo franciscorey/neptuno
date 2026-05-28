@@ -7,9 +7,8 @@ __pycache__/
 *.exe
 *.dll
 *.so
-*.a
-*.out
 *.class
+*.out
 
 # Dependencies
 node_modules/
@@ -23,27 +22,34 @@ venv/
 dist/
 build/
 target/
+.gradle/
+
+# Python specific
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.so
+.coverage
+coverage/
+htmlcov/
+.mypy_cache/
+.pytest_cache/
+
+# Logs and temp files
 *.log
 *.tmp
 *.swp
 *.swo
 
-# Editors and IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# System files
+# OS generated files
 .DS_Store
 Thumbs.db
 
-# Coverage and testing
-coverage/
-htmlcov/
-.coverage
-.mypy_cache/
-.pytest_cache/
+# Editors
+.vscode/
+.idea/
 
 # Compressed files
 *.zip
