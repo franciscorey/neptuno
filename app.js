@@ -740,4 +740,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     */
+
+    // Funcionalidad del botón CTA "Escuchar Ahora" en el Hero
+    const ctaEscucharAhora = document.getElementById('ctaEscucharAhora');
+    if (ctaEscucharAhora && radioWidget) {
+        ctaEscucharAhora.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Expandir el widget si está minimizado
+            if (radioWidget.classList.contains('widget-minimized')) {
+                radioWidget.classList.remove('widget-minimized');
+                radioWidget.classList.add('widget-expanded');
+            }
+            
+            // Iniciar reproducción si no está sonando
+            if (!isPlaying) {
+                if (widgetMiniStatus) widgetMiniStatus.textContent = "CONECTANDO...";
+                
+                audio.play()
+                    .then(() => {
+                        isPlaying = true;
+                        widgetPlayIcon.classList.replace('fa-play', 'fa-pause');
+                        if (widgetMiniStatus) widgetMiniStatus.textContent = "ON";
+                        if (widgetLiveBadge) widgetLiveBadge.style.display = 'inline-block';
+                        
+                        // Iniciar la consulta de metadatos cuando empiece a sonar
+                        fetchZenoMetadata();
+                        metadataTimer = setInterval(fetchZenoMetadata, ZENO_CONFIG.updateInterval);
+                    })
+                    .catch(error => {
+                        console.error("Error al reproducir el stream:", error);
+                        if (widgetMiniStatus) widgetMiniStatus.textContent = "ERROR";
+                    });
+            }
+        });
+    }
 });
