@@ -30,11 +30,9 @@ C. Sincronización de Metadata (Programación)
 
 Para una experiencia moderna, el widget debe ser capaz de mostrar información dinámica basada en tu infraestructura actual:
 
-Fuente de Datos: El widget debe consumir directamente el archivo JSON programacion.json ya existente en el sitio para obtener los datos de la parrilla programática.
+Fuente de Datos: El widget debe consumir directamente de la seccion programación ya existente en el sitio para obtener los datos de la parrilla programática tanto hora actual como texto informativo con el nombre del programa en curso.
 
-Reloj interno: Implementar una función que rastree la hora actual (usando la zona horaria local de Chile) para identificar qué programa está activo en la sección de programación.
-
-Actualización dinámica: El texto informativo del widget debe extraerse automáticamente de la estructura del JSON al presionar el botón de reproducción o al cambiar el programa según la hora.
+Reloj interno: Implementar una función similar a la que destaca el bloque programatico actual, que rastree la hora actual (usando la zona horaria local de Chile) para identificar qué programa está activo en la sección de programación.
 
 3. Consideraciones de Diseño y Estilo
 
