@@ -28,21 +28,21 @@ Controles: Implementar funciones básicas de play, pause y mute. Se recomienda l
 
 C. Sincronización de Metadata (Programación)
 
-Para una experiencia moderna, el widget debe ser capaz de mostrar información dinámica:
+Para una experiencia moderna, el widget debe ser capaz de mostrar información dinámica basada en tu infraestructura actual:
 
-Reloj interno: Implementar una función que rastree la hora actual (usando la zona horaria local de la emisora).
+Fuente de Datos: El widget debe consumir directamente el archivo JSON programacion.json ya existente en el sitio para obtener los datos de la parrilla programática.
 
-Parrilla de datos: Utilizar un array o objeto JSON para mapear los programas según horarios.
+Reloj interno: Implementar una función que rastree la hora actual (usando la zona horaria local de Chile) para identificar qué programa está activo en la sección de programación.
 
-Actualización dinámica: El texto informativo del widget debe actualizarse automáticamente al presionar el botón de reproducción o al cambiar el programa según la hora.
+Actualización dinámica: El texto informativo del widget debe extraerse automáticamente de la estructura del JSON al presionar el botón de reproducción o al cambiar el programa según la hora.
 
-3. Consideraciones de Diseño
+3. Consideraciones de Diseño y Estilo
+
+Respeto a la identidad visual: NO se deben realizar cambios a la paleta de colores actual del sitio. La estética del nuevo widget debe heredar y respetar los colores y estilos definidos en el CSS del proyecto original.
 
 Adaptabilidad: El widget debe ser responsivo, ajustando su tamaño y disposición dependiendo del ancho de pantalla del dispositivo.
 
-Animaciones: Utilizar transiciones (CSS transitions) en los cambios de estado para evitar saltos visuales bruscos, proporcionando una sensación de "novedad" y calidad.
-
-Feedback Visual: Es vital incluir indicadores de estado ("En vivo" o "Pausado") mediante elementos gráficos que denoten actividad (por ejemplo, animaciones de pulso).
+Feedback Visual: Incluir indicadores de estado ("En vivo" o "Pausado") mediante elementos gráficos que denoten actividad (por ejemplo, animaciones de pulso).
 
 Eficiencia de Texto: Implementar un efecto de marquesina (texto deslizante) para asegurar que los nombres largos de los programas sean legibles en el contenedor del widget.
 
