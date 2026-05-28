@@ -242,8 +242,8 @@ ul {
     border-block: 2px solid var(--border-color);
     padding: 15px var(--spacing);
     position: sticky;
-    top: 70px; /* Justo debajo del header */
-    z-index: 90;
+    top: 0; /* Pegado justo debajo del header que tiene z-index 100 */
+    z-index: 99; /* Menor que el header (100) pero mayor que el contenido */
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
