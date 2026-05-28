@@ -91,6 +91,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Manejar navegación desde enlaces del footer con data-section
+    document.querySelectorAll('.footer-links a[data-section]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sectionId = link.getAttribute('data-section');
+            showSection(sectionId);
+        });
+    });
+
+    // Manejar clic en el logo del header para volver al inicio
+    const logoLink = document.querySelector('.logo a');
+    if (logoLink) {
+        logoLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('inicio');
+        });
+    }
+
+    // Inicializar: Asegurar que las secciones Explora y Sobre Radio sean visibles en inicio
+    // Esto corrige el problema de que no se muestran al cargar la página por primera vez
+    const aboutSection = document.getElementById('sobre-radio');
+    const exploreSection = document.getElementById('explora');
+    if (aboutSection) aboutSection.classList.add('active');
+    if (exploreSection) exploreSection.classList.add('active');
+
     // Manejar botón "Volver" y navegación del historial
     window.addEventListener('popstate', (e) => {
         if (e.state) {
