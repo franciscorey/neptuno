@@ -68,25 +68,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // Actualizar clase active en el menú de navegación
     function updateNavActive(sectionId) {
         // Remover active de TODOS los enlaces de navegación (header y footer)
-        document.querySelectorAll('.main-nav a, .footer-links a, .explore-card').forEach(link => {
+        document.querySelectorAll('.main-nav a, .footer-links a').forEach(link => {
             link.classList.remove('active');
         });
         
         // Mapeo especial para la sección de detalle de noticia
         const navSectionId = sectionId === 'noticia-detalle' ? 'noticias' : sectionId;
         
-        // Buscar y activar enlaces en header, footer y explora que coincidan con la sección
-        document.querySelectorAll(`.main-nav a[data-section="${navSectionId}"], .footer-links a[data-section="${navSectionId}"], .explore-card[data-section="${navSectionId}"]`).forEach(link => {
+        // Buscar y activar enlaces en header y footer que coincidan con la sección
+        document.querySelectorAll(`.main-nav a[onclick*="'${navSectionId}'"], .footer-links a[onclick*="'${navSectionId}'"]`).forEach(link => {
             link.classList.add('active');
         });
     }
 
-    // Manejar navegación desde TODOS los enlaces con data-section (header, footer, explora)
-    document.querySelectorAll('[data-section]').forEach(link => {
+    // Manejar navegación desde enlaces del header
+    document.querySelectorAll('.main-nav a').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            const sectionId = link.getAttribute('data-section');
-            showSection(sectionId);
+            const href = link.getAttribute('href');
+            
+            if (href.startsWith('#')) {
+                const sectionId = href.substring(1);
+                showSection(sectionId);
+            }
         });
     });
 
