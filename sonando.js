@@ -1,4 +1,4 @@
-const API_URL = "PEGA_AQUI_TU_URL_APPS_SCRIPT";
+const API_URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnSyvZ4WXJ5krEDMnYKCswrtdd9AZYr_cG6oQNi4UMbdjtgyyx_o0gs8_lx7m_OhQ2ReXjotJd35ICsDejUx5IyCzUSRoJISv2clyyREO1OmcPBN6sar8bIHuYLUjT4xc97LtnUXYA2x0IRPCdtmksacQpo2dh1jcsJnZV8F6lkntwQXhFxQtWVI1H71-4j-nTOvRjUVXpG8meYFP43eACLryPludi_bO1WDaNYAYBsoHBTYOGpVNFFw9guO8jF1DZKsAJqZgtLTusFNZ5g88SNQMjlOcA&lib=Mi5mKru-wWOkeVgG0tHFxFWXJ7hljrEEe";
 
 async function loadSonando() {
 
