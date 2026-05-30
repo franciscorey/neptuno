@@ -1,1 +1,1 @@
-Nothing should be ignored since only source files (.js and .css) are being modified.
+Nothing should be ignored based on the provided file changes. The modified files (sonando.js and styles.css) are source code files that should be tracked in version control.

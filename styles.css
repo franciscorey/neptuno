@@ -1270,10 +1270,22 @@ ul {
 }
 
 .request-form {
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 20px;
     max-width: 600px;
+}
+
+.request-form.is-open {
+    display: flex;
+}
+
+.request-form.is-closed {
+    display: none;
+}
+
+#open-suggest-btn.is-hidden {
+    display: none;
 }
 
 .form-group {
@@ -1533,19 +1545,10 @@ ul {
     padding: 60px 20px;
 }
 
-.loading-state .loader {
-    width: 50px;
-    height: 50px;
-    border: 4px solid var(--secondary-color);
-    border-top: 4px solid var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.loading-state i {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
 }
 
 /* Error State */
@@ -1605,12 +1608,6 @@ ul {
     cursor: not-allowed;
 }
 
-.vote-btn.transmitting {
-    background: var(--secondary-color);
-    border-color: var(--secondary-color);
-    color: white;
-}
-
 .vote-btn.voted {
     background: var(--success-color);
     border-color: var(--success-color);
@@ -1618,20 +1615,6 @@ ul {
 }
 
 /* Indicadores de Movimiento */
-.movement-up {
-    color: var(--success-color);
-}
-
-.movement-down {
-    color: #ff5252;
-}
-
-.movement-new {
-    color: var(--primary-color);
-    font-weight: bold;
-    font-size: 0.6em;
-}
-
 .movement-icon {
     font-size: 0.7em;
     margin-left: 4px;
@@ -1652,50 +1635,8 @@ ul {
     background: rgba(76, 175, 80, 0.2);
     padding: 2px 6px;
     border-radius: 3px;
-}
-
-/* Feedback Container (reemplaza alerts) */
-.feedback-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.feedback-message {
-    padding: 15px 25px;
-    border-radius: 8px;
-    color: white;
-    font-weight: 500;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    animation: slideIn 0.3s ease-out;
-    transition: opacity 0.3s ease;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-.feedback-success {
-    background: var(--success-color);
-}
-
-.feedback-error {
-    background: var(--error-color);
-}
-
-.feedback-info {
-    background: var(--primary-color);
+    font-weight: bold;
+    font-size: 0.8em;
 }
 
 /* Responsive para SONANDO */
@@ -1706,15 +1647,6 @@ ul {
     
     .sidebar-section {
         order: -1;
-    }
-    
-    .feedback-container {
-        left: 20px;
-        right: 20px;
-    }
-    
-    .feedback-message {
-        text-align: center;
     }
 }
 
