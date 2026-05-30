@@ -9,7 +9,6 @@ __pycache__/
 *.so
 *.a
 *.out
-*.class
 
 # Dependencies
 node_modules/
@@ -19,13 +18,11 @@ venv/
 .env.local
 .env.*
 
-# Build directories
-dist/
-build/
-target/
+# Logs and temp files
 *.log
 *.tmp
 *.swp
+*.swo
 
 # Editors
 .vscode/
@@ -34,10 +31,45 @@ target/
 # System files
 .DS_Store
 Thumbs.db
-```
 
-Wait, looking at the modified files again: `['app.js', 'index.html', 'sonando.js', 'styles.css']` - these are all source code files (JavaScript, HTML, CSS) with no build artifacts, dependencies, or temporary files in the changes.
+# Coverage
+coverage/
+htmlcov/
+.coverage
 
-```gitignore
+# Distribution / packaging
+dist/
+build/
+*.tar.gz
+*.zip
 
+# Python specific
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.egg
+
+# Compressed files
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.bz2
+*.tar.xz
+*.tar.zst
 ```
