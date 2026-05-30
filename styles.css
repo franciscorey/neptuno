@@ -1126,6 +1126,26 @@ ul {
     color: var(--primary-color);
     font-weight: bold;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vote-btn {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.vote-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
 }
 
 .new-track {
@@ -1188,6 +1208,57 @@ ul {
 #productos.view-section.active,
 #sonando.view-section.active {
     display: block !important;
+}
+
+/* Formulario de solicitud en Sonando */
+.request-form-container {
+    margin-top: 40px;
+    background-color: var(--surface-color);
+    border-radius: 6px;
+    padding: 25px;
+    border: 1px solid var(--border-color);
+}
+
+.request-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 600px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    background-color: var(--surface-light);
+    color: var(--text-color);
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
 }
 
 /* Sección Sobre Radio - solo visible cuando inicio está activo */

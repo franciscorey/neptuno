@@ -227,6 +227,26 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Formulario de Solicitud de Canciones -->
+                <div class="request-form-container">
+                    <h3 class="sonando-column-title">Solicita tu canción</h3>
+                    <form id="request-form" class="request-form">
+                        <div class="form-group">
+                            <label for="request-artist">Artista</label>
+                            <input type="text" id="request-artist" name="artist" required placeholder="Nombre del artista">
+                        </div>
+                        <div class="form-group">
+                            <label for="request-song">Canción</label>
+                            <input type="text" id="request-song" name="song" required placeholder="Nombre de la canción">
+                        </div>
+                        <div class="form-group">
+                            <label for="request-message">Mensaje (opcional)</label>
+                            <textarea id="request-message" name="message" rows="3" placeholder="Dedicatoria o mensaje especial"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">Enviar Solicitud</button>
+                    </form>
+                </div>
             </div>
         </section>
 
