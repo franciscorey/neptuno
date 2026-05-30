@@ -21,6 +21,7 @@
                 <ul>
                     <li><a href="#" data-section="inicio" class="active">Radio</a></li>
                     <li><a href="#" data-section="programacion">Programación</a></li>
+                    <li><a href="#" data-section="sonando">Sonando</a></li>
                     <li><a href="#" data-section="noticias">Noticias</a></li>
                     <li><a href="#" data-section="productos">Productos</a></li>
                 </ul>
@@ -203,6 +204,32 @@
             </div>
         </section>
 
+        <!-- VISTA: SONANDO -->
+        <section id="sonando" class="sonando-section view-section">
+            <div class="section-container">
+                <div class="section-banner">
+                    <img src="assets/radio.png" alt="Sonando en Radio Neptuno" class="banner-image">
+                </div>
+                <h2 class="section-title">Sonando</h2>
+                <p class="section-subtitle">Lo más sonado y nuevos lanzamientos</p>
+                
+                <div class="sonando-grid">
+                    <div class="sonando-column">
+                        <h3 class="sonando-column-title">Top 10</h3>
+                        <div id="top10-list" class="top10-list">
+                            <!-- Se carga dinámicamente desde sonando.js -->
+                        </div>
+                    </div>
+                    <div class="sonando-column">
+                        <h3 class="sonando-column-title">Nuevos</h3>
+                        <div id="new-list" class="new-list">
+                            <!-- Se carga dinámicamente desde sonando.js -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- VISTA: PUBLICIDAD (siempre visible dentro del main) -->
         <section class="ads-section view-section" id="ads-section">
             <div class="ads-container">
@@ -280,6 +307,7 @@
                 <ul>
                     <li><a href="#" data-section="inicio">Radio</a></li>
                     <li><a href="#" data-section="programacion">Programación</a></li>
+                    <li><a href="#" data-section="sonando">Sonando</a></li>
                     <li><a href="#" data-section="noticias">Noticias</a></li>
                     <li><a href="#" data-section="productos">Productos</a></li>
                 </ul>
@@ -297,6 +325,7 @@
         </div>
     </footer>
 
+    <script src="sonando.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

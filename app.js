@@ -79,6 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const sectionId = link.getAttribute('data-section');
             showSection(sectionId);
+            
+            // Cargar datos dinámicos si es la sección SONANDO
+            if (sectionId === 'sonando' && typeof loadSonando === 'function') {
+                loadSonando();
+            }
         });
     });
     
@@ -97,6 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const sectionId = link.getAttribute('data-section');
             showSection(sectionId);
+            
+            // Cargar datos dinámicos si es la sección SONANDO
+            if (sectionId === 'sonando' && typeof loadSonando === 'function') {
+                loadSonando();
+            }
         });
     });
 
