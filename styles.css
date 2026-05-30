@@ -12,6 +12,7 @@
     --primary-hover: #66BB6A;
     --accent-color: #FF5CFF;     /* Púrpura vibrante para detalles visuales */
     --accent-hover: #FF8AFF;     /* Púrpura más claro para hovers */
+    --success-color: #2E7D32;    /* Verde éxito para votación confirmada */
 
     /* Textos */
     --text-color: #e8ede8;
@@ -1090,6 +1091,14 @@ ul {
     box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
 }
 
+.error-message,
+.no-data {
+    color: var(--text-muted);
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+}
+
 .track-rank {
     font-family: var(--font-title);
     font-size: 1.2rem;
@@ -1146,6 +1155,17 @@ ul {
 .vote-btn:hover {
     background-color: var(--primary-hover);
     transform: translateY(-1px);
+}
+
+.vote-btn:disabled {
+    background-color: var(--text-muted);
+    cursor: not-allowed;
+    transform: none;
+}
+
+.vote-btn.voted {
+    background-color: var(--success-color);
+    cursor: default;
 }
 
 .new-track {
