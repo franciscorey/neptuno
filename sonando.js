@@ -5,6 +5,7 @@ const CACHE_DURATION = 12 * 60 * 60 * 1000;
 
 let sonandoData = null;
 let formOpenedAt = null;
+let previousRanking = []; // Para calcular movimiento
 
 // Función para obtener caché válido
 function getCachedData() {
@@ -20,10 +21,58 @@ function getCachedData() {
     return null;
 }
 
-// Función para guardar en caché
+// Función para guardar en caché incluyendo el ranking anterior
 function saveToCache(data) {
+    // Guardar ranking actual como "previous" para la próxima vez
+    if (data.top10 && data.top10.length > 0) {
+        const sortedTracks = [...data.top10].sort((a, b) => b.votos - a.votos);
+        localStorage.setItem('sonando_previous_ranking', JSON.stringify(sortedTracks.map(t => ({ id: t.id, votos: t.votos }))));
+    }
+    
     localStorage.setItem('sonando_cache', JSON.stringify(data));
     localStorage.setItem('sonando_cache_time', Date.now().toString());
+}
+
+// Función para obtener ranking anterior
+function getPreviousRanking() {
+    const cached = localStorage.getItem('sonando_previous_ranking');
+    if (cached) {
+        return JSON.parse(cached);
+    }
+    return [];
+}
+
+// Función para calcular movimiento de un track
+function getTrackMovement(trackId, currentIndex, currentVotes) {
+    const previous = getPreviousRanking();
+    
+    if (previous.length === 0) {
+        return null; // No hay datos previos
+    }
+    
+    // Buscar track en ranking anterior
+    const prevIndex = previous.findIndex(t => t.id === trackId);
+    
+    if (prevIndex === -1) {
+        return 'new'; // Nuevo ingreso
+    }
+    
+    const prevTrack = previous[prevIndex];
+    
+    // Comparar posiciones
+    if (currentIndex < prevIndex) {
+        return 'up'; // Subió
+    } else if (currentIndex > prevIndex) {
+        return 'down'; // Bajó
+    } else {
+        // Misma posición, comparar votos
+        if (currentVotes > prevTrack.votos) {
+            return 'up'; // Mismos puestos pero más votos
+        } else if (currentVotes < prevTrack.votos) {
+            return 'down';
+        }
+        return 'same'; // Igual
+    }
 }
 
 // Función para verificar si ya votó por un track
@@ -142,21 +191,33 @@ function renderTop10(tracks) {
             const item = document.createElement("div");
             item.className = "track-item";
             
+            // Calcular movimiento
+            const movement = getTrackMovement(track.id, index, track.votos);
+            let movementIcon = '';
+            if (movement === 'up') {
+                movementIcon = '<span class="movement-icon up"><i class="fas fa-arrow-up"></i></span>';
+            } else if (movement === 'down') {
+                movementIcon = '<span class="movement-icon down"><i class="fas fa-arrow-down"></i></span>';
+            } else if (movement === 'new') {
+                movementIcon = '<span class="movement-icon new">NEW</span>';
+            }
+            
             // Verificar si ya votó por este track
             const alreadyVoted = hasVoted(track.id);
-            const voteButtonText = alreadyVoted ? '✓ Señalizado' : '📻 Señalizar';
+            const voteButtonText = alreadyVoted ? '✓ Señalizado' : 'Señalizar';
             const voteButtonDisabled = alreadyVoted ? 'disabled' : '';
             
             item.innerHTML = `
                 <div class="track-rank">
                     ${(index + 1).toString().padStart(2, "0")}
+                    ${movementIcon}
                 </div>
                 <div class="track-info">
                     <div class="track-title">${track.cancion}</div>
                     <div class="track-artist">${track.artista}</div>
                 </div>
                 <div class="track-votes">
-                    <span class="vote-count">📻 ${track.votos}</span>
+                    <span class="vote-count"><i class="fas fa-broadcast-tower"></i> ${track.votos}</span>
                     <button class="vote-btn ${alreadyVoted ? 'voted' : ''}" onclick="voteTrack(event, '${track.id}')" ${voteButtonDisabled}>${voteButtonText}</button>
                 </div>
             `;
@@ -228,8 +289,8 @@ async function voteTrack(event, trackId) {
             // Actualizar el contador de votos sin recargar toda la lista
             const trackItem = voteBtn.closest('.track-item');
             const voteCount = trackItem.querySelector('.vote-count');
-            const currentVotes = parseInt(voteCount.textContent.replace('📻 ', ''));
-            voteCount.textContent = `📻 ${currentVotes + 1}`;
+            const currentVotes = parseInt(voteCount.textContent.replace(/<i[^>]*><\/i>\s*/, ''));
+            voteCount.innerHTML = `<i class="fas fa-broadcast-tower"></i> ${currentVotes + 1}`;
             voteBtn.innerHTML = '<i class="fas fa-check"></i> Señal recibida';
             voteBtn.classList.add('voted');
             
