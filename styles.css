@@ -1069,6 +1069,13 @@ ul {
     padding-bottom: 10px;
 }
 
+.request-form-intro {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
 .top10-list,
 .new-list {
     display: flex;
@@ -1237,6 +1244,25 @@ ul {
     border-radius: 6px;
     padding: 25px;
     border: 1px solid var(--border-color);
+    position: relative;
+}
+
+.btn-close-form {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 8px;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+
+.btn-close-form:hover {
+    color: var(--primary-color);
 }
 
 .request-form {
