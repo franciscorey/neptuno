@@ -233,11 +233,19 @@
                     <h3 class="sonando-column-title">Solicita tu canción</h3>
                     <form id="request-form" class="request-form">
                         <div class="form-group">
-                            <label for="request-artist">Artista</label>
+                            <label for="request-name">Nombre (opcional)</label>
+                            <input type="text" id="request-name" name="name" placeholder="Tu nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="request-email">Email (opcional)</label>
+                            <input type="email" id="request-email" name="email" placeholder="tu@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="request-artist">Artista *</label>
                             <input type="text" id="request-artist" name="artist" required placeholder="Nombre del artista">
                         </div>
                         <div class="form-group">
-                            <label for="request-song">Canción</label>
+                            <label for="request-song">Canción *</label>
                             <input type="text" id="request-song" name="song" required placeholder="Nombre de la canción">
                         </div>
                         <div class="form-group">
