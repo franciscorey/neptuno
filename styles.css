@@ -1668,3 +1668,40 @@ ul {
         text-align: center;
     }
 }
+
+/* Feedback no intrusivo para SONANDO */
+#sonando-feedback {
+    display: none;
+    padding: 15px 25px;
+    margin: 20px 0;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease-out;
+    transition: opacity 0.3s ease;
+}
+
+#sonando-feedback.sonando-feedback.success {
+    background-color: var(--success-color);
+}
+
+#sonando-feedback.sonando-feedback.error {
+    background-color: #d32f2f;
+}
+
+#sonando-feedback.sonando-feedback.info {
+    background-color: var(--primary-color);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

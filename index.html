@@ -230,27 +230,31 @@
 
                 <!-- Formulario de Solicitud de Canciones -->
                 <div class="request-form-container">
-                    <h3 class="sonando-column-title">Solicita tu canción</h3>
-                    <form id="request-form" class="request-form">
+                    <h3 class="sonando-column-title">¿Tienes una señal para Neptuno?</h3>
+                    <button type="button" id="open-suggest-btn" class="btn-primary">Transmitir sugerencia</button>
+                    <form id="request-form" class="request-form" style="display: none;">
+                        <!-- Honeypot field (oculto) -->
+                        <input type="text" id="honeypot-website" name="website" class="honeypot" tabindex="-1" autocomplete="off" style="display: none;">
+                        
                         <div class="form-group">
                             <label for="request-name">Nombre (opcional)</label>
-                            <input type="text" id="request-name" name="name" placeholder="Tu nombre">
+                            <input type="text" id="request-name" name="name" placeholder="Tu nombre" maxlength="100">
                         </div>
                         <div class="form-group">
                             <label for="request-email">Email (opcional)</label>
-                            <input type="email" id="request-email" name="email" placeholder="tu@email.com">
+                            <input type="email" id="request-email" name="email" placeholder="tu@email.com" maxlength="100">
                         </div>
                         <div class="form-group">
                             <label for="request-artist">Artista *</label>
-                            <input type="text" id="request-artist" name="artist" required placeholder="Nombre del artista">
+                            <input type="text" id="request-artist" name="artist" required placeholder="Nombre del artista" maxlength="100">
                         </div>
                         <div class="form-group">
                             <label for="request-song">Canción *</label>
-                            <input type="text" id="request-song" name="song" required placeholder="Nombre de la canción">
+                            <input type="text" id="request-song" name="song" required placeholder="Nombre de la canción" maxlength="100">
                         </div>
                         <div class="form-group">
                             <label for="request-message">Mensaje (opcional)</label>
-                            <textarea id="request-message" name="message" rows="3" placeholder="Dedicatoria o mensaje especial"></textarea>
+                            <textarea id="request-message" name="message" rows="3" placeholder="Dedicatoria o mensaje especial" maxlength="300"></textarea>
                         </div>
                         <button type="submit" class="btn-primary">Enviar Solicitud</button>
                     </form>
