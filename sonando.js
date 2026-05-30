@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbyYEu3baFA7PgdE2F-89zOPaMzwv9aMsnR0DmMhjMXK1vIWRz241dUKYLgxjzOKzEsX/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxMmITY5Bf7euH5iYwFKFACLc_7Dt0GxLDtY_rc6cy_CVqAK1WJZ_ynM955qqWc9Sfl/exec";
 
 // Configuración de caché (12 horas)
 const CACHE_DURATION = 12 * 60 * 60 * 1000;
