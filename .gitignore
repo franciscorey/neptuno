@@ -1,4 +1,3 @@
-```
 # Compiled and build artifacts
 *.pyc
 __pycache__/
@@ -22,26 +21,36 @@ node_modules/
 target/
 .gradle/
 
+# Editors
+.vscode/
+.idea/
+
 # Logs and temp files
 *.log
 *.tmp
 *.swp
-*.swo
 
 # Environment
 .env
 .env.local
 .env.*
 
-# Editors
-.vscode/
-.idea/
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
-# System files
+# Build outputs
+dist/
+build/
+target/
+
+# OS generated files
 .DS_Store
 Thumbs.db
 
-# Coverage
+# Coverage reports
 coverage/
 htmlcov/
 .coverage
@@ -69,4 +78,3 @@ htmlcov/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
-```

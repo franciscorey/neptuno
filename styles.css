@@ -1492,3 +1492,179 @@ ul {
         flex-direction: column;
     }
 }
+
+/* ========================================
+   SECCIÓN SONANDO - Estilos adicionales
+   ======================================== */
+
+/* Loading State */
+.loading-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.loading-state .loader {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--secondary-color);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.error-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--error-color);
+}
+
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+/* Formulario Colapsable */
+.form-collapsed {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.form-expanded {
+    max-height: 800px;
+    transition: max-height 0.5s ease-in;
+}
+
+/* Honeypot (anti-spam) */
+.honeypot {
+    display: none !important;
+    visibility: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+}
+
+/* Botones de Votación */
+.vote-btn {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 8px 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.vote-btn:hover:not(:disabled) {
+    background: var(--primary-color);
+    color: white;
+}
+
+.vote-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.vote-btn.transmitting {
+    background: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: white;
+}
+
+.vote-btn.voted {
+    background: var(--success-color);
+    border-color: var(--success-color);
+    color: white;
+}
+
+/* Indicadores de Movimiento */
+.movement-up {
+    color: var(--success-color);
+}
+
+.movement-down {
+    color: var(--error-color);
+}
+
+.movement-new {
+    color: var(--primary-color);
+}
+
+.movement-icon {
+    font-size: 0.7em;
+    margin-left: 4px;
+}
+
+/* Feedback Container (reemplaza alerts) */
+.feedback-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.feedback-message {
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    animation: slideIn 0.3s ease-out;
+    transition: opacity 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.feedback-success {
+    background: var(--success-color);
+}
+
+.feedback-error {
+    background: var(--error-color);
+}
+
+.feedback-info {
+    background: var(--primary-color);
+}
+
+/* Responsive para SONANDO */
+@media (max-width: 768px) {
+    .sonando-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .sidebar-section {
+        order: -1;
+    }
+    
+    .feedback-container {
+        left: 20px;
+        right: 20px;
+    }
+    
+    .feedback-message {
+        text-align: center;
+    }
+}
