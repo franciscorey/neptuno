@@ -5,7 +5,6 @@ const CACHE_DURATION = 12 * 60 * 60 * 1000;
 
 let sonandoData = null;
 let formOpenedAt = null;
-let previousRanking = []; // Para calcular movimiento
 
 // Función para obtener caché válido
 function getCachedData() {
@@ -94,6 +93,14 @@ function registerVote(trackId) {
     localStorage.setItem(`voted_track_${trackId}`, Date.now().toString());
 }
 
+// Función para escapar HTML y prevenir XSS
+function escapeHTML(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 // Función para mostrar feedback no intrusivo
 function showFeedback(message, type = 'success') {
     // Crear o reutilizar elemento de feedback
@@ -109,7 +116,7 @@ function showFeedback(message, type = 'success') {
         }
     }
     
-    feedbackEl.textContent = message;
+    feedbackEl.innerHTML = message;
     feedbackEl.className = `sonando-feedback ${type}`;
     feedbackEl.style.display = 'block';
     
@@ -213,8 +220,8 @@ function renderTop10(tracks) {
                     ${movementIcon}
                 </div>
                 <div class="track-info">
-                    <div class="track-title">${track.cancion}</div>
-                    <div class="track-artist">${track.artista}</div>
+                    <div class="track-title">${escapeHTML(track.cancion)}</div>
+                    <div class="track-artist">${escapeHTML(track.artista)}</div>
                 </div>
                 <div class="track-votes">
                     <span class="vote-count"><i class="fas fa-broadcast-tower"></i> ${track.votos}</span>
@@ -241,8 +248,8 @@ function renderNuevos(tracks) {
         item.className = "new-track";
         item.innerHTML = `
             <div class="new-badge">NEW SIGNAL</div>
-            <div class="track-title">${track.cancion}</div>
-            <div class="track-artist">${track.artista}</div>
+            <div class="track-title">${escapeHTML(track.cancion)}</div>
+            <div class="track-artist">${escapeHTML(track.artista)}</div>
         `;
         container.appendChild(item);
     });
@@ -253,7 +260,8 @@ async function voteTrack(event, trackId) {
     event.preventDefault();
     event.stopPropagation();
     
-    const voteBtn = event.target;
+    // Usar currentTarget en lugar de target para evitar problemas si se hace click en el icono
+    const voteBtn = event.currentTarget;
     
     // Verificar cooldown
     if (hasVoted(trackId)) {
@@ -289,7 +297,9 @@ async function voteTrack(event, trackId) {
             // Actualizar el contador de votos sin recargar toda la lista
             const trackItem = voteBtn.closest('.track-item');
             const voteCount = trackItem.querySelector('.vote-count');
-            const currentVotes = parseInt(voteCount.textContent.replace(/<i[^>]*><\/i>\s*/, ''));
+            // Extraer número de forma más robusta
+            const votesMatch = voteCount.textContent.match(/\d+/);
+            const currentVotes = votesMatch ? parseInt(votesMatch[0]) : 0;
             voteCount.innerHTML = `<i class="fas fa-broadcast-tower"></i> ${currentVotes + 1}`;
             voteBtn.innerHTML = '<i class="fas fa-check"></i> Señal recibida';
             voteBtn.classList.add('voted');
@@ -366,11 +376,11 @@ function initRequestForm() {
                     },
                     body: JSON.stringify({
                         action: 'request',
-                        artist: artist,
-                        song: song,
-                        message: message,
-                        email: email,
-                        name: name,
+                        artist: escapeHTML(artist),
+                        song: escapeHTML(song),
+                        message: escapeHTML(message),
+                        email: escapeHTML(email),
+                        name: escapeHTML(name),
                         timestamp: new Date().toISOString()
                     })
                 });
@@ -383,12 +393,13 @@ function initRequestForm() {
                     // Resetear tiempo de apertura
                     formOpenedAt = Date.now();
                     
-                    // Cerrar formulario después de 2 segundos
+                    // Cerrar formulario después de 2 segundos usando clases
                     setTimeout(() => {
-                        requestForm.style.display = 'none';
+                        requestForm.classList.remove('is-open');
+                        requestForm.classList.add('is-closed');
                         const openSuggestBtn = document.getElementById('open-suggest-btn');
                         if (openSuggestBtn) {
-                            openSuggestBtn.style.display = 'inline-block';
+                            openSuggestBtn.classList.remove('is-hidden');
                         }
                     }, 2000);
                 } else {
@@ -410,7 +421,7 @@ function initRequestForm() {
 document.addEventListener('DOMContentLoaded', () => {
     initRequestForm();
     
-    // Manejar botón de abrir/cerrar formulario
+    // Manejar botón de abrir/cerrar formulario usando clases
     const openSuggestBtn = document.getElementById('open-suggest-btn');
     const closeSuggestBtn = document.getElementById('close-suggest-btn');
     const requestForm = document.getElementById('request-form');
@@ -420,9 +431,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Registrar momento de apertura
             formOpenedAt = Date.now();
             
-            // Mostrar formulario y ocultar botón
-            requestForm.style.display = 'flex';
-            openSuggestBtn.style.display = 'none';
+            // Mostrar formulario y ocultar botón usando clases
+            requestForm.classList.remove('is-closed');
+            requestForm.classList.add('is-open');
+            openSuggestBtn.classList.add('is-hidden');
             
             // Scroll suave hacia el formulario
             requestForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -432,9 +444,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Manejar botón de cerrar formulario
     if (closeSuggestBtn && requestForm && openSuggestBtn) {
         closeSuggestBtn.addEventListener('click', () => {
-            // Ocultar formulario y mostrar botón
-            requestForm.style.display = 'none';
-            openSuggestBtn.style.display = 'inline-block';
+            // Ocultar formulario y mostrar botón usando clases
+            requestForm.classList.remove('is-open');
+            requestForm.classList.add('is-closed');
+            openSuggestBtn.classList.remove('is-hidden');
             
             // Limpiar formulario
             requestForm.reset();
