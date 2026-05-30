@@ -276,17 +276,9 @@ async function voteTrack(event, trackId) {
     voteBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Transmitiendo...';
     
     try {
-        // Usar POST con body JSON para compatibilidad con Google Apps Script
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                action: 'vote',
-                trackId: trackId
-            })
-        });
+        // Usar GET con query params para compatibilidad con Google Apps Script
+        const url = `${API_URL}?action=vote&trackId=${encodeURIComponent(trackId)}`;
+        const response = await fetch(url);
         
         const result = await response.json();
         
@@ -368,22 +360,16 @@ function initRequestForm() {
             submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Transmitiendo...';
             
             try {
-                // Enviar a Google Apps Script
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'request',
-                        artist: escapeHTML(artist),
-                        song: escapeHTML(song),
-                        message: escapeHTML(message),
-                        email: escapeHTML(email),
-                        name: escapeHTML(name),
-                        timestamp: new Date().toISOString()
-                    })
-                });
+                // Enviar a Google Apps Script usando GET con query params
+                const url =
+                    `${API_URL}?action=request` +
+                    `&artist=${encodeURIComponent(artist)}` +
+                    `&song=${encodeURIComponent(song)}` +
+                    `&message=${encodeURIComponent(message)}` +
+                    `&email=${encodeURIComponent(email)}` +
+                    `&name=${encodeURIComponent(name)}`;
+                
+                const response = await fetch(url);
                 
                 const result = await response.json();
                 
