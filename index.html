@@ -221,7 +221,7 @@
                         </div>
                     </div>
                     <div class="sonando-column">
-                        <h3 class="sonando-column-title">Nuevos</h3>
+                        <h3 class="sonando-column-title">Nuevos Ingresos</h3>
                         <div id="new-list" class="new-list">
                             <!-- Se carga dinámicamente desde sonando.js -->
                         </div>
@@ -231,8 +231,12 @@
                 <!-- Formulario de Solicitud de Canciones -->
                 <div class="request-form-container">
                     <h3 class="sonando-column-title">¿Tienes una señal para Neptuno?</h3>
-                    <button type="button" id="open-suggest-btn" class="btn-primary">Transmitir sugerencia</button>
+                    <p class="request-form-intro">Comparte esa canción que quieres escuchar en nuestra frecuencia.</p>
+                    <button type="button" id="open-suggest-btn" class="btn-primary"><i class="fas fa-broadcast-tower"></i> Transmitir sugerencia</button>
                     <form id="request-form" class="request-form" style="display: none;">
+                        <!-- Botón para cerrar formulario -->
+                        <button type="button" id="close-suggest-btn" class="btn-close-form"><i class="fas fa-times"></i></button>
+                        
                         <!-- Honeypot field (oculto) -->
                         <input type="text" id="honeypot-website" name="website" class="honeypot" tabindex="-1" autocomplete="off" style="display: none;">
                         

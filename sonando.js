@@ -204,7 +204,7 @@ async function voteTrack(event, trackId) {
     
     // Deshabilitar botón temporalmente para evitar múltiples clicks
     voteBtn.disabled = true;
-    voteBtn.innerHTML = '⏳ Transmitiendo...';
+    voteBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Transmitiendo...';
     
     try {
         // Usar POST con body JSON para compatibilidad con Google Apps Script
@@ -230,11 +230,11 @@ async function voteTrack(event, trackId) {
             const voteCount = trackItem.querySelector('.vote-count');
             const currentVotes = parseInt(voteCount.textContent.replace('📻 ', ''));
             voteCount.textContent = `📻 ${currentVotes + 1}`;
-            voteBtn.innerHTML = '✓ Señal recibida';
+            voteBtn.innerHTML = '<i class="fas fa-check"></i> Señal recibida';
             voteBtn.classList.add('voted');
             
             // Mostrar feedback no intrusivo
-            showFeedback('✓ Señal recibida correctamente');
+            showFeedback('<i class="fas fa-check-circle"></i> Señal recibida correctamente', 'success');
             
             // Recargar la lista completa después de 2 segundos para mostrar el ranking actualizado
             setTimeout(async () => {
@@ -245,7 +245,7 @@ async function voteTrack(event, trackId) {
         }
     } catch (error) {
         console.error("Error al votar:", error);
-        showFeedback('Se perdió la transmisión. Intenta nuevamente.', 'error');
+        showFeedback('<i class="fas fa-exclamation-triangle"></i> Se perdió la transmisión. Intenta nuevamente.', 'error');
         voteBtn.disabled = false;
         voteBtn.innerHTML = originalText;
     }
@@ -294,7 +294,7 @@ function initRequestForm() {
             
             // Deshabilitar botón durante el envío
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '⏳ Transmitiendo...';
+            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Transmitiendo...';
             
             try {
                 // Enviar a Google Apps Script
@@ -317,16 +317,25 @@ function initRequestForm() {
                 const result = await response.json();
                 
                 if (result.success) {
-                    showFeedback('✓ Señal recibida correctamente');
+                    showFeedback('<i class="fas fa-check-circle"></i> Señal recibida correctamente', 'success');
                     requestForm.reset();
                     // Resetear tiempo de apertura
                     formOpenedAt = Date.now();
+                    
+                    // Cerrar formulario después de 2 segundos
+                    setTimeout(() => {
+                        requestForm.style.display = 'none';
+                        const openSuggestBtn = document.getElementById('open-suggest-btn');
+                        if (openSuggestBtn) {
+                            openSuggestBtn.style.display = 'inline-block';
+                        }
+                    }, 2000);
                 } else {
                     throw new Error(result.message || 'Error al enviar la solicitud');
                 }
             } catch (error) {
                 console.error("Error al enviar solicitud:", error);
-                showFeedback('Se perdió la transmisión. Intenta nuevamente.', 'error');
+                showFeedback('<i class="fas fa-exclamation-triangle"></i> Se perdió la transmisión. Intenta nuevamente.', 'error');
             } finally {
                 // Restaurar botón
                 submitBtn.disabled = false;
@@ -342,6 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Manejar botón de abrir/cerrar formulario
     const openSuggestBtn = document.getElementById('open-suggest-btn');
+    const closeSuggestBtn = document.getElementById('close-suggest-btn');
     const requestForm = document.getElementById('request-form');
     
     if (openSuggestBtn && requestForm) {
@@ -357,9 +367,22 @@ document.addEventListener('DOMContentLoaded', () => {
             requestForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
     }
+    
+    // Manejar botón de cerrar formulario
+    if (closeSuggestBtn && requestForm && openSuggestBtn) {
+        closeSuggestBtn.addEventListener('click', () => {
+            // Ocultar formulario y mostrar botón
+            requestForm.style.display = 'none';
+            openSuggestBtn.style.display = 'inline-block';
+            
+            // Limpiar formulario
+            requestForm.reset();
+        });
+    }
 });
 
 // Exportar para uso externo
 window.loadSonando = loadSonando;
 window.voteTrack = voteTrack;
 window.initRequestForm = initRequestForm;
+window.showFeedback = showFeedback;
