@@ -75,22 +75,33 @@ function getTrackMovement(trackId, currentIndex, currentVotes) {
 }
 
 // Función para verificar si ya votó por un track
-function hasVoted(trackId) {
-    const voted = localStorage.getItem(`voted_track_${trackId}`);
+function hasVoted(trackId, source) {
+
+    const voted =
+        localStorage.getItem(
+            `voted_${source}_${trackId}`
+        );
+
     if (voted) {
+
         const voteTime = parseInt(voted);
         const now = Date.now();
-        // Cooldown de 24 horas
+
         if (now - voteTime < 24 * 60 * 60 * 1000) {
             return true;
         }
     }
+
     return false;
 }
 
 // Función para registrar voto
-function registerVote(trackId) {
-    localStorage.setItem(`voted_track_${trackId}`, Date.now().toString());
+function registerVote(trackId, source) {
+
+    localStorage.setItem(
+        `voted_${source}_${trackId}`,
+        Date.now().toString()
+    );
 }
 
 // Función para escapar HTML y prevenir XSS
@@ -210,7 +221,7 @@ function renderTop10(tracks) {
             }
             
             // Verificar si ya votó por este track
-            const alreadyVoted = hasVoted(track.id);
+            const alreadyVoted =     hasVoted(track.id, "TOP_10");
             const voteButtonText = alreadyVoted ? '✓ Señalizado' : 'Señalizar';
             const voteButtonDisabled = alreadyVoted ? 'disabled' : '';
             
@@ -249,7 +260,8 @@ function renderNuevos(tracks) {
         const item = document.createElement("div");
         item.className = "new-track";
 
-        const alreadyVoted = hasVoted(track.id);
+        const alreadyVoted =
+    hasVoted(track.id, "NUEVOS");
 
         item.innerHTML = `
             <div class="new-badge">NEW SIGNAL</div>
@@ -292,7 +304,7 @@ async function voteTrack(event, trackId, source) {
     const voteBtn = event.target.closest('button');
     
     // Verificar cooldown
-    if (hasVoted(trackId)) {
+    if (hasVoted(trackId, source)) {
         showFeedback('Ya señalaste esta canción', 'info');
         return;
     }
@@ -312,7 +324,7 @@ async function voteTrack(event, trackId, source) {
         
         if (result.success) {
             // Registrar voto en localStorage para cooldown
-            registerVote(trackId);
+            registerVote(trackId, source);
             
             // Actualizar el contador de votos sin recargar toda la lista
             const trackItem =
