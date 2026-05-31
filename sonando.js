@@ -1,7 +1,7 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbxMmITY5Bf7euH5iYwFKFACLc_7Dt0GxLDtY_rc6cy_CVqAK1WJZ_ynM955qqWc9Sfl/exec";
 
 // Configuración de caché (12 horas)
-const CACHE_DURATION = 12 * 60 * 60 * 1000;
+const CACHE_DURATION = 60000;
 
 let sonandoData = null;
 let formOpenedAt = null;
@@ -225,7 +225,7 @@ function renderTop10(tracks) {
                 </div>
                 <div class="track-votes">
                     <span class="vote-count"><i class="fas fa-broadcast-tower"></i> ${track.votos}</span>
-                    <button class="vote-btn ${alreadyVoted ? 'voted' : ''}" onclick="voteTrack(event, '${track.id}')" ${voteButtonDisabled}>${voteButtonText}</button>
+                    <button class="vote-btn ${alreadyVoted ? 'voted' : ''}" onclick="voteTrack(event, '${track.id}', 'TOP_10')" ${voteButtonDisabled}>${voteButtonText}</button>
                 </div>
             `;
             container.appendChild(item);
@@ -271,7 +271,7 @@ function renderNuevos(tracks) {
 
                 <button
                     class="vote-btn ${alreadyVoted ? 'voted' : ''}"
-                    onclick="voteTrack(event,'${track.id}')"
+                    onclick="voteTrack(event,'${track.id}','NUEVOS')"
                     ${alreadyVoted ? 'disabled' : ''}>
                     ${alreadyVoted ? '✓ Impulsado' : 'Impulsar'}
                 </button>
@@ -284,12 +284,12 @@ function renderNuevos(tracks) {
 }
 
 // Función para votar por un track (con evento pasado como parámetro)
-async function voteTrack(event, trackId) {
+async function voteTrack(event, trackId, source) {
     event.preventDefault();
     event.stopPropagation();
     
     // Usar currentTarget en lugar de target para evitar problemas si se hace click en el icono
-    const voteBtn = event.currentTarget;
+    const voteBtn = event.target.closest('button');
     
     // Verificar cooldown
     if (hasVoted(trackId)) {
@@ -305,7 +305,7 @@ async function voteTrack(event, trackId) {
     
     try {
         // Usar GET con query params para compatibilidad con Google Apps Script
-        const url = `${API_URL}?action=vote&trackId=${encodeURIComponent(trackId)}`;
+        const url =     `${API_URL}?action=vote`     + `&trackId=${encodeURIComponent(trackId)}`     + `&source=${encodeURIComponent(source)}`;
         const response = await fetch(url);
         
         const result = await response.json();
