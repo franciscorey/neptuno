@@ -233,24 +233,52 @@ function renderTop10(tracks) {
 }
 
 function renderNuevos(tracks) {
+
     const container = document.querySelector("#new-list");
-    
-    // Limpiar contenedor antes de renderizar para evitar duplicados
+
     container.innerHTML = "";
 
     if (!tracks || tracks.length === 0) {
-        container.innerHTML = '<p class="no-data">No hay nuevos lanzamientos</p>';
+        container.innerHTML =
+            '<p class="no-data">No hay nuevos lanzamientos</p>';
         return;
     }
 
     tracks.forEach(track => {
+
         const item = document.createElement("div");
         item.className = "new-track";
+
+        const alreadyVoted = hasVoted(track.id);
+
         item.innerHTML = `
             <div class="new-badge">NEW SIGNAL</div>
-            <div class="track-title">${escapeHTML(track.cancion)}</div>
-            <div class="track-artist">${escapeHTML(track.artista)}</div>
+
+            <div class="track-title">
+                ${escapeHTML(track.cancion)}
+            </div>
+
+            <div class="track-artist">
+                ${escapeHTML(track.artista)}
+            </div>
+
+            <div class="track-votes">
+
+                <span class="vote-count">
+                    <i class="fas fa-broadcast-tower"></i>
+                    ${track.votos || 0}
+                </span>
+
+                <button
+                    class="vote-btn ${alreadyVoted ? 'voted' : ''}"
+                    onclick="voteTrack(event,'${track.id}')"
+                    ${alreadyVoted ? 'disabled' : ''}>
+                    ${alreadyVoted ? '✓ Impulsado' : 'Impulsar'}
+                </button>
+
+            </div>
         `;
+
         container.appendChild(item);
     });
 }
@@ -287,7 +315,9 @@ async function voteTrack(event, trackId) {
             registerVote(trackId);
             
             // Actualizar el contador de votos sin recargar toda la lista
-            const trackItem = voteBtn.closest('.track-item');
+            const trackItem =
+    voteBtn.closest('.track-item') ||
+    voteBtn.closest('.new-track');
             const voteCount = trackItem.querySelector('.vote-count');
             // Extraer número de forma más robusta
             const votesMatch = voteCount.textContent.match(/\d+/);
