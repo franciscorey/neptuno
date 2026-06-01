@@ -400,6 +400,8 @@ async function initData() {
 
     await loadSchedule();
 
+    await loadNews();
+
 }
     
 async function loadProgramas() {
