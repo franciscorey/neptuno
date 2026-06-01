@@ -164,6 +164,10 @@ document.addEventListener('DOMContentLoaded', () => {
         allNews =
             data.noticias || [];
 
+        console.log(data);
+        console.log(data.noticias);
+        console.log(allNews);
+
         renderNewsList();
 
     } catch (error) {
