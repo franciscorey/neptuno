@@ -9,8 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let allNews = [];
     let currentArticleId = null;
 
-    let programsData = [];
+    let programasData = [];
+    let programacionData = [];
     let scheduleData = [];
+
+    const API_URL =
+'https://script.google.com/macros/s/AKfycbxMmITY5Bf7euH5iYwFKFACLc_7Dt0GxLDtY_rc6cy_CVqAK1WJZ_ynM955qqWc9Sfl/exec';
 
     // Función principal para mostrar secciones
     function showSection(sectionId, articleId = null) {
@@ -357,57 +361,63 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Inicializar carga de noticias
-    loadNews();
-    // Inicializar carga de programacion
-    loadSchedule();
+    // Inicializar carga de datos
+    initData();
     
 // ==========================================
 // SISTEMA DE PROGRAMACIÓN DINÁMICA
 // ==========================================
 
+async function initData() {
+
+    await loadProgramas();
+
+    await loadSchedule();
+
+}
+    
+async function loadProgramas() {
+
+    try {
+
+        const response =
+            await fetch(`${API_URL}?action=programas`);
+
+        const data =
+            await response.json();
+
+        programasData =
+            data.programas || [];
+
+    } catch(error) {
+
+        console.error(
+            'Error cargando programas:',
+            error
+        );
+    }
+}
+
 async function loadSchedule() {
 
     try {
 
-        const API_URL =
-        'https://script.google.com/macros/s/AKfycbxMmITY5Bf7euH5iYwFKFACLc_7Dt0GxLDtY_rc6cy_CVqAK1WJZ_ynM955qqWc9Sfl/exec';
+        const response =
+            await fetch(`${API_URL}?action=programacion`);
 
-        const [
-            programsResponse,
-            scheduleResponse
-        ] = await Promise.all([
+        const data =
+            await response.json();
 
-            fetch(
-                `${API_URL}?action=programas`
-            ),
+        programacionData =
+            data.programacion || [];
 
-            fetch(
-                `${API_URL}?action=programacion`
-            )
-
-        ]);
-
-        const programsJson =
-            await programsResponse.json();
-
-        const scheduleJson =
-            await scheduleResponse.json();
-
-        programsData =
-            programsJson.programas || [];
-
-        scheduleData =
-            scheduleJson.programacion || [];
+        mergeScheduleData();
 
         renderSchedule();
 
         updateLiveSchedule();
 
-        setInterval(
-            updateLiveSchedule,
-            60000
-        );
+        setInterval(updateLiveSchedule, 60000);
 
     } catch(error) {
 
@@ -415,52 +425,56 @@ async function loadSchedule() {
             'Error cargando programación:',
             error
         );
-
     }
+}
 
+function mergeScheduleData() {
+
+    const programasMap = {};
+
+    programasData.forEach(programa => {
+
+        programasMap[programa.id] = programa;
+    });
+
+    scheduleData = programacionData.map(item => ({
+
+        ...item,
+
+        ...(programasMap[item.programa_id] || {})
+    }));
 }
 
 function renderSchedule() {
 
-    const grid =
+    const container =
         document.querySelector('.schedule-grid');
 
-    if (!grid) return;
+    if (!container) return;
 
-    grid.innerHTML = '';
+    container.innerHTML =
+        scheduleData.map(item => `
 
-    scheduleData.forEach(slot => {
+        <div
+            class="schedule-card"
+            data-start="${item.inicio}"
+            data-end="${item.fin}"
+        >
 
-        const programa =
-            programsData.find(
-                p => p.id === slot.programa_id
-            );
+            <span class="time">
+                <i class="fas ${item.icono}"></i>
+                ${item.inicio} - ${item.fin}
+            </span>
 
-        if (!programa) return;
+            <h3>${item.nombre}</h3>
 
-        grid.innerHTML += `
-            <div
-                class="schedule-card"
-                data-start="${slot.inicio}"
-                data-end="${slot.fin}"
-                data-programa="${programa.id}"
-            >
+            <p>${item.descripcion}</p>
 
-                <span class="time">
-                    <i class="fas ${programa.icono}"></i>
-                    ${slot.inicio} - ${slot.fin}
-                </span>
+        </div>
 
-                <h3>${programa.nombre}</h3>
-
-                <p>${programa.descripcion}</p>
-
-            </div>
-        `;
-
-    });
-
+    `).join('');
 }
+    
 
 function isCurrentProgram(
     currentMinutes,
