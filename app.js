@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let allNews = [];
     let currentArticleId = null;
 
+    let programsData = [];
+    let scheduleData = [];
+
     // Función principal para mostrar secciones
     function showSection(sectionId, articleId = null) {
         // Ocultar todas las secciones con clase view-section
@@ -356,115 +359,265 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicializar carga de noticias
     loadNews();
+    // Inicializar carga de programacion
+    loadSchedule();
     
-    // ==========================================
-    // SISTEMA DE PROGRAMACIÓN EN VIVO
-    // ==========================================
-    function updateLiveSchedule() {
-        const now = new Date();
-        // Convertimos la hora actual del sistema a minutos totales transcurridos en el día
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+// ==========================================
+// SISTEMA DE PROGRAMACIÓN DINÁMICA
+// ==========================================
 
-        const scheduleCards = document.querySelectorAll('.schedule-card');
+async function loadSchedule() {
 
-        scheduleCards.forEach(card => {
-            const startStr = card.getAttribute('data-start');
-            const endStr = card.getAttribute('data-end');
+    try {
 
-            if (!startStr || !endStr) return;
+        const [programsResponse, scheduleResponse] =
+            await Promise.all([
+                fetch('programas.json'),
+                fetch('programacion.json')
+            ]);
 
-            // Desestructuramos y convertimos "HH:MM" a números
-            const [startHours, startSplitMinutes] = startStr.split(':').map(Number);
-            let [endHours, endSplitMinutes] = endStr.split(':').map(Number);
+        programsData =
+            await programsResponse.json();
 
-            const startMinutes = startHours * 60 + startSplitMinutes;
-            
-            // Caso especial: Si el programa termina a las 00:00, equivale al final del día (minuto 1440)
-            if (endHours === 0 && endSplitMinutes === 0) {
-                endHours = 24;
-            }
-            const endMinutes = endHours * 60 + endSplitMinutes;
+        scheduleData =
+            await scheduleResponse.json();
 
-            // Buscamos si la tarjeta ya posee el badge de "Al Aire"
-            const existingBadge = card.querySelector('.current-badge');
+        renderSchedule();
 
-            // Evaluamos si la hora actual cae dentro del rango del bloque
-            if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
-                // Activa el diseño destacado de la tarjeta
-                card.classList.add('current');
-                
-                // Si el badge no existe, lo creamos e insertamos dinámicamente
-                if (!existingBadge) {
-                    const badge = document.createElement('span');
-                    badge.classList.add('current-badge');
-                    badge.textContent = 'Al Aire';
-                    card.appendChild(badge);
-                }
-            } else {
-                // Remueve el diseño destacado y el badge si el bloque ya pasó o no ha empezado
-                card.classList.remove('current');
-                if (existingBadge) {
-                    existingBadge.remove();
-                }
-            }
-        });
-        
-        // Actualizar también el widget flotante
-        updateWidgetSchedule(currentMinutes);
+        updateLiveSchedule();
+
+        setInterval(
+            updateLiveSchedule,
+            60000
+        );
+
+    } catch(error) {
+
+        console.error(
+            'Error cargando programación:',
+            error
+        );
+
     }
-    
-    // Función para actualizar la información del widget flotante
-    function updateWidgetSchedule(currentMinutes) {
-        const scheduleCards = document.querySelectorAll('.schedule-card');
-        let currentShow = null;
-        
-        scheduleCards.forEach(card => {
-            const startStr = card.getAttribute('data-start');
-            const endStr = card.getAttribute('data-end');
-            
-            if (!startStr || !endStr) return;
-            
-            const [startHours, startSplitMinutes] = startStr.split(':').map(Number);
-            let [endHours, endSplitMinutes] = endStr.split(':').map(Number);
-            
-            const startMinutes = startHours * 60 + startSplitMinutes;
-            
-            if (endHours === 0 && endSplitMinutes === 0) {
-                endHours = 24;
+
+}
+
+function renderSchedule() {
+
+    const grid =
+        document.querySelector('.schedule-grid');
+
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    scheduleData.forEach(slot => {
+
+        const programa =
+            programsData.find(
+                p => p.id === slot.programa_id
+            );
+
+        if (!programa) return;
+
+        grid.innerHTML += `
+            <div
+                class="schedule-card"
+                data-start="${slot.inicio}"
+                data-end="${slot.fin}"
+                data-programa="${programa.id}"
+            >
+
+                <span class="time">
+                    <i class="fas ${programa.icono}"></i>
+                    ${slot.inicio} - ${slot.fin}
+                </span>
+
+                <h3>${programa.nombre}</h3>
+
+                <p>${programa.descripcion}</p>
+
+            </div>
+        `;
+
+    });
+
+}
+
+function isCurrentProgram(
+    currentMinutes,
+    startMinutes,
+    endMinutes
+) {
+
+    if (endMinutes < startMinutes) {
+
+        return (
+            currentMinutes >= startMinutes ||
+            currentMinutes < endMinutes
+        );
+
+    }
+
+    return (
+        currentMinutes >= startMinutes &&
+        currentMinutes < endMinutes
+    );
+
+}
+
+function updateLiveSchedule() {
+
+    const now = new Date();
+
+    const currentMinutes =
+        now.getHours() * 60 +
+        now.getMinutes();
+
+    const cards =
+        document.querySelectorAll('.schedule-card');
+
+    let currentShow = null;
+
+    cards.forEach(card => {
+
+        const startStr =
+            card.dataset.start;
+
+        const endStr =
+            card.dataset.end;
+
+        if (!startStr || !endStr)
+            return;
+
+        const [startHour, startMinute] =
+            startStr
+                .split(':')
+                .map(Number);
+
+        const [endHour, endMinute] =
+            endStr
+                .split(':')
+                .map(Number);
+
+        const startMinutes =
+            startHour * 60 +
+            startMinute;
+
+        const endMinutes =
+            endHour * 60 +
+            endMinute;
+
+        const badge =
+            card.querySelector(
+                '.current-badge'
+            );
+
+        const active =
+            isCurrentProgram(
+                currentMinutes,
+                startMinutes,
+                endMinutes
+            );
+
+        if (active) {
+
+            card.classList.add(
+                'current'
+            );
+
+            if (!badge) {
+
+                const badgeElement =
+                    document.createElement(
+                        'span'
+                    );
+
+                badgeElement.classList.add(
+                    'current-badge'
+                );
+
+                badgeElement.textContent =
+                    'Al Aire';
+
+                card.appendChild(
+                    badgeElement
+                );
+
             }
-            const endMinutes = endHours * 60 + endSplitMinutes;
-            
-            if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
-                const showName = card.querySelector('h3')?.textContent || 'Programa en curso';
-                currentShow = {
-                    name: showName,
-                    start: startStr,
-                    end: endStr
-                };
-            }
-        });
-        
-        // Actualizar elementos del widget
-        const widgetShowName = document.getElementById('widgetShowName');
-        const widgetShowTime = document.getElementById('widgetShowTime');
-        const widgetMiniStatus = document.getElementById('widgetMiniStatus');
-        
-        if (widgetShowName && widgetShowTime && widgetMiniStatus) {
-            if (currentShow) {
-                widgetShowName.textContent = currentShow.name;
-                widgetShowTime.textContent = `${currentShow.start} - ${currentShow.end}`;
-            } else {
-                widgetShowName.textContent = 'Sin programación';
-                widgetShowTime.textContent = '--:-- - --:--';
-            }
+
+            currentShow = {
+
+                name:
+                    card.querySelector(
+                        'h3'
+                    )?.textContent,
+
+                start:
+                    startStr,
+
+                end:
+                    endStr
+
+            };
+
+        } else {
+
+            card.classList.remove(
+                'current'
+            );
+
+            if (badge)
+                badge.remove();
+
         }
+
+    });
+
+    updateWidgetSchedule(
+        currentShow
+    );
+
+}
+
+function updateWidgetSchedule(
+    currentShow
+) {
+
+    const widgetShowName =
+        document.getElementById(
+            'widgetShowName'
+        );
+
+    const widgetShowTime =
+        document.getElementById(
+            'widgetShowTime'
+        );
+
+    if (
+        !widgetShowName ||
+        !widgetShowTime
+    ) return;
+
+    if (currentShow) {
+
+        widgetShowName.textContent =
+            currentShow.name;
+
+        widgetShowTime.textContent =
+            `${currentShow.start} - ${currentShow.end}`;
+
+    } else {
+
+        widgetShowName.textContent =
+            'Sin programación';
+
+        widgetShowTime.textContent =
+            '--:-- - --:--';
+
     }
 
-    // Inicializa la verificación inmediatamente al cargar la web
-    updateLiveSchedule();
-
-    // Configura un temporizador para comprobar el horario automáticamente cada 60 segundos (60000 ms)
-    setInterval(updateLiveSchedule, 60000);
+}
     
     // ==========================================
     // PARÁMETROS DE CONFIGURACIÓN DE TU EMISORA
