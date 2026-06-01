@@ -150,16 +150,35 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Cargar noticias desde JSON
     async function loadNews() {
-        try {
-            const response = await fetch('noticias.json');
-            allNews = await response.json();
-            renderNewsList();
-        } catch (error) {
-            console.error('Error cargando noticias:', error);
-            document.getElementById('newsGrid').innerHTML = 
-                '<p style="text-align:center;color:var(--text-muted);">No se pudieron cargar las noticias.</p>';
-        }
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}?action=noticias`
+            );
+
+        const data =
+            await response.json();
+
+        allNews =
+            data.noticias || [];
+
+        renderNewsList();
+
+    } catch (error) {
+
+        console.error(
+            'Error cargando noticias:',
+            error
+        );
+
+        document.getElementById(
+            'newsGrid'
+        ).innerHTML =
+            '<p style="text-align:center;color:var(--text-muted);">No se pudieron cargar las noticias.</p>';
     }
+}
 
     // Renderizar lista de noticias en la sección principal
     function renderNewsList() {
@@ -193,9 +212,18 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // Si aún no hemos cargado las noticias, hacerlo ahora
             if (allNews.length === 0) {
-                const response = await fetch('noticias.json');
-                allNews = await response.json();
-            }
+
+    const response =
+        await fetch(
+            `${API_URL}?action=noticias`
+        );
+
+    const data =
+        await response.json();
+
+    allNews =
+        data.noticias || [];
+}
 
             const article = allNews.find(item => item.id === articleId);
             currentArticleId = articleId;
@@ -453,10 +481,11 @@ function renderSchedule() {
     if (!container) return;
 
     container.innerHTML =
-        scheduleData.map(item => `
+        scheduleData.map((item, index) => `
 
         <div
             class="schedule-card"
+            data-index="${index}"
             data-start="${item.inicio}"
             data-end="${item.fin}"
         >
@@ -506,29 +535,32 @@ function updateLiveSchedule() {
         now.getHours() * 60 +
         now.getMinutes();
 
-    const cards =
-        document.querySelectorAll('.schedule-card');
-
     let currentShow = null;
 
-    cards.forEach(card => {
+    document
+        .querySelectorAll('.schedule-card')
+        .forEach(card => {
 
-        const startStr =
-            card.dataset.start;
+            card.classList.remove('current');
 
-        const endStr =
-            card.dataset.end;
+            const badge =
+                card.querySelector(
+                    '.current-badge'
+                );
 
-        if (!startStr || !endStr)
-            return;
+            if (badge)
+                badge.remove();
+        });
+
+    scheduleData.forEach((programa, index) => {
 
         const [startHour, startMinute] =
-            startStr
+            programa.inicio
                 .split(':')
                 .map(Number);
 
         const [endHour, endMinute] =
-            endStr
+            programa.fin
                 .split(':')
                 .map(Number);
 
@@ -540,11 +572,6 @@ function updateLiveSchedule() {
             endHour * 60 +
             endMinute;
 
-        const badge =
-            card.querySelector(
-                '.current-badge'
-            );
-
         const active =
             isCurrentProgram(
                 currentMinutes,
@@ -552,57 +579,31 @@ function updateLiveSchedule() {
                 endMinutes
             );
 
-        if (active) {
+        if (!active) return;
 
-            card.classList.add(
-                'current'
+        currentShow = programa;
+
+        const card =
+            document.querySelectorAll(
+                '.schedule-card'
+            )[index];
+
+        if (!card) return;
+
+        card.classList.add('current');
+
+        const badge =
+            document.createElement(
+                'span'
             );
 
-            if (!badge) {
+        badge.className =
+            'current-badge';
 
-                const badgeElement =
-                    document.createElement(
-                        'span'
-                    );
+        badge.textContent =
+            'Al Aire';
 
-                badgeElement.classList.add(
-                    'current-badge'
-                );
-
-                badgeElement.textContent =
-                    'Al Aire';
-
-                card.appendChild(
-                    badgeElement
-                );
-
-            }
-
-            currentShow = {
-
-                name:
-                    card.querySelector(
-                        'h3'
-                    )?.textContent,
-
-                start:
-                    startStr,
-
-                end:
-                    endStr
-
-            };
-
-        } else {
-
-            card.classList.remove(
-                'current'
-            );
-
-            if (badge)
-                badge.remove();
-
-        }
+        card.appendChild(badge);
 
     });
 
@@ -634,10 +635,10 @@ function updateWidgetSchedule(
     if (currentShow) {
 
         widgetShowName.textContent =
-            currentShow.name;
+            currentShow.nombre;
 
         widgetShowTime.textContent =
-            `${currentShow.start} - ${currentShow.end}`;
+            `${currentShow.inicio} - ${currentShow.fin}`;
 
     } else {
 
