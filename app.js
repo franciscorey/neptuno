@@ -154,9 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
 
         const response =
-            await fetch(
-                `${API_URL}?action=noticias`
-            );
+            await fetch(`${API_URL}?action=noticias`);
 
         const data =
             await response.json();
@@ -164,11 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         allNews =
             data.noticias || [];
 
-        console.log(data);
-        console.log(data.noticias);
-        console.log(allNews);
-        console.log('allNews:', allNews);
-console.log('newsGrid:', document.getElementById('newsGrid'));
+        console.log('Noticias cargadas:', allNews);
 
         renderNewsList();
 
@@ -179,10 +173,8 @@ console.log('newsGrid:', document.getElementById('newsGrid'));
             error
         );
 
-        document.getElementById(
-            'newsGrid'
-        ).innerHTML =
-            '<p style="text-align:center;color:var(--text-muted);">No se pudieron cargar las noticias.</p>';
+        document.getElementById('newsGrid').innerHTML =
+            '<p>No se pudieron cargar las noticias.</p>';
     }
 }
 
