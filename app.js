@@ -167,6 +167,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(data);
         console.log(data.noticias);
         console.log(allNews);
+        console.log('allNews:', allNews);
+console.log('newsGrid:', document.getElementById('newsGrid'));
 
         renderNewsList();
 
