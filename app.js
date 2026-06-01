@@ -370,17 +370,35 @@ async function loadSchedule() {
 
     try {
 
-        const [programsResponse, scheduleResponse] =
-            await Promise.all([
-                fetch('programas.json'),
-                fetch('programacion.json')
-            ]);
+        const API_URL =
+        'https://script.google.com/macros/s/AKfycbxMmITY5Bf7euH5iYwFKFACLc_7Dt0GxLDtY_rc6cy_CVqAK1WJZ_ynM955qqWc9Sfl/exec';
 
-        programsData =
+        const [
+            programsResponse,
+            scheduleResponse
+        ] = await Promise.all([
+
+            fetch(
+                `${API_URL}?action=programas`
+            ),
+
+            fetch(
+                `${API_URL}?action=programacion`
+            )
+
+        ]);
+
+        const programsJson =
             await programsResponse.json();
 
-        scheduleData =
+        const scheduleJson =
             await scheduleResponse.json();
+
+        programsData =
+            programsJson.programas || [];
+
+        scheduleData =
+            scheduleJson.programacion || [];
 
         renderSchedule();
 
