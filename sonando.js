@@ -4,7 +4,6 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxMmITY5Bf7euH5iYwFKFAC
 const CACHE_DURATION = 60000;
 
 let sonandoData = null;
-let formOpenedAt = null;
 
 // Función para obtener caché válido
 function getCachedData() {
@@ -360,21 +359,12 @@ async function voteTrack(event, trackId, source) {
 function initRequestForm() {
     const requestForm = document.getElementById('request-form');
     if (requestForm) {
-        // Registrar momento de apertura del formulario
-        formOpenedAt = Date.now();
         
         requestForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const submitBtn = requestForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.innerHTML;
-            
-            // Validar tiempo mínimo de envío (3 segundos)
-            const timeSinceOpen = Date.now() - formOpenedAt;
-            if (timeSinceOpen < 3000) {
-                showFeedback('Por favor espera unos segundos antes de enviar', 'error');
-                return;
-            }
             
             // Obtener valores del formulario
             const artist = document.getElementById('request-artist').value.trim();
@@ -416,20 +406,14 @@ function initRequestForm() {
                 const result = await response.json();
                 
                 if (result.success) {
-                    showFeedback('<i class="fas fa-check-circle"></i> Señal recibida correctamente', 'success');
-                    requestForm.reset();
-                    // Resetear tiempo de apertura
-                    formOpenedAt = Date.now();
-                    
-                    // Cerrar formulario después de 2 segundos usando clases
+                    showFeedback(
+                        '<i class="fas fa-check-circle"></i> Señal recibida correctamente',
+                        'success'
+                        );
+
                     setTimeout(() => {
-                        requestForm.classList.remove('is-open');
-                        requestForm.classList.add('is-closed');
-                        const openSuggestBtn = document.getElementById('open-suggest-btn');
-                        if (openSuggestBtn) {
-                            openSuggestBtn.classList.remove('is-hidden');
-                        }
-                    }, 2000);
+                        requestForm.reset();
+                    }, 1500);
                 } else {
                     throw new Error(result.message || 'Error al enviar la solicitud');
                 }
@@ -448,39 +432,7 @@ function initRequestForm() {
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
     initRequestForm();
-    
-    // Manejar botón de abrir/cerrar formulario usando clases
-    const openSuggestBtn = document.getElementById('open-suggest-btn');
-    const closeSuggestBtn = document.getElementById('close-suggest-btn');
-    const requestForm = document.getElementById('request-form');
-    
-    if (openSuggestBtn && requestForm) {
-        openSuggestBtn.addEventListener('click', () => {
-            // Registrar momento de apertura
-            formOpenedAt = Date.now();
-            
-            // Mostrar formulario y ocultar botón usando clases
-            requestForm.classList.remove('is-closed');
-            requestForm.classList.add('is-open');
-            openSuggestBtn.classList.add('is-hidden');
-            
-            // Scroll suave hacia el formulario
-            requestForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
-    }
-    
-    // Manejar botón de cerrar formulario
-    if (closeSuggestBtn && requestForm && openSuggestBtn) {
-        closeSuggestBtn.addEventListener('click', () => {
-            // Ocultar formulario y mostrar botón usando clases
-            requestForm.classList.remove('is-open');
-            requestForm.classList.add('is-closed');
-            openSuggestBtn.classList.remove('is-hidden');
-            
-            // Limpiar formulario
-            requestForm.reset();
-        });
-    }
+
 });
 
 // Exportar para uso externo
