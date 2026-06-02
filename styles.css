@@ -756,6 +756,7 @@ ul {
     padding: 10px 24px;
     font-weight: bold;
     border-radius: 4px;
+    cursor: pointer;
 }
 
 .btn-secondary:hover {
@@ -1242,50 +1243,25 @@ ul {
 }
 
 /* Formulario de solicitud en Sonando */
+
 .request-form-container {
     margin-top: 40px;
     background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     padding: 25px;
-    border: 1px solid var(--border-color);
-    position: relative;
 }
 
-.btn-close-form {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: transparent;
-    border: none;
+.request-form-intro {
+    margin-bottom: 20px;
     color: var(--text-muted);
-    cursor: pointer;
-    padding: 8px;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
-    z-index: 10;
-}
-
-.btn-close-form:hover {
-    color: var(--primary-color);
 }
 
 .request-form {
-    display: none;
+    display: flex;
     flex-direction: column;
     gap: 20px;
     max-width: 600px;
-}
-
-.request-form.is-open {
-    display: flex;
-}
-
-.request-form.is-closed {
-    display: none;
-}
-
-#open-suggest-btn.is-hidden {
-    display: none;
 }
 
 .form-group {
@@ -1295,7 +1271,7 @@ ul {
 }
 
 .form-group label {
-    font-weight: bold;
+    font-weight: 600;
     color: var(--text-color);
     font-size: 0.9rem;
 }
@@ -1305,11 +1281,11 @@ ul {
     padding: 12px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
-    font-family: var(--font-body);
-    font-size: 1rem;
     background-color: var(--surface-light);
     color: var(--text-color);
-    transition: border-color 0.2s;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: border-color .2s ease;
 }
 
 .form-group input:focus,
@@ -1320,7 +1296,28 @@ ul {
 
 .form-group textarea {
     resize: vertical;
-    min-height: 80px;
+    min-height: 100px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.btn-secondary {
+    padding: 12px 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.btn-secondary:hover {
+    border-color: var(--primary-color);
 }
 
 /* Sección Sobre Radio - solo visible cuando inicio está activo */
