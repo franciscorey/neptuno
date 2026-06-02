@@ -541,6 +541,25 @@ ul {
     }
 }
 
+/* NEPTUNO TV */
+.neptuno-tv-section {
+    padding: 60px 20px;
+    background: var(--surface-color);
+}
+
+.tv-player {
+    margin-top: 25px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.tv-player iframe {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: none;
+}
+
 /* SOBRE LA RADIO */
 .about-section {
     background-color: var(--surface-light);
