@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         newsGrid.innerHTML = allNews.map(news => `
             <article class="news-card" data-id="${news.id}">
-                <div class="news-img-placeholder" style="background-image: url('${news.imagen}'); background-size: cover; background-position: center;">
+                <div class="news-img-placeholder" style="background-image: url('assets/noticias/${news.imagen}'); background-size: cover; background-position: center;">
                     ${!news.imagen ? '<i class="far fa-newspaper"></i>' : ''}
                 </div>
                 <div class="news-body">
@@ -268,7 +268,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Crear imagen del artículo
             const img = document.createElement('img');
-            img.src = article.imagen || '';
+            img.src = article.imagen
+                ? `assets/noticias/${article.imagen}`
+                : '';
             img.alt = article.titulo || 'Imagen del artículo';
             img.className = 'article-image';
             articleContainer.appendChild(img);
