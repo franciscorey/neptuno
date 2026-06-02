@@ -190,40 +190,104 @@
                 </div>
 
                 <!-- Formulario de Solicitud de Canciones -->
-                <div class="request-form-container">
-                    <h3 class="sonando-column-title">¿Tienes una señal para Neptuno?</h3>
-                    <p class="request-form-intro">Comparte esa canción que quieres escuchar en nuestra frecuencia.</p>
-                    <button type="button" id="open-suggest-btn" class="btn-primary"><i class="fas fa-broadcast-tower"></i> Transmitir sugerencia</button>
-                    <form id="request-form" class="request-form">
-                        <!-- Botón para cerrar formulario -->
-                        <button type="button" id="close-suggest-btn" class="btn-close-form"><i class="fas fa-times"></i></button>
-                        
-                        <!-- Honeypot field (oculto) -->
-                        <input type="text" id="honeypot-website" name="website" class="honeypot" tabindex="-1" autocomplete="off" style="display: none;">
-                        
-                        <div class="form-group">
-                            <label for="request-name">Nombre (opcional)</label>
-                            <input type="text" id="request-name" name="name" placeholder="Tu nombre" maxlength="100">
-                        </div>
-                        <div class="form-group">
-                            <label for="request-email">Email (opcional)</label>
-                            <input type="email" id="request-email" name="email" placeholder="tu@email.com" maxlength="100">
-                        </div>
-                        <div class="form-group">
-                            <label for="request-artist">Artista *</label>
-                            <input type="text" id="request-artist" name="artist" required placeholder="Nombre del artista" maxlength="100">
-                        </div>
-                        <div class="form-group">
-                            <label for="request-song">Canción *</label>
-                            <input type="text" id="request-song" name="song" required placeholder="Nombre de la canción" maxlength="100">
-                        </div>
-                        <div class="form-group">
-                            <label for="request-message">Mensaje (opcional)</label>
-                            <textarea id="request-message" name="message" rows="3" placeholder="Dedicatoria o mensaje especial" maxlength="300"></textarea>
-                        </div>
-                        <button type="submit" class="btn-primary">Enviar Solicitud</button>
-                    </form>
-                </div>
+	            <div class="request-form-container">
+	               <h3 class="sonando-column-title">
+	                  ¿Tienes una señal para Neptuno?
+	               </h3>
+	               <p class="request-form-intro">
+	                  Comparte esa canción que quieres escuchar en nuestra frecuencia.
+	               </p>
+	               <form id="request-form" class="request-form is-open">
+	                  <!-- Honeypot -->
+	                  <input
+	                     type="text"
+	                     id="honeypot-website"
+	                     name="website"
+	                     class="honeypot"
+	                     tabindex="-1"
+	                     autocomplete="off"
+	                     style="display:none;"
+	                     >
+	                  <div class="form-group">
+	                     <label for="request-name">
+	                     Nombre (opcional)
+	                     </label>
+	                     <input
+	                        type="text"
+	                        id="request-name"
+	                        name="name"
+	                        placeholder="Tu nombre"
+	                        maxlength="100"
+	                        >
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="request-email">
+	                     Email (opcional)
+	                     </label>
+	                     <input
+	                        type="email"
+	                        id="request-email"
+	                        name="email"
+	                        placeholder="tu@email.com"
+	                        maxlength="100"
+	                        >
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="request-artist">
+	                     Artista *
+	                     </label>
+	                     <input
+	                        type="text"
+	                        id="request-artist"
+	                        name="artist"
+	                        required
+	                        placeholder="Nombre del artista"
+	                        maxlength="100"
+	                        >
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="request-song">
+	                     Canción *
+	                     </label>
+	                     <input
+	                        type="text"
+	                        id="request-song"
+	                        name="song"
+	                        required
+	                        placeholder="Nombre de la canción"
+	                        maxlength="100"
+	                        >
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="request-message">
+	                     Mensaje (opcional)
+	                     </label>
+	                     <textarea
+	                        id="request-message"
+	                        name="message"
+	                        rows="3"
+	                        placeholder="Dedicatoria o mensaje especial"
+	                        maxlength="300"
+	                        ></textarea>
+	                  </div>
+	                  <div class="form-actions">
+	                     <button
+	                        type="submit"
+	                        class="btn-primary"
+	                        >
+	                     <i class="fas fa-paper-plane"></i>
+	                     Enviar sugerencia
+	                     </button>
+	                     <button
+	                        type="reset"
+	                        class="btn-secondary"
+	                        >
+	                     <i class="fas fa-eraser"></i>
+	                     Limpiar campos
+	                     </button>
+	                  </div>
+	               </form>
+	            </div>
             </div>
         </section>
 
