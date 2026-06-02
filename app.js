@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     
     // Estado de la aplicación
+    let appData = {
+    noticias: [],
+    programas: [],
+    programacion: []
+    };
     let currentSection = 'inicio';
     let allNews = [];
     let currentArticleId = null;
@@ -15,6 +20,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const API_URL =
 'https://script.google.com/macros/s/AKfycbxMmITY5Bf7euH5iYwFKFACLc_7Dt0GxLDtY_rc6cy_CVqAK1WJZ_ynM955qqWc9Sfl/exec';
+
+    // Precarga
+    async function preloadData() {
+
+    try {
+
+        const [
+            noticiasRes,
+            programasRes,
+            programacionRes
+        ] = await Promise.all([
+
+            fetch(`${API_URL}?action=noticias`),
+            fetch(`${API_URL}?action=programas`),
+            fetch(`${API_URL}?action=programacion`)
+
+        ]);
+
+        const noticiasData =
+            await noticiasRes.json();
+
+        const programasDataApi =
+            await programasRes.json();
+
+        const programacionDataApi =
+            await programacionRes.json();
+
+        appData.noticias =
+            noticiasData.noticias || [];
+
+        appData.programas =
+            programasDataApi.programas || [];
+
+        appData.programacion =
+            programacionDataApi.programacion || [];
+
+        console.log('Datos precargados');
+
+    } catch(error) {
+
+        console.error(
+            'Error precargando datos',
+            error
+        );
+
+    }
+}
 
     // Función principal para mostrar secciones
     function showSection(sectionId, articleId = null) {
@@ -147,36 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // SISTEMA DE NOTICIAS DINÁMICAS
     // ==========================================
-    
-    // Cargar noticias desde JSON
-    async function loadNews() {
-
-    try {
-
-        const response =
-            await fetch(`${API_URL}?action=noticias`);
-
-        const data =
-            await response.json();
-
-        allNews =
-            data.noticias || [];
-
-        console.log('Noticias cargadas:', allNews);
-
-        renderNewsList();
-
-    } catch (error) {
-
-        console.error(
-            'Error cargando noticias:',
-            error
-        );
-
-        document.getElementById('newsGrid').innerHTML =
-            '<p>No se pudieron cargar las noticias.</p>';
-    }
-}
 
     // Renderizar lista de noticias en la sección principal
     function renderNewsList() {
@@ -211,16 +233,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Si aún no hemos cargado las noticias, hacerlo ahora
             if (allNews.length === 0) {
 
-    const response =
-        await fetch(
-            `${API_URL}?action=noticias`
-        );
+    allNews = appData.noticias;
 
-    const data =
-        await response.json();
-
-    allNews =
-        data.noticias || [];
 }
 
             const article = allNews.find(item => item.id === articleId);
@@ -398,12 +412,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function initData() {
 
-    await loadProgramas();
+    await preloadData();
 
-    await loadSchedule();
+    allNews =
+        appData.noticias;
 
-    await loadNews();
+    programasData =
+        appData.programas;
 
+    programacionData =
+        appData.programacion;
+
+    renderNewsList();
+
+    mergeScheduleData();
+
+    renderSchedule();
+
+    updateLiveSchedule();
+
+    setInterval(
+        updateLiveSchedule,
+        60000
+    );
 }
     
 async function loadProgramas() {
