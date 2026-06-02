@@ -71,13 +71,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Solo deben ser visibles cuando estamos en la vista 'inicio'
         const aboutSection = document.getElementById('sobre-radio');
         const exploreSection = document.getElementById('explora');
+        const tvSection = document.getElementById('neptuno-tv');
         
         if (sectionId === 'inicio') {
             if (aboutSection) aboutSection.classList.add('active');
             if (exploreSection) exploreSection.classList.add('active');
+            if (tvSection) tvSection.classList.add('active');
         } else {
             if (aboutSection) aboutSection.classList.remove('active');
             if (exploreSection) exploreSection.classList.remove('active');
+            if (tvSection) tvSection.classList.remove('active');
         }
         
         // Actualizar navegación activa en el menú
@@ -167,8 +170,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Esto corrige el problema de que no se muestran al cargar la página por primera vez
     const aboutSection = document.getElementById('sobre-radio');
     const exploreSection = document.getElementById('explora');
+    const tvSection = document.getElementById('neptuno-tv');
     if (aboutSection) aboutSection.classList.add('active');
     if (exploreSection) exploreSection.classList.add('active');
+    if (tvSection) tvSection.classList.add('active');
 
     // Manejar botón "Volver" y navegación del historial
     window.addEventListener('popstate', (e) => {
