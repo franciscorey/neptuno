@@ -1230,6 +1230,13 @@ ul {
 .vote-btn.voted {
     background-color: var(--success-color);
     cursor: default;
+    animation: votePulse .5s ease;
+}
+
+@keyframes votePulse {
+    0% {transform: scale(1);}
+    50% {transform: scale(1.08);}
+    100% {transform: scale(1);}
 }
 
 /* NUEVOS INGRESOS */
@@ -1266,29 +1273,85 @@ ul {
 
 /* FEEDBACK */
 
-.sonando-feedback {
-    margin: 20px 0;
-    padding: 15px;
-    border-radius: 6px;
-    font-weight: 500;
+#sonando-feedback {
+
+    display: none;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    min-width: 320px;
+    max-width: 90vw;
+
+    padding: 20px 28px;
+
+    border-radius: 10px;
+
+    text-align: center;
+    font-weight: 600;
+
+    z-index: 99999;
+
+    box-shadow:
+        0 12px 40px rgba(0,0,0,.35);
+
+    animation: feedbackPop .25s ease;
 }
 
-.sonando-feedback.success {
-    background: rgba(76, 175, 80, 0.12);
-    border: 1px solid rgba(76, 175, 80, 0.4);
-    color: var(--primary-color);
+#sonando-feedback::before {
+
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,.45);
+
+    z-index: -1;
 }
 
-.sonando-feedback.error {
-    background: rgba(255, 82, 82, 0.12);
-    border: 1px solid rgba(255, 82, 82, 0.4);
+#sonando-feedback.success {
+
+    background: var(--success-color);
+    color: #fff;
 }
 
-.sonando-feedback.info {
-    background: rgba(33, 150, 243, 0.12);
-    border: 1px solid rgba(33, 150, 243, 0.4);
+#sonando-feedback.error {
+
+    background: #d32f2f;
+    color: #fff;
 }
 
+#sonando-feedback.info {
+
+    background: var(--accent-color);
+    color: #fff;
+}
+
+@keyframes feedbackPop {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translate(-50%, -45%)
+            scale(.9);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translate(-50%, -50%)
+            scale(1);
+    }
+}
 /* FORM NOTE */
 
 .request-note {
@@ -1312,6 +1375,10 @@ ul {
         display: flex;
         flex-direction: column;
         align-items: stretch;
+        transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
     }
 
     .track-rank {
@@ -1679,53 +1746,12 @@ ul {
     font-style: italic;
 }
 
-/* Formulario Colapsable */
-.form-collapsed {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-}
-
-.form-expanded {
-    max-height: 800px;
-    transition: max-height 0.5s ease-in;
-}
-
 /* Honeypot (anti-spam) */
 .honeypot {
     display: none !important;
     visibility: hidden !important;
     position: absolute !important;
     left: -9999px !important;
-}
-
-/* Botones de Votación */
-.vote-btn {
-    background: transparent;
-    border: 2px solid var(--primary-color);
-    color: var(--primary-color);
-    padding: 8px 16px;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-}
-
-.vote-btn:hover:not(:disabled) {
-    background: var(--primary-color);
-    color: white;
-}
-
-.vote-btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-.vote-btn.voted {
-    background: var(--success-color);
-    border-color: var(--success-color);
-    color: white;
 }
 
 /* Indicadores de Movimiento */
@@ -1753,44 +1779,7 @@ ul {
     font-size: 0.8em;
 }
 
-/* Responsive para SONANDO */
-@media (max-width: 768px) {
-    .sonando-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .sidebar-section {
-        order: -1;
-    }
-}
-
-/* Feedback no intrusivo para SONANDO */
-#sonando-feedback {
-    display: none;
-    padding: 15px 25px;
-    margin: 20px 0;
-    border-radius: 8px;
-    color: white;
-    font-weight: 500;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    animation: fadeIn 0.3s ease-out;
-    transition: opacity 0.3s ease;
-}
-
-#sonando-feedback.sonando-feedback.success {
-    background-color: var(--success-color);
-}
-
-#sonando-feedback.sonando-feedback.error {
-    background-color: #d32f2f;
-}
-
-#sonando-feedback.sonando-feedback.info {
-    background-color: var(--primary-color);
-}
-
-@keyframes fadeIn {
+@keyframes sonandoFadeIn {
     from {
         opacity: 0;
         transform: translateY(-10px);
