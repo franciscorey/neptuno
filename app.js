@@ -26,35 +26,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
 
-        const [
-            noticiasRes,
-            programasRes,
-            programacionRes
-        ] = await Promise.all([
+        const response =
+            await fetch(`${API_URL}?action=all`);
 
-            fetch(`${API_URL}?action=noticias`),
-            fetch(`${API_URL}?action=programas`),
-            fetch(`${API_URL}?action=programacion`)
-
-        ]);
-
-        const noticiasData =
-            await noticiasRes.json();
-
-        const programasDataApi =
-            await programasRes.json();
-
-        const programacionDataApi =
-            await programacionRes.json();
+        const data =
+            await response.json();
 
         appData.noticias =
-            noticiasData.noticias || [];
+            data.noticias || [];
 
         appData.programas =
-            programasDataApi.programas || [];
+            data.programas || [];
 
         appData.programacion =
-            programacionDataApi.programacion || [];
+            data.programacion || [];
 
         console.log('Datos precargados');
 
