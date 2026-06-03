@@ -1071,7 +1071,7 @@ ul {
 
 /* SONANDO SECTION */
 .sonando-section {
-    background-color: var(--surface-light);
+    background-color: var(--bg-color);
 }
 
 /* BLOQUE EXPLICATIVO */
@@ -1165,7 +1165,7 @@ ul {
 .track-item {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 5px;
     padding: 14px;
     background-color: var(--surface-light);
     border-radius: 4px;
@@ -1272,7 +1272,7 @@ ul {
 
 .new-track {
     position: relative;
-    padding: 15px;
+    padding: 14px;
     background-color: var(--surface-light);
     border-radius: 4px;
     border-left: 4px solid var(--accent-color);
