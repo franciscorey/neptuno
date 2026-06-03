@@ -10,8 +10,8 @@
     /* Acentos vibrantes */
     --primary-color: #4CAF50;    /* Verde para acciones principales */
     --primary-hover: #66BB6A;
-    --accent-color: #8b5cf6;     /* Púrpura vibrante para detalles visuales */
-    --accent-hover: #FF8AFF;     /* Púrpura más claro para hovers */
+    --accent-color: #8B5CF6;     /* Púrpura */
+    --accent-light: #FF3CFF;     /* Púrpura vibrante */
     --success-color: #2E7D32;    /* Verde éxito para votación confirmada */
 
     /* Textos */
@@ -215,8 +215,8 @@ ul {
 
 .badge {
     background-color: rgba(0, 229, 255, 0.1);
-    color: var(--accent-color);
-    border: 1px solid var(--accent-color);
+    color: var(--accent-light);
+    border: 1px solid var(--accent-light);
     padding: 4px 12px;
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -703,7 +703,7 @@ ul {
 }
 
 .schedule-card.current {
-    border-color: var(--accent-color);
+    border-color: var(--accent-light);
     box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
 }
 
@@ -730,7 +730,7 @@ ul {
     position: absolute;
     top: 15px;
     right: 15px;
-    background-color: var(--accent-color);
+    background-color: var(--accent-light);
     color: #fff;
     font-size: 0.7rem;
     padding: 2px 8px;
@@ -929,7 +929,7 @@ ul {
     margin-bottom: 15px;
     font-size: 1rem;
     text-transform: uppercase;
-    color: var(--accent-color);
+    color: var(--accent-light);
 }
 
 .footer-links ul {
@@ -1127,7 +1127,7 @@ ul {
     margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    border-bottom: 2px solid var(--accent-color);
+    border-bottom: 2px solid var(--primary-color);
     padding-bottom: 10px;
 }
 
@@ -1180,7 +1180,7 @@ ul {
     font-family: var(--font-title);
     font-size: 1.2rem;
     font-weight: bold;
-    color: var(--accent-color);
+    color: var(--accent-light);
     min-width: 50px;
     text-align: center;
     display: flex;
@@ -1273,7 +1273,7 @@ ul {
     top: 8px;
     right: 10px;
 
-    background-color: var(--accent-color);
+    background-color: var(--accent-light);
     color: #fff;
 
     font-size: 0.65rem;
@@ -1576,7 +1576,7 @@ ul {
 }
 
 .news-detail-section .breadcrumb a:hover {
-    color: var(--accent-color);
+    color: var(--accent-light);
 }
 
 .news-detail-section .article-image {
