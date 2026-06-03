@@ -229,6 +229,15 @@ function renderTop10(tracks) {
                     ${(index + 1).toString().padStart(2, "0")}
                     ${movementIcon}
                 </div>
+
+                <img
+                    class="track-cover"
+                    src="assets/covers/${track.cover}"
+                    alt="${escapeHTML(track.cancion)}"
+                    loading="lazy"
+                    onerror="this.src='assets/covers/default.webp'"
+                >
+                
                 <div class="track-info">
                     <div class="track-title">${escapeHTML(track.cancion)}</div>
                     <div class="track-artist">${escapeHTML(track.artista)}</div>
@@ -264,6 +273,14 @@ function renderNuevos(tracks) {
 
         item.innerHTML = `
             <div class="new-badge">NUEVO</div>
+
+            <img
+                class="track-cover"
+                src="assets/covers/${track.cover}"
+                alt="${escapeHTML(track.cancion)}"
+                loading="lazy"
+                onerror="this.src='assets/covers/default.webp'"
+            >
 
             <div class="track-title">
                 ${escapeHTML(track.cancion)}
