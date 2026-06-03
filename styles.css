@@ -1233,6 +1233,14 @@ ul {
     gap: 10px;
 }
 
+.track-cover {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
 .vote-btn {
     background-color: var(--primary-color);
     color: #000;
