@@ -221,7 +221,7 @@ function renderTop10(tracks) {
             
             // Verificar si ya votó por este track
             const alreadyVoted =     hasVoted(track.id, "TOP_10");
-            const voteButtonText = alreadyVoted ? '✓ Señalizado' : 'Señalizar';
+            const voteButtonText = alreadyVoted ? '✓ Enviado' : 'Votar';
             const voteButtonDisabled = alreadyVoted ? 'disabled' : '';
             
             item.innerHTML = `
@@ -263,7 +263,7 @@ function renderNuevos(tracks) {
     hasVoted(track.id, "NUEVOS");
 
         item.innerHTML = `
-            <div class="new-badge">NEW SIGNAL</div>
+            <div class="new-badge">NUEVO</div>
 
             <div class="track-title">
                 ${escapeHTML(track.cancion)}
