@@ -75,10 +75,13 @@ ul {
 }
 
 .section-subtitle {
-    text-align: left;
+    font-size: 0.8rem;
+    text-align: right;
     color: var(--text-muted);
+    font-family: var(--font-title);
     margin-bottom: 40px;
-    border-top: 3px solid var(--text-muted);
+    padding-top: 2px;
+    border-top: 1px solid var(--text-muted);
 }
 
 /* BOTONES */
