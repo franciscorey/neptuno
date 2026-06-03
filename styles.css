@@ -61,17 +61,24 @@ ul {
 }
 
 .section-title {
-    font-size: 2rem;
-    text-align: center;
+    font-size: 1rem;
+    text-align: left;
     margin-bottom: 10px;
     text-transform: uppercase;
     letter-spacing: 1px;
+    font-family: var(--font-title);
+    display: inline-block;
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    padding: 2px 6px;
+    border-radius: 3px;
 }
 
 .section-subtitle {
-    text-align: center;
+    text-align: left;
     color: var(--text-muted);
     margin-bottom: 40px;
+    border-top: 3px solid var(--text-muted);
 }
 
 /* BOTONES */
