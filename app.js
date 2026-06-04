@@ -220,33 +220,51 @@ document.addEventListener('DOMContentLoaded', () => {
     
         function mostrar() {
 
+        const mensaje =
+            activos[informativoActual].texto;
+    
+        signalText.className = '';
+    
+        signalText.textContent =
+            mensaje;
+    
+        // Fade In
+        signalText.classList.add(
+            'signal-fade-in'
+        );
+    
+        // Espera 3 segundos
+        setTimeout(() => {
+    
             signalText.classList.add(
-                "fade-out"
+                'signal-scroll'
             );
-        
-            setTimeout(() => {
-        
-                signalText.textContent =
-                    activos[
-                        informativoActual
-                    ].texto;
-        
-                signalText.classList.remove(
-                    "fade-out"
-                );
-        
-                informativoActual =
-                    (informativoActual + 1)
-                    % activos.length;
-        
-            }, 600);
-        }
+    
+        }, 3000);
+    
+        // Fade Out cerca del final
+        setTimeout(() => {
+    
+            signalText.classList.remove(
+                'signal-scroll'
+            );
+    
+            signalText.classList.add(
+                'signal-fade-out'
+            );
+    
+        }, 9400);
+    
+        informativoActual =
+            (informativoActual + 1)
+            % activos.length;
+    }
     
         mostrar();
     
         setInterval(
             mostrar,
-            15000
+            10000
         );
     }
 
