@@ -582,10 +582,10 @@ ul {
 
 #signal-text {
     position: absolute;
-    white-space: nowrap;
-    left: 100%;
     top: 50%;
-    transform: translateY(-50%);
+    left: 0;
+    white-space: nowrap;
+    animation: ticker 20s linear infinite;
 }
 
 @keyframes ticker {
