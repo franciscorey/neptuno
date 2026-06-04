@@ -556,11 +556,14 @@ ul {
 
 .signal-bar {
     height: 34px;
-    background: var(--signal-color);
-    color: #111;
+    background: var(--bg-color);
+    color: #fff;
     display: flex;
     align-items: center;
     overflow: hidden;
+    position: sticky;
+    top: 55px;
+    z-index: 10;
 }
 
 .signal-label {
@@ -586,7 +589,10 @@ ul {
 #signal-text {
     display: block;
     padding: 0 15px;
-    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: .9rem;
     opacity: 1;
     transition:
         opacity .6s ease,
