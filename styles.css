@@ -581,9 +581,10 @@ ul {
 }
 
 #signal-text {
-    position: absolute;
+    display: block;
     top: 50%;
     left: 0;
+    padding-left: 15px;
     white-space: nowrap;
     animation: ticker 20s linear infinite;
 }
