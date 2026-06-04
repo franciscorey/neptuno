@@ -565,7 +565,7 @@ ul {
 .signal-label {
     height: 100%;
     padding: 0 14px;
-    background: rgba(0,0,0,.15);
+    background: var(--accent-color);
     display: flex;
     align-items: center;
     font-size: .75rem;
@@ -577,28 +577,24 @@ ul {
 .signal-content {
     flex: 1;
     overflow: hidden;
-    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 #signal-text {
-    display: block;
-    top: 50%;
-    left: 0;
-    padding-left: 15px;
+    display: inline-block;
     white-space: nowrap;
+    font-weight: 600;
     animation: ticker 20s linear infinite;
 }
 
 @keyframes ticker {
-
     from {
-        transform: translate(0,-50%);
+        transform: translateX(100%);
     }
-
     to {
-        transform: translate(-120%,-50%);
+        transform: translateX(-120%);
     }
-
 }
 
 /* NEPTUNO TV */
