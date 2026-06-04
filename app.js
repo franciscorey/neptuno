@@ -255,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // PROGRAMA ACTUAL
 
+        /*
         console.log("1");
         const actual =
             getCurrentProgram();
@@ -282,6 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     `${siguiente.nombre}`
             });
         }
+        */
         
         // TV
     
