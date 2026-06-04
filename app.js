@@ -206,31 +206,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 await response.json();
     
             if (
-                data.success &&
-                data.informativos &&
-                data.informativos.length > 0
+                !data.success ||
+                !data.informativos ||
+                data.informativos.length === 0
             ) {
+                return;
+            }
     
-                informativos =
-                    data.informativos;
+            informativos =
+                data.informativos;
+    
+            mostrarInformativo();
+    
+            setInterval(() => {
+    
+                informativoActual++;
+    
+                if (
+                    informativoActual >=
+                    informativos.length
+                ) {
+                    informativoActual = 0;
+                }
     
                 mostrarInformativo();
     
-                setInterval(() => {
-    
-                    informativoActual++;
-    
-                    if (
-                        informativoActual >=
-                        informativos.length
-                    ) {
-                        informativoActual = 0;
-                    }
-    
-                    mostrarInformativo();
-    
-                }, 15000);
-            }
+            }, 15000);
     
         } catch (error) {
     
@@ -243,19 +244,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function mostrarInformativo() {
     
-        const textEl =
+        const signalText =
             document.getElementById(
-                "info-bar-text"
+                "signal-text"
             );
     
         if (
-            !textEl ||
+            !signalText ||
             informativos.length === 0
         ) {
             return;
         }
     
-        textEl.textContent =
+        signalText.textContent =
             informativos[
                 informativoActual
             ].texto;
