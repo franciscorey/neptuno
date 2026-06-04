@@ -201,113 +201,66 @@ document.addEventListener('DOMContentLoaded', () => {
     let informativoActual = 0;
 
     function initInformativos() {
-
-        console.log("INIT INFORMATIVOS EJECUTADO");
-        
-        const track =
-            document.getElementById(
-                "signal-track"
-            );
-    
-        if (!track) {
-            return;
-        }
+        const track = document.getElementById("signal-track");
+        if (!track) return;
     
         let mensajes = [];
     
-        // INFORMATIVOS SHEETS
-    
-        const informativos =
-            appData.informativos.filter(
-                item =>
-                    item.activo === true ||
-                    item.activo === "TRUE"
-            );
+        // 1. INFORMATIVOS SHEETS (Filtro booleano estricto)
+        const informativos = appData.informativos.filter(item => item.activo === true);
     
         informativos.forEach(item => {
-    
-            mensajes.push({
-    
-                tipo:
-                    item.nombre,
-    
-                texto:
-                    item.texto
-            });
+            if (item.texto) {
+                mensajes.push({
+                    tipo: item.nombre,
+                    texto: item.texto
+                });
+            }
         });
     
-        // TOP 1 SONANDO
-    
-        if (
-            appData.ranking &&
-            appData.ranking.length
-        ) {
-            const top =
-                appData.ranking[0];
-    
+        // 2. TOP 1 SONANDO
+        if (appData.ranking && appData.ranking.length) {
+            const top = appData.ranking[0];
             mensajes.unshift({
-                tipo:
-                    "SONANDO",
-                texto:
-                    `${top.artista} - ${top.cancion} lidera con ${top.votos} votos`
+                tipo: "SONANDO",
+                texto: `${top.artista} - ${top.cancion} lidera con ${top.votos} votos`
             });
         }
     
-        // PROGRAMA ACTUAL
-
-        /*
-        console.log("1");
-        const actual =
-            getCurrentProgram();
-    
+        // 3. PROGRAMA ACTUAL Y PRÓXIMO
+        const actual = getCurrentProgram();
         if (actual) {
             mensajes.unshift({
-                tipo:
-                    "AL AIRE",
-                texto:
-                    actual.nombre
+                tipo: "AL AIRE",
+                texto: actual.nombre
             });
         }
     
-        // PROXIMO
-        console.log("2");
-        const siguiente =
-            getNextProgram();
-
-        console.log("3");
+        const siguiente = getNextProgram();
         if (siguiente) {
             mensajes.push({
-                tipo:
-                    "SIGUE",
-                texto:
-                    `${siguiente.nombre}`
+                tipo: "SIGUE",
+                texto: siguiente.nombre
             });
         }
-        */
-        
-        // TV
     
+        // 4. MENSAJE FIJO TV
         mensajes.push({
-            tipo:
-                "TV",
-            texto:
-                "Neptuno TV transmite en vivo"
+            tipo: "TV",
+            texto: "Neptuno TV transmite en vivo"
         });
-
-        console.log("LLEGO AL FINAL");
-        
-        track.innerHTML =
-            mensajes.map(msg => `
-                <span class="signal-item">
-                    <span class="signal-badge">
-                        ${msg.tipo}
-                    </span>
-                    ${msg.texto}
-                </span>
-                <span class="signal-separator">
-                    ●
-                </span>
-            `).join('');
+    
+        // 5. RENDERIZADO AL DOM
+        const contenidoHTML = mensajes.map(msg => `
+            <span class="signal-item">
+                <span class="signal-badge">${msg.tipo}</span>
+                ${msg.texto}
+            </span>
+            <span class="signal-separator">●</span>
+        `).join('');
+    
+        // Inyectar doble para evitar saltos en la animación CSS de marquesina infinita
+        track.innerHTML = contenidoHTML + contenidoHTML;
     }
 
     // ==========================================
@@ -676,6 +629,49 @@ function isCurrentProgram(
 
 }
 
+    function getCurrentProgram() {
+        if (!scheduleData || scheduleData.length === 0) return null;
+        
+        const now = new Date();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        
+        for (let i = 0; i < scheduleData.length; i++) {
+            const programa = scheduleData[i];
+            const [startHour, startMinute] = programa.inicio.split(':').map(Number);
+            const [endHour, endMinute] = programa.fin.split(':').map(Number);
+            
+            const startMinutes = startHour * 60 + startMinute;
+            const endMinutes = endHour * 60 + endMinute;
+            
+            if (isCurrentProgram(currentMinutes, startMinutes, endMinutes)) {
+                return programa;
+            }
+        }
+        return null;
+    }
+    
+    function getNextProgram() {
+        if (!scheduleData || scheduleData.length === 0) return null;
+        
+        const now = new Date();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        
+        for (let i = 0; i < scheduleData.length; i++) {
+            const programa = scheduleData[i];
+            const [startHour, startMinute] = programa.inicio.split(':').map(Number);
+            const [endHour, endMinute] = programa.fin.split(':').map(Number);
+            
+            const startMinutes = startHour * 60 + startMinute;
+            const endMinutes = endHour * 60 + endMinute;
+            
+            if (isCurrentProgram(currentMinutes, startMinutes, endMinutes)) {
+                // Retorna el siguiente programa, o el primero del día si es el último
+                return scheduleData[i + 1] || scheduleData[0];
+            }
+        }
+        return null;
+    }
+    
 function updateLiveSchedule() {
 
     const now = new Date();
