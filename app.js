@@ -186,6 +186,115 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    /* ========================================
+       BARRA DE INFORMACIÓN RADIO NEPTUNO
+       ======================================== */
+    
+    let signalMessages = [];
+    let signalIndex = 0;
+    
+    /**
+     * Carga mensajes desde la API
+     */
+    async function loadSignalBar() {
+    
+        try {
+    
+            const response =
+                await fetch(`${API_URL}?action=info`);
+    
+            const data =
+                await response.json();
+    
+            if (!data.success || !data.items?.length) {
+                return;
+            }
+    
+            signalMessages =
+                data.items.filter(
+                    item => item.activo !== false
+                );
+    
+            startSignalRotation();
+    
+        } catch (error) {
+    
+            console.error(
+                "Error cargando barra informativa:",
+                error
+            );
+    
+        }
+    
+    }
+    
+    /**
+     * Inicia rotación de mensajes
+     */
+    function startSignalRotation() {
+    
+        const signalText =
+            document.getElementById("signal-text");
+    
+        if (!signalText) return;
+    
+        if (!signalMessages.length) {
+    
+            signalText.textContent =
+                "📡 Bienvenido a Radio Neptuno";
+    
+            return;
+        }
+    
+        function showMessage() {
+    
+            const current =
+                signalMessages[signalIndex];
+    
+            signalText.textContent =
+                current.texto;
+    
+            signalText.style.animation =
+                "none";
+    
+            signalText.offsetWidth;
+    
+            const speed = 80; // px por segundo
+    
+            const duration =
+                Math.max(
+                    10,
+                    signalText.scrollWidth / speed
+                );
+    
+            signalText.style.animation =
+                `ticker ${duration}s linear`;
+    
+            signalIndex =
+                (signalIndex + 1)
+                % signalMessages.length;
+        }
+    
+        showMessage();
+    
+        signalText.addEventListener(
+            "animationend",
+            showMessage
+        );
+    }
+    
+    /**
+     * Inicialización
+     */
+    document.addEventListener(
+        "DOMContentLoaded",
+        () => {
+    
+            loadSignalBar();
+    
+        }
+    );
+
     // ==========================================
     // SISTEMA DE NOTICIAS DINÁMICAS
     // ==========================================
