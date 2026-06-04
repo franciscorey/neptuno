@@ -588,6 +588,18 @@ ul {
     transform: translateY(-50%);
 }
 
+@keyframes ticker {
+
+    from {
+        transform: translate(0,-50%);
+    }
+
+    to {
+        transform: translate(-120%,-50%);
+    }
+
+}
+
 /* NEPTUNO TV */
 .neptuno-tv-section {
     padding: 20px 10px;
