@@ -551,6 +551,43 @@ ul {
     }
 }
 
+/* BARRA INFORMACION */
+
+.signal-bar {
+    height: 34px;
+    background: var(--primary-color);
+    color: #111;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.signal-label {
+    height: 100%;
+    padding: 0 14px;
+    background: rgba(0,0,0,.15);
+    display: flex;
+    align-items: center;
+    font-size: .75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    z-index: 2;
+}
+
+.signal-content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+#signal-text {
+    position: absolute;
+    white-space: nowrap;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 /* NEPTUNO TV */
 .neptuno-tv-section {
     padding: 20px 10px;
