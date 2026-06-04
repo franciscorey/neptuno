@@ -202,6 +202,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initInformativos() {
 
+        console.log("INIT INFORMATIVOS EJECUTADO");
+        
         const track =
             document.getElementById(
                 "signal-track"
@@ -287,7 +289,9 @@ document.addEventListener('DOMContentLoaded', () => {
             texto:
                 "Neptuno TV transmite en vivo"
         });
-    
+
+        console.log("LLEGO AL FINAL");
+        
         track.innerHTML =
             mensajes.map(msg => `
                 <span class="signal-item">
