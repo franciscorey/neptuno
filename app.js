@@ -254,7 +254,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     
         // PROGRAMA ACTUAL
-    
+
+        console.log("1");
         const actual =
             getCurrentProgram();
     
@@ -268,10 +269,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     
         // PROXIMO
-    
+        console.log("2");
         const siguiente =
             getNextProgram();
-    
+
+        console.log("3");
         if (siguiente) {
             mensajes.push({
                 tipo:
@@ -280,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     `${siguiente.nombre}`
             });
         }
-    
+        
         // TV
     
         mensajes.push({
