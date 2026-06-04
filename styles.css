@@ -13,6 +13,7 @@
     --accent-color: #8B5CF6;     /* Púrpura */
     --accent-light: #FF3CFF;     /* Púrpura vibrante */
     --success-color: #2E7D32;    /* Verde éxito para votación confirmada */
+    --signal-color: #66BB6A;    /* Verde para barra de info */
 
     /* Textos */
     --text-color: #e8ede8;        /* Gris claro */
@@ -555,7 +556,7 @@ ul {
 
 .signal-bar {
     height: 34px;
-    background: var(--primary-color);
+    background: var(--signal-color);
     color: #111;
     display: flex;
     align-items: center;
@@ -583,19 +584,19 @@ ul {
 }
 
 #signal-text {
-    display: inline-block;
-    white-space: nowrap;
+    display: block;
+    padding: 0 15px;
     font-weight: 600;
-    animation: ticker 20s linear infinite;
+    opacity: 1;
+    transition: opacity .6s ease;
 }
 
-@keyframes ticker {
-    from {
-        transform: translateX(100%);
-    }
-    to {
-        transform: translateX(-120%);
-    }
+#signal-text.fade-out {
+    opacity: 0;
+}
+
+#signal-text.fade-in {
+    opacity: 1;
 }
 
 /* NEPTUNO TV */
