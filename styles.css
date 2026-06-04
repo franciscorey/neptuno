@@ -588,15 +588,14 @@ ul {
     padding: 0 15px;
     font-weight: 600;
     opacity: 1;
-    transition: opacity .6s ease;
+    transition:
+        opacity .6s ease,
+        transform .6s ease;
 }
 
 #signal-text.fade-out {
     opacity: 0;
-}
-
-#signal-text.fade-in {
-    opacity: 1;
+    transform: translateY(-4px);
 }
 
 /* NEPTUNO TV */
