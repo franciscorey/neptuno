@@ -13,7 +13,7 @@
     --accent-color: #8B5CF6;     /* Púrpura */
     --accent-light: #FF3CFF;     /* Púrpura vibrante */
     --success-color: #2E7D32;    /* Verde éxito para votación confirmada */
-    --signal-color: #66BB6A;    /* Verde para barra de info */
+    --signal-color: #0a0e0a;    /* Oscuro para barra de info */
 
     /* Textos */
     --text-color: #e8ede8;        /* Gris claro */
@@ -556,14 +556,20 @@ ul {
 
 .signal-bar {
     height: 34px;
-    background: var(--bg-color);
+    background: var(--signal-color);
     color: #fff;
     display: flex;
     align-items: center;
     overflow: hidden;
     position: sticky;
-    top: 55px;
+    top: 56px;
     z-index: 10;
+}
+
+@media (max-width: 768px) {
+    .signal-bar {
+        top: 68px;
+    }
 }
 
 .signal-label {
@@ -590,19 +596,51 @@ ul {
     display: block;
     padding: 0 15px;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     font-size: .9rem;
     opacity: 1;
-    transition:
-        opacity .6s ease,
-        transform .6s ease;
 }
 
-#signal-text.fade-out {
-    opacity: 0;
-    transform: translateY(-4px);
-}
+    /* Entrada */
+    .signal-fade-in {
+        animation: signalFadeIn .6s ease forwards;
+    }
+    
+    /* Salida */
+    .signal-fade-out {
+        animation: signalFadeOut .6s ease forwards;
+    }
+    
+    /* Movimiento */
+    .signal-scroll {
+        animation: signalScroll 7s linear forwards;
+    }
+    
+    @keyframes signalFadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    @keyframes signalFadeOut {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+    
+    @keyframes signalScroll {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-35%);
+        }
+    }
 
 /* NEPTUNO TV */
 .neptuno-tv-section {
