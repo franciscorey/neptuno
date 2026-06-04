@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let appData = {
     noticias: [],
     programas: [],
-    programacion: []
+    programacion: [],
+    informativos: []
     };
     let currentSection = 'inicio';
     let allNews = [];
@@ -40,6 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         appData.programacion =
             data.programacion || [];
+
+        appData.informativos =
+            data.informativos || [];
 
         console.log('Datos precargados');
 
@@ -190,76 +194,46 @@ document.addEventListener('DOMContentLoaded', () => {
     // BARRA INFORMATIVA
     // ======================================
     
-    let informativos = [];
     let informativoActual = 0;
+
+    function initInformativos() {
     
-    async function loadInformativos() {
-    
-        try {
-    
-            const response =
-                await fetch(
-                    `${API_URL}?action=informativos`
-                );
-    
-            const data =
-                await response.json();
-    
-            if (
-                !data.success ||
-                !data.informativos ||
-                data.informativos.length === 0
-            ) {
-                return;
-            }
-    
-            informativos =
-                data.informativos;
-    
-            mostrarInformativo();
-    
-            setInterval(() => {
-    
-                informativoActual++;
-    
-                if (
-                    informativoActual >=
-                    informativos.length
-                ) {
-                    informativoActual = 0;
-                }
-    
-                mostrarInformativo();
-    
-            }, 15000);
-    
-        } catch (error) {
-    
-            console.error(
-                "Error cargando informativos:",
-                error
+        const activos =
+            appData.informativos.filter(
+                item =>
+                    item.activo === true ||
+                    item.activo === "TRUE"
             );
-        }
-    }
     
-    function mostrarInformativo() {
+        if (!activos.length) {
+            return;
+        }
     
         const signalText =
             document.getElementById(
                 "signal-text"
             );
     
-        if (
-            !signalText ||
-            informativos.length === 0
-        ) {
+        if (!signalText) {
             return;
         }
     
-        signalText.textContent =
-            informativos[
-                informativoActual
-            ].texto;
+        function mostrar() {
+    
+            signalText.textContent =
+                activos[informativoActual].texto;
+    
+            informativoActual =
+                (informativoActual + 1)
+                % activos.length;
+        }
+    
+        mostrar();
+    
+        setInterval(
+            mostrar,
+            15000
+        );
     }
 
     // ==========================================
@@ -496,6 +470,8 @@ async function initData() {
     renderSchedule();
 
     updateLiveSchedule();
+
+    initInformativos();
 
     setInterval(
         updateLiveSchedule,
