@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     noticias: [],
     programas: [],
     programacion: [],
-    informativos: []
+    informativos: [],
+    ranking: []
     };
     let currentSection = 'inicio';
     let allNews = [];
@@ -44,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         appData.informativos =
             data.informativos || [];
+
+        appData.ranking =
+            data.top10 || [];
 
         console.log('Datos precargados');
 
@@ -197,75 +201,105 @@ document.addEventListener('DOMContentLoaded', () => {
     let informativoActual = 0;
 
     function initInformativos() {
+
+        const track =
+            document.getElementById(
+                "signal-track"
+            );
     
-        const activos =
+        if (!track) {
+            return;
+        }
+    
+        let mensajes = [];
+    
+        // INFORMATIVOS SHEETS
+    
+        const informativos =
             appData.informativos.filter(
                 item =>
                     item.activo === true ||
                     item.activo === "TRUE"
             );
     
-        if (!activos.length) {
-            return;
+        informativos.forEach(item => {
+    
+            mensajes.push({
+    
+                tipo:
+                    item.nombre,
+    
+                texto:
+                    item.texto
+            });
+        });
+    
+        // TOP 1 SONANDO
+    
+        if (
+            appData.ranking &&
+            appData.ranking.length
+        ) {
+            const top =
+                appData.ranking[0];
+    
+            mensajes.unshift({
+                tipo:
+                    "SONANDO",
+                texto:
+                    `${top.artista} - ${top.cancion} lidera con ${top.votos} votos`
+            });
         }
     
-        const signalText =
-            document.getElementById(
-                "signal-text"
-            );
+        // PROGRAMA ACTUAL
     
-        if (!signalText) {
-            return;
+        const actual =
+            getCurrentProgram();
+    
+        if (actual) {
+            mensajes.unshift({
+                tipo:
+                    "AL AIRE",
+                texto:
+                    actual.nombre
+            });
         }
     
-        function mostrar() {
-
-        const mensaje =
-            activos[informativoActual].texto;
+        // PROXIMO
     
-        signalText.className = '';
+        const siguiente =
+            getNextProgram();
     
-        signalText.textContent =
-            mensaje;
+        if (siguiente) {
+            mensajes.push({
+                tipo:
+                    "SIGUE",
+                texto:
+                    `${siguiente.nombre}`
+            });
+        }
     
-        // Fade In
-        signalText.classList.add(
-            'signal-fade-in'
-        );
+        // TV
     
-        // Espera 3 segundos
-        setTimeout(() => {
+        mensajes.push({
+            tipo:
+                "TV",
+            texto:
+                "Neptuno TV transmite en vivo"
+        });
     
-            signalText.classList.add(
-                'signal-scroll'
-            );
-    
-        }, 3000);
-    
-        // Fade Out cerca del final
-        setTimeout(() => {
-    
-            signalText.classList.remove(
-                'signal-scroll'
-            );
-    
-            signalText.classList.add(
-                'signal-fade-out'
-            );
-    
-        }, 9400);
-    
-        informativoActual =
-            (informativoActual + 1)
-            % activos.length;
-    }
-    
-        mostrar();
-    
-        setInterval(
-            mostrar,
-            10000
-        );
+        track.innerHTML =
+            mensajes.map(msg => `
+                <span class="signal-item">
+                    <span class="signal-badge">
+                        ${msg.tipo}
+                    </span>
+                    ${msg.texto}
+                </span>
+                <span class="signal-separator">
+                    ●
+                </span>
+            `).join('');
     }
 
     // ==========================================
