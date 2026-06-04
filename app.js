@@ -186,114 +186,80 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /* ========================================
-       BARRA DE INFORMACIÓN RADIO NEPTUNO
-       ======================================== */
+    // ======================================
+    // BARRA INFORMATIVA
+    // ======================================
     
-    let signalMessages = [];
-    let signalIndex = 0;
+    let informativos = [];
+    let informativoActual = 0;
     
-    /**
-     * Carga mensajes desde la API
-     */
-    async function loadSignalBar() {
+    async function loadInformativos() {
     
         try {
     
             const response =
-                await fetch(`${API_URL}?action=info`);
+                await fetch(
+                    `${API_URL}?action=informativos`
+                );
     
             const data =
                 await response.json();
     
-            if (!data.success || !data.items?.length) {
-                return;
+            if (
+                data.success &&
+                data.informativos &&
+                data.informativos.length > 0
+            ) {
+    
+                informativos =
+                    data.informativos;
+    
+                mostrarInformativo();
+    
+                setInterval(() => {
+    
+                    informativoActual++;
+    
+                    if (
+                        informativoActual >=
+                        informativos.length
+                    ) {
+                        informativoActual = 0;
+                    }
+    
+                    mostrarInformativo();
+    
+                }, 15000);
             }
-    
-            signalMessages =
-                data.items.filter(
-                    item => item.activo !== false
-                );
-    
-            startSignalRotation();
     
         } catch (error) {
     
             console.error(
-                "Error cargando barra informativa:",
+                "Error cargando informativos:",
                 error
             );
-    
         }
-    
     }
     
-    /**
-     * Inicia rotación de mensajes
-     */
-    function startSignalRotation() {
+    function mostrarInformativo() {
     
-        const signalText =
-            document.getElementById("signal-text");
+        const textEl =
+            document.getElementById(
+                "info-bar-text"
+            );
     
-        if (!signalText) return;
-    
-        if (!signalMessages.length) {
-    
-            signalText.textContent =
-                "📡 Bienvenido a Radio Neptuno";
-    
+        if (
+            !textEl ||
+            informativos.length === 0
+        ) {
             return;
         }
     
-        function showMessage() {
-    
-            const current =
-                signalMessages[signalIndex];
-    
-            signalText.textContent =
-                current.texto;
-    
-            signalText.style.animation =
-                "none";
-    
-            signalText.offsetWidth;
-    
-            const speed = 80; // px por segundo
-    
-            const duration =
-                Math.max(
-                    10,
-                    signalText.scrollWidth / speed
-                );
-    
-            signalText.style.animation =
-                `ticker ${duration}s linear`;
-    
-            signalIndex =
-                (signalIndex + 1)
-                % signalMessages.length;
-        }
-    
-        showMessage();
-    
-        signalText.addEventListener(
-            "animationend",
-            showMessage
-        );
+        textEl.textContent =
+            informativos[
+                informativoActual
+            ].texto;
     }
-    
-    /**
-     * Inicialización
-     */
-    document.addEventListener(
-        "DOMContentLoaded",
-        () => {
-    
-            loadSignalBar();
-    
-        }
-    );
 
     // ==========================================
     // SISTEMA DE NOTICIAS DINÁMICAS
