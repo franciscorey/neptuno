@@ -219,13 +219,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     
         function mostrar() {
-    
-            signalText.textContent =
-                activos[informativoActual].texto;
-    
-            informativoActual =
-                (informativoActual + 1)
-                % activos.length;
+
+            signalText.classList.add(
+                "fade-out"
+            );
+        
+            setTimeout(() => {
+        
+                signalText.textContent =
+                    activos[
+                        informativoActual
+                    ].texto;
+        
+                signalText.classList.remove(
+                    "fade-out"
+                );
+        
+                informativoActual =
+                    (informativoActual + 1)
+                    % activos.length;
+        
+            }, 600);
         }
     
         mostrar();
