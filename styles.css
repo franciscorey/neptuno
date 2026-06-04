@@ -248,6 +248,103 @@ ul {
     margin-bottom: 30px;
 }
 
+/* BARRA INFORMACION */
+
+.signal-bar {
+    height: 34px;
+    background: var(--signal-color);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: sticky;
+    top: 56px;
+    z-index: 10;
+}
+
+@media (max-width: 768px) {
+    .signal-bar {
+        top: 68px;
+    }
+}
+
+.signal-label {
+    height: 100%;
+    padding: 0 14px;
+    background: var(--accent-light);
+    color: white;
+    display: flex;
+    align-items: center;
+    font-size: .75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    z-index: 2;
+}
+
+.signal-content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.signal-track {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    height: 34px;
+    animation:
+        ticker 60s linear infinite;
+}
+
+.signal-track:hover {
+    animation-play-state: paused;
+}
+
+.signal-item {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 18px;
+    font-size: .85rem;
+}
+
+.signal-badge {
+    background: var(--primary-color);
+    color: #111;
+    font-size: .68rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-right: 8px;
+    text-transform: uppercase;
+}
+
+.signal-separator {
+    opacity: .35;
+    margin-right: 18px;
+}
+
+@keyframes ticker {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+@media (max-width: 768px) {
+    .signal-bar {
+        top: 95px;
+    }
+    .signal-track {
+        animation-duration: 45s;
+    }
+    .signal-item {
+        font-size: .8rem;
+    }
+}
+
+
 /* ========================================== */
 /* WIDGET FLOTANTE DE RADIO                   */
 /* ========================================== */
@@ -552,95 +649,6 @@ ul {
     }
 }
 
-/* BARRA INFORMACION */
-
-.signal-bar {
-    height: 34px;
-    background: var(--signal-color);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    position: sticky;
-    top: 56px;
-    z-index: 10;
-}
-
-@media (max-width: 768px) {
-    .signal-bar {
-        top: 68px;
-    }
-}
-
-.signal-label {
-    height: 100%;
-    padding: 0 14px;
-    background: var(--accent-light);
-    color: white;
-    display: flex;
-    align-items: center;
-    font-size: .75rem;
-    font-weight: 700;
-    flex-shrink: 0;
-    z-index: 2;
-}
-
-.signal-content {
-    flex: 1;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-}
-
-#signal-text {
-    display: block;
-    padding: 0 15px;
-    white-space: nowrap;
-    font-size: .9rem;
-    opacity: 1;
-}
-
-    /* Entrada */
-    .signal-fade-in {
-        animation: signalFadeIn .6s ease forwards;
-    }
-    
-    /* Salida */
-    .signal-fade-out {
-        animation: signalFadeOut .6s ease forwards;
-    }
-    
-    /* Movimiento */
-    .signal-scroll {
-        animation: signalScroll 7s linear forwards;
-    }
-    
-    @keyframes signalFadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
-    
-    @keyframes signalFadeOut {
-        from {
-            opacity: 1;
-        }
-        to {
-            opacity: 0;
-        }
-    }
-    
-    @keyframes signalScroll {
-        from {
-            transform: translateX(0);
-        }
-        to {
-            transform: translateX(-35%);
-        }
-    }
 
 /* NEPTUNO TV */
 .neptuno-tv-section {
