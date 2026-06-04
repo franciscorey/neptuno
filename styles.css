@@ -12,6 +12,7 @@
     --primary-hover: #66BB6A;
     --accent-color: #8B5CF6;     /* Púrpura */
     --accent-light: #FF3CFF;     /* Púrpura vibrante */
+    --accent-gradient: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-light) 100%);
     --success-color: #2E7D32;    /* Verde éxito para votación confirmada */
     --signal-color: #0a0e0a;    /* Oscuro para barra de info */
 
@@ -254,24 +255,21 @@ ul {
     height: 34px;
     background: var(--signal-color);
     color: #fff;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.15);
     display: flex;
     align-items: center;
     overflow: hidden;
     position: sticky;
     top: 56px;
     z-index: 10;
-}
-
-@media (max-width: 768px) {
-    .signal-bar {
-        top: 68px;
-    }
+    contain: layout paint;
+    content-visibility: auto;
 }
 
 .signal-label {
     height: 100%;
     padding: 0 14px;
-    background: var(--accent-light);
+    background-image: var(--accent-gradient);
     color: white;
     display: flex;
     align-items: center;
@@ -279,31 +277,42 @@ ul {
     font-weight: 700;
     flex-shrink: 0;
     z-index: 2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .signal-content {
     flex: 1;
     overflow: hidden;
     position: relative;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%);
 }
 
 .signal-track {
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
+    user-select: none; /* Evita selecciones accidentales del texto en movimiento */
+    -webkit-user-select: none;
     height: 34px;
-    animation: ticker 40s linear infinite;
+    animation: ticker 110s linear infinite;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
 }
 
-.signal-track:hover {
-    animation-play-state: paused;
+@media (hover: hover) {
+    .signal-track:hover {
+        animation-play-state: paused;
+        cursor: pointer; /* Un indicador visual sutil de que se puede interactuar */
+    }
 }
 
 .signal-item {
     display: inline-flex;
     align-items: center;
-    margin-right: 18px;
+    margin-right: 24px;
     font-size: .85rem;
+    flex-shrink: 0;
 }
 
 .signal-badge {
@@ -315,6 +324,8 @@ ul {
     border-radius: 4px;
     margin-right: 8px;
     text-transform: uppercase;
+    flex-shrink: 0; /* La etiqueta conserva su ancho exacto siempre */
+    letter-spacing: 0.05em;
 }
 
 .signal-separator {
@@ -333,10 +344,10 @@ ul {
 
 @media (max-width: 768px) {
     .signal-bar {
-        top: 95px;
+        top: 68px;
     }
     .signal-track {
-        animation-duration: 35s;
+        animation-duration: 120s;
     }
     .signal-item {
         font-size: .8rem;
