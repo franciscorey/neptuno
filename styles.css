@@ -292,8 +292,7 @@ ul {
     align-items: center;
     white-space: nowrap;
     height: 34px;
-    animation:
-        ticker 60s linear infinite;
+    animation: ticker 40s linear infinite;
 }
 
 .signal-track:hover {
@@ -325,10 +324,10 @@ ul {
 
 @keyframes ticker {
     from {
-        transform: translateX(100%);
+        transform: translateX(0);
     }
     to {
-        transform: translateX(-100%);
+        transform: translateX(-50%);
     }
 }
 
@@ -337,7 +336,7 @@ ul {
         top: 95px;
     }
     .signal-track {
-        animation-duration: 45s;
+        animation-duration: 35s;
     }
     .signal-item {
         font-size: .8rem;
