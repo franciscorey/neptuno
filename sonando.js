@@ -193,19 +193,24 @@ async function fetchFreshData() {
 }
 
 function renderTop10(tracks) {
-    const container = document.querySelector("#top10-list");
+        const container = document.querySelector("#top10-list");
+        container.innerHTML = "";
     
-    // Limpiar contenedor antes de renderizar para evitar duplicados
-    container.innerHTML = "";
-
-    if (!tracks || tracks.length === 0) {
-        container.innerHTML = '<p class="no-data">No hay tracks disponibles</p>';
-        return;
-    }
-
-    tracks
-        .sort((a, b) => b.votos - a.votos)
-        .forEach((track, index) => {
+        if (!tracks || tracks.length === 0) {
+            container.innerHTML = '<p class="no-data">No hay tracks disponibles</p>';
+            // Limpiamos también el Top 1 si no hay señal
+            renderTopOne(null);
+            return;
+        }
+    
+        // 1. Ordenamos los tracks por votos descencientes
+        const sortedTracks = [...tracks].sort((a, b) => b.votos - a.votos);
+    
+        // 2. ¡MAGIA!: Tomamos el índice [0] (el más votado) y lo mandamos al destacado
+        renderTopOne(sortedTracks[0]);
+    
+        // 3. Seguimos con tu lógica habitual para pintar las filas de la lista
+        sortedTracks.forEach((track, index) => {
             const item = document.createElement("div");
             item.className = "track-item";
             
@@ -254,6 +259,45 @@ function renderTop10(tracks) {
             container.appendChild(item);
         });
 }
+
+function renderTopOne(track) {
+        const container = document.querySelector("#top-one-container");
+        if (!container) return; // Salvaguarda si no encuentra el div
+    
+        // Si por alguna razón no hay tracks, limpiamos el contenedor y salimos
+        if (!track) {
+            container.innerHTML = "";
+            return;
+        }
+    
+        // Inyectamos dinámicamente la estructura neobrutalista con la data del puntero
+        container.innerHTML = `
+            <div class="top-one-card">
+                <div class="top-one-cover-wrapper">
+                    <span class="top-one-badge"><i class="fas fa-crown"></i> TOP 1</span>
+                    <img 
+                        class="top-one-cover" 
+                        src="assets/covers/${track.cover}" 
+                        alt="${escapeHTML(track.cancion)}" 
+                        loading="lazy"
+                        onerror="this.src='assets/covers/default.webp'"
+                    >
+                </div>
+                
+                <div class="top-one-content">
+                    <span class="top-one-tagline">El track más impulsado de la señal</span>
+                    <h3 class="top-one-title">${escapeHTML(track.cancion)}</h3>
+                    <p class="top-one-artist">${escapeHTML(track.artista)}</p>
+                    
+                    <div class="top-one-meta">
+                        <span class="top-one-stat">
+                            <i class="fas fa-broadcast-tower"></i> ${track.votos || 0} Impulsos
+                        </span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
 
 function renderNuevos(tracks) {
 
