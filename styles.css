@@ -1607,7 +1607,157 @@ ul {
     .sonando-feedback.success { background-color: var(--success-color); color: #fff; }
     .sonando-feedback.error { background-color: #C62828; color: #fff; }
     .sonando-feedback.info { background-image: var(--accent-gradient); color: #fff; }
+
+    /* ==========================================================================
+       TARJETA DESTACADA: TOP ONE CARD (Efecto Overlap & Rotación)
+       ========================================================================== */
     
+    .top-one-card {
+        position: relative;
+        background-color: var(--surface-color);
+        border: 1px solid rgba(139, 92, 246, 0.25); /* Toque púrpura por ser el rey */
+        border-right: 4px solid var(--accent-color); /* Indicador visual neón */
+        border-radius: 8px;
+        padding: 30px 30px 30px 180px; /* Espacio extra a la izquierda para la portada flotante */
+        margin: 25px 0 35px;
+        min-height: 140px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+        overflow: visible; /* CRÍTICO: Permite que la portada sobresalga del div */
+    }
+    
+    /* CONTENEDOR DE LA PORTADA VOLADORA */
+    .top-one-cover-wrapper {
+        position: absolute;
+        left: -20px; /* Se sale hacia la izquierda del contenedor */
+        top: -15px;  /* Se sale hacia arriba del contenedor */
+        width: 160px;
+        height: 160px;
+        z-index: 10;
+        /* Efecto de inclinación y perspectiva cyberpunk */
+        transform: perspective(800px) rotateY(15deg) rotateX(5deg) rotateZ(-3deg);
+        transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    
+    /* Efecto interactivo al pasar el mouse por la tarjeta */
+    .top-one-card:hover .top-one-cover-wrapper {
+        transform: perspective(800px) rotateY(5deg) rotateX(2deg) rotateZ(-1deg) scale(1.04);
+    }
+    
+    .top-one-cover {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 2px solid var(--accent-light);
+        box-shadow: -10px 15px 30px rgba(0, 0, 0, 0.6), 
+                    0 0 15px rgba(255, 60, 255, 0.2);
+    }
+    
+    /* MINI BADGE FLOTANTE DE LA CORONA */
+    .top-one-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-image: var(--accent-gradient);
+        color: #fff;
+        font-size: 0.65rem;
+        font-weight: 800;
+        padding: 4px 8px;
+        border-radius: 4px;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 10px rgba(139, 92, 246, 0.5);
+        z-index: 12;
+    }
+    
+    /* TEXTOS DE LA TARJETA */
+    .top-one-content {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        width: 100%;
+    }
+    
+    .top-one-tagline {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--primary-hover);
+        font-weight: 600;
+    }
+    
+    .top-one-title {
+        font-family: var(--font-title);
+        font-size: 1.6rem;
+        color: #fff;
+        margin: 2px 0;
+        line-height: 1.2;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .top-one-artist {
+        font-size: 1rem;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+    }
+    
+    /* CONTADOR DE VOTOS DESTACADO */
+    .top-one-meta {
+        display: inline-flex;
+    }
+    
+    .top-one-stat {
+        background: rgba(76, 175, 80, 0.1);
+        border: 1px solid rgba(76, 175, 80, 0.3);
+        color: var(--primary-hover);
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    /* ==========================================================================
+       ADAPTACIÓN RESPONSIVA (MÓVIL)
+       ========================================================================== */
+    
+    @media (max-width: 768px) {
+        .top-one-card {
+            padding: 25px; /* Quitamos el espacio lateral rígido */
+            flex-direction: column; /* Apilamos contenido verticalmente */
+            align-items: center;
+            text-align: center;
+            margin-top: 40px; /* Espacio arriba para que la portada no pise lo anterior */
+            border-right: 1px solid rgba(139, 92, 246, 0.25);
+            border-top: 4px solid var(--accent-color); /* Cambiamos el acento al borde superior */
+        }
+    
+        .top-one-cover-wrapper {
+            position: relative;
+            left: 0;
+            top: -45px; /* La hacemos sobresalir hacia arriba en el eje central */
+            margin-bottom: -30px; /* Absorbe el espacio del desfase */
+            width: 130px;
+            height: 130px;
+            transform: perspective(800px) rotateX(10deg) rotateZ(-1deg); /* Simplificado para mobile */
+        }
+        
+        .top-one-card:hover .top-one-cover-wrapper {
+            transform: perspective(800px) rotateX(5deg) scale(1.02);
+        }
+    
+        .top-one-title {
+            font-size: 1.3rem;
+        }
+    
+        .top-one-meta {
+            justify-content: center;
+        }
+    }
+
     /* DISEÑO RESPONSIVO (MOBILE) */
     @media (max-width: 768px) {
         .sonando-grid,
