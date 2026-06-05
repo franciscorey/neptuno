@@ -170,20 +170,21 @@ async function fetchFreshData() {
     try {
         const response = await fetch(API_URL);
         const data = await response.json();
-        sonandoData = data;
         
-        // Guardar en caché
-        saveToCache(data);
-        
-        // Renderizar solo si estamos en la vista sonando
+        // 1. Primero renderizamos si la sección está activa.
+        // Al hacerlo aquí, getTrackMovement() usará el "previous_ranking" de la ejecución anterior.
         const sonandoSection = document.querySelector('#sonando');
         if (sonandoSection && sonandoSection.classList.contains('active')) {
             renderTop10(data.top10);
             renderNuevos(data.nuevos);
         }
+        
+        // 2. AHORA guardamos en caché, actualizando el "previous_ranking" para la PRÓXIMA carga.
+        sonandoData = data;
+        saveToCache(data);
+        
     } catch (error) {
         console.error("Error obteniendo datos frescos:", error);
-        // Si hay caché, mantenerlo, sino mostrar error
         if (!getCachedData()) {
             document.querySelector("#top10-list").innerHTML = '<p class="error-message">Se perdió la transmisión. Intente más tarde.</p>';
             document.querySelector("#new-list").innerHTML = '<p class="error-message">Se perdió la transmisión. Intente más tarde.</p>';
@@ -211,13 +212,16 @@ function renderTop10(tracks) {
             // Calcular movimiento
             const movement = getTrackMovement(track.id, index, track.votos);
             let movementIcon = '';
-            if (movement === 'up') {
-                movementIcon = '<span class="movement-icon up"><i class="fas fa-arrow-up"></i></span>';
-            } else if (movement === 'down') {
-                movementIcon = '<span class="movement-icon down"><i class="fas fa-arrow-down"></i></span>';
-            } else if (movement === 'new') {
-                movementIcon = '<span class="movement-icon new">NEW</span>';
-            }
+                if (movement === 'up') {
+                    movementIcon = '<span class="movement-icon up"><i class="fas fa-arrow-up"></i></span>';
+                } else if (movement === 'down') {
+                    movementIcon = '<span class="movement-icon down"><i class="fas fa-arrow-down"></i></span>';
+                } else if (movement === 'new') {
+                    movementIcon = '<span class="movement-icon new">NEW</span>';
+                } else if (movement === 'same') {
+                    // Un guion o círculo sutil para indicar constancia
+                    movementIcon = '<span class="movement-icon same"><i class="fas fa-minus"></i></span>';
+                }
             
             // Verificar si ya votó por este track
             const alreadyVoted =     hasVoted(track.id, "TOP_10");
