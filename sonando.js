@@ -287,13 +287,9 @@ function renderNuevos(tracks) {
                 loading="lazy"
                 onerror="this.src='assets/covers/default.webp'"
             >
-
-            <div class="track-title">
-                ${escapeHTML(track.cancion)}
-            </div>
-
-            <div class="track-artist">
-                ${escapeHTML(track.artista)}
+            <div class="track-info">
+                <div class="track-title">${escapeHTML(track.cancion)}</div>
+                <div class="track-artist">${escapeHTML(track.artista)}</div>
             </div>
 
             <div class="track-votes">
