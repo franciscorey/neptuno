@@ -278,6 +278,8 @@ function renderNuevos(tracks) {
         item.innerHTML = `
             <div class="new-badge">NUEVO</div>
 
+            <div class="track-rank new-track-icon">
+                    <i class="fas fa-bolt"></i> </div>
             <img
                 class="track-cover"
                 src="assets/covers/${track.cover}"
