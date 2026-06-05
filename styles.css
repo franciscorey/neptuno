@@ -1279,6 +1279,8 @@ ul {
         border-top: 1px solid transparent;
         border-right: 1px solid transparent;
         border-bottom: 1px solid transparent;
+        width: 100%;
+        min-width: 0;
         transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
     }
@@ -1309,11 +1311,13 @@ ul {
         font-weight: 700;
         color: var(--text-muted);
         min-width: 45px;
+        max-width: 45px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 2px;
+        flex-shrink: 0;
         line-height: 1;
     }
     
@@ -1321,6 +1325,13 @@ ul {
     .track-item:nth-child(-n+3) .track-rank {
         color: var(--accent-light);
         text-shadow: 0 0 10px rgba(255, 60, 255, 0.4);
+    }
+
+    /* Estilo específico para el icono de la estrella en Nuevos Ingresos */
+    .new-track-icon i {
+        font-size: 1rem;
+        color: var(--accent-light);
+        filter: drop-shadow(0 0 5px rgba(255, 60, 255, 0.5)); /* Efecto neón purpura */
     }
     
     /* Portadas de los Discos */
@@ -1379,8 +1390,8 @@ ul {
     /* BADGE NUEVO (COLUMNA DERECHA) */
     .new-badge {
         position: absolute;
-        top: -8px;
-        right: 12px;
+        top: 0px;
+        left: -2px;
         background-image: var(--accent-gradient);
         color: #fff;
         font-size: 0.6rem;
