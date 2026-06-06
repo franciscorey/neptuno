@@ -485,24 +485,24 @@ document.addEventListener('DOMContentLoaded', () => {
             // Fallback si la hoja no tiene filas o falla
             if (!anuncios || anuncios.length === 0) {
                 container.innerHTML = `
-                    <div class="ad-dynamic-card" style="grid-column: 1 / -1; text-align: center; border: 1px dashed rgba(139,92,246,0.3);">
+                    <div class="ad-empty-state">
                         <h3>¿Quieres anunciarte en Radio Neptuno?</h3>
                         <p>Apoya nuestra señal independiente y llega a toda la comunidad local.</p>
-                        <a href="mailto:info@radioneptuno.cl" class="btn-ad-dynamic" style="align-self: center; background: var(--accent-gradient);">Escríbenos Hoy</a>
+                        <a href="mailto:info@radioneptuno.cl" class="btn-ad-dynamic">Escríbenos Hoy</a>
                     </div>
                 `;
                 return;
             }
     
-            // Renderizado interactivo con efecto revelación por hover heredado de CSS
+            // Renderizado interactivo limpio
             container.innerHTML = anuncios.map(ad => {
                 const tieneImagen = ad.imagen && ad.imagen.trim() !== "";
                 return `
                     <div class="ad-dynamic-card ${tieneImagen ? 'has-reveal-image' : ''}">
                         <div class="ad-card-main-content">
-                            <div style="display: flex; align-items: flex-start; gap: 12px; z-index: 2; position: relative;">
-                                <i class="fas ${ad.icono || 'fa-star'}" style="color: var(--primary-hover, #8b5cf6); font-size: 1.2rem; margin-top: 3px;"></i>
-                                <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <div class="ad-header-content">
+                                <i class="fas ${ad.icono || 'fa-star'} ad-icon"></i>
+                                <div class="ad-text-group">
                                     <h3>${escapeHTML(ad.titulo)}</h3>
                                     <p>${escapeHTML(ad.descripcion)}</p>
                                 </div>
@@ -513,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                             ` : ''}
                         </div>
-                        <a href="${ad.link}" target="_blank" class="btn-ad-dynamic" style="z-index: 3; position: relative;">
+                        <a href="${ad.link}" target="_blank" class="btn-ad-dynamic">
                             ${escapeHTML(ad.textoBoton || 'Saber más')}
                         </a>
                     </div>
