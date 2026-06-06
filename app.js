@@ -6,11 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Estado de la aplicación
     let appData = {
-    noticias: [],
-    programas: [],
-    programacion: [],
-    informativos: [],
-    ranking: []
+        noticias: [],
+        programas: [],
+        programacion: [],
+        informativos: [],
+        ranking: [],
+        anuncios: []
     };
     let currentSection = 'inicio';
     let allNews = [];
@@ -34,20 +35,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const data =
             await response.json();
 
-        appData.noticias =
-            data.noticias || [];
+        appData.noticias = data.noticias || [];
 
-        appData.programas =
-            data.programas || [];
+        appData.programas = data.programas || [];
 
-        appData.programacion =
-            data.programacion || [];
+        appData.programacion = data.programacion || [];
 
-        appData.informativos =
-            data.informativos || [];
+        appData.informativos = data.informativos || [];
 
-        appData.ranking =
-            data.top10 || [];
+        appData.ranking = data.top10 || [];
+
+        appData.anuncios = data.anuncios || [];
 
         console.log('Datos precargados');
 
@@ -80,15 +78,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const aboutSection = document.getElementById('sobre-radio');
         const exploreSection = document.getElementById('explora');
         const tvSection = document.getElementById('neptuno-tv');
+        const adsSection = document.getElementById('ads-section');
         
         if (sectionId === 'inicio') {
             if (aboutSection) aboutSection.classList.add('active');
             if (exploreSection) exploreSection.classList.add('active');
             if (tvSection) tvSection.classList.add('active');
+            if (adsSection) adsSection.classList.add('active');
         } else {
             if (aboutSection) aboutSection.classList.remove('active');
             if (exploreSection) exploreSection.classList.remove('active');
             if (tvSection) tvSection.classList.remove('active');
+            if (adsSection) adsSection.classList.remove('active');
         }
         
         // Actualizar navegación activa en el menú
@@ -179,9 +180,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const aboutSection = document.getElementById('sobre-radio');
     const exploreSection = document.getElementById('explora');
     const tvSection = document.getElementById('neptuno-tv');
+    const adsSection = document.getElementById('ads-section');
     if (aboutSection) aboutSection.classList.add('active');
     if (exploreSection) exploreSection.classList.add('active');
     if (tvSection) tvSection.classList.add('active');
+    if (adsSection) adsSection.classList.add('active');
 
     // Manejar botón "Volver" y navegación del historial
     window.addEventListener('popstate', (e) => {
@@ -470,41 +473,81 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Inicializar carga de datos
-    initData();
+    // ==========================================
+    // NUEVO: SISTEMA DE ANUNCIOS INTERACTIVOS
+    // ==========================================
+        function renderAnuncios() {
+            const container = document.querySelector("#ads-container");
+            if (!container) return;
+    
+            const anuncios = appData.anuncios;
+    
+            // Fallback si la hoja no tiene filas o falla
+            if (!anuncios || anuncios.length === 0) {
+                container.innerHTML = `
+                    <div class="ad-dynamic-card" style="grid-column: 1 / -1; text-align: center; border: 1px dashed rgba(139,92,246,0.3);">
+                        <h3>¿Quieres anunciarte en Radio Neptuno?</h3>
+                        <p>Apoya nuestra señal independiente y llega a toda la comunidad local.</p>
+                        <a href="mailto:info@radioneptuno.cl" class="btn-ad-dynamic" style="align-self: center; background: var(--accent-gradient);">Escríbenos Hoy</a>
+                    </div>
+                `;
+                return;
+            }
+    
+            // Renderizado interactivo con efecto revelación por hover heredado de CSS
+            container.innerHTML = anuncios.map(ad => {
+                const tieneImagen = ad.imagen && ad.imagen.trim() !== "";
+                return `
+                    <div class="ad-dynamic-card ${tieneImagen ? 'has-reveal-image' : ''}">
+                        <div class="ad-card-main-content">
+                            <div style="display: flex; align-items: flex-start; gap: 12px; z-index: 2; position: relative;">
+                                <i class="fas ${ad.icono || 'fa-star'}" style="color: var(--primary-hover, #8b5cf6); font-size: 1.2rem; margin-top: 3px;"></i>
+                                <div style="display: flex; flex-direction: column; gap: 4px;">
+                                    <h3>${escapeHTML(ad.titulo)}</h3>
+                                    <p>${escapeHTML(ad.descripcion)}</p>
+                                </div>
+                            </div>
+                            ${tieneImagen ? `
+                                <div class="ad-reveal-wrapper">
+                                    <img src="${ad.imagen}" alt="${escapeHTML(ad.titulo)}" loading="lazy">
+                                </div>
+                            ` : ''}
+                        </div>
+                        <a href="${ad.link}" target="_blank" class="btn-ad-dynamic" style="z-index: 3; position: relative;">
+                            ${escapeHTML(ad.textoBoton || 'Saber más')}
+                        </a>
+                    </div>
+                `;
+            }).join('');
+        }
+    
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
     
 // ==========================================
 // SISTEMA DE PROGRAMACIÓN DINÁMICA
 // ==========================================
 
 async function initData() {
+        await preloadData();
 
-    await preloadData();
+        allNews = appData.noticias;
+        programasData = appData.programas;
+        programacionData = appData.programacion;
 
-    allNews =
-        appData.noticias;
+        renderNewsList();
+        mergeScheduleData();
+        renderSchedule();
+        updateLiveSchedule();
+        initInformativos();
+        renderAnuncios(); // ¡INTEGRADO! Se dibuja justo al arrancar la app con los datos precargados
 
-    programasData =
-        appData.programas;
-
-    programacionData =
-        appData.programacion;
-
-    renderNewsList();
-
-    mergeScheduleData();
-
-    renderSchedule();
-
-    updateLiveSchedule();
-
-    initInformativos();
-
-    setInterval(
-        updateLiveSchedule,
-        60000
-    );
-}
+        setInterval(updateLiveSchedule, 60000);
+    }
     
 async function loadProgramas() {
 
@@ -1059,28 +1102,6 @@ function updateWidgetSchedule(
         displayDefaultIcon();
     }
 
-    // Highlight automático del menú basado en la sección visible durante el scroll
-    // Desactivado en modo SPA ya que la navegación es manual
-    /*
-    const sections = document.querySelectorAll('section[id]');
-    window.addEventListener('scroll', () => {
-        const scrollY = window.pageYOffset;
-        
-        sections.forEach(current => {
-            const sectionHeight = current.offsetHeight;
-            const sectionTop = current.offsetTop - 110;
-            const sectionId = current.getAttribute('id');
-            const navLink = document.querySelector(`.main-nav a[href*=${sectionId}]`);
-
-            if (navLink) {
-                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                    document.querySelector('.main-nav a.active')?.classList.remove('active');
-                    navLink.classList.add('active');
-                }
-            }
-        });
-    });
-    */
 
     // Funcionalidad del botón CTA "Escuchar Ahora" en el Hero
     const ctaEscucharAhora = document.getElementById('ctaEscucharAhora');
@@ -1116,4 +1137,7 @@ function updateWidgetSchedule(
             }
         });
     }
+
+    // Inicializar carga de datos maestra al inicio
+    initData();
 });
