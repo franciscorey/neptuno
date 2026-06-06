@@ -661,246 +661,307 @@ ul {
 
 
 /* NEPTUNO TV */
-.neptuno-tv-section {
-    padding: 20px 10px;
-    background: var(--surface-color);
-}
+    .neptuno-tv-section {
+        padding: 20px 10px;
+        background: var(--surface-color);
+    }
+    
+    .tv-player {
+        margin-top: 15px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+    }
+    
+    .tv-player iframe {
+        width: 100%;
+        aspect-ratio: 16/9;
+        border: none;
+    }
+    
+    /* SOBRE LA RADIO */
+    .about-section {
+        background-color: var(--surface-light);
+    }
+    
+    /* SECCIÓN EXPLORA */
+    .explore-section {
+        background-color: var(--surface-color);
+    }
+    
+    .explore-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .explore-card {
+        background-color: var(--surface-light);
+        padding: 40px 30px;
+        border-radius: 8px;
+        text-align: center;
+        border: 1px solid var(--border-color);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .explore-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(76, 175, 80, 0.2);
+        border-color: var(--primary-color);
+    }
+    
+    .explore-card i {
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+    }
+    
+    .explore-card h3 {
+        font-family: var(--font-title);
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+    
+    .explore-card p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+    
+    /* BANNER DE SECCIÓN */
+    .section-banner {
+        width: 100%;
+        max-height: 300px;
+        overflow: hidden;
+        border-radius: 8px;
+        margin-bottom: 40px;
+    }
+    
+    .banner-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+    
+    .about-grid {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 50px;
+        align-items: center;
+    }
+    
+    .about-text h2 {
+        font-family: var(--font-title);
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+    
+    .divider {
+        border: none;
+        border-top: 3px solid var(--primary-color);
+        width: 60px;
+        margin-bottom: 20px;
+    }
+    
+    .about-text p {
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+    
+    .about-stats,
+    .about-image {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .radio-illustration {
+        max-width: 200px;
+        height: auto;
+        filter: drop-shadow(0 0 20px rgba(76, 175, 80, 0.3));
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .stat-card {
+        background-color: var(--surface-color);
+        padding: 25px;
+        border-radius: 6px;
+        border-left: 4px solid var(--accent-color);
+    }
+    
+    .stat-card h3 {
+        font-family: var(--font-title);
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 5px;
+    }
+    
+    /* PARRILLA DE PROGRAMACIÓN */
+    .schedule-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+    
+    .schedule-card {
+        background-color: var(--surface-color);
+        padding: 25px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        position: relative;
+    }
+    
+    .schedule-card.current {
+        border-color: var(--accent-light);
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+    }
+    
+    .schedule-card .time {
+        display: block;
+        color: var(--primary-color);
+        font-weight: bold;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .schedule-card h3 {
+        font-family: var(--font-title);
+        margin-bottom: 10px;
+    }
+    
+    .schedule-card p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    
+    .current-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: var(--accent-light);
+        color: #fff;
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+    
 
-.tv-player {
-    margin-top: 15px;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-}
+    /* ==========================================
+       SECCIÓN ANUNCIOS - CONEXIONES NEPTUNO
+       ========================================== */
 
-.tv-player iframe {
-    width: 100%;
-    aspect-ratio: 16/9;
-    border: none;
-}
-
-/* SOBRE LA RADIO */
-.about-section {
-    background-color: var(--surface-light);
-}
-
-/* SECCIÓN EXPLORA */
-.explore-section {
-    background-color: var(--surface-color);
-}
-
-.explore-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
-}
-
-.explore-card {
-    background-color: var(--surface-light);
-    padding: 40px 30px;
-    border-radius: 8px;
-    text-align: center;
-    border: 1px solid var(--border-color);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.explore-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(76, 175, 80, 0.2);
-    border-color: var(--primary-color);
-}
-
-.explore-card i {
-    font-size: 3rem;
-    color: var(--primary-color);
-    margin-bottom: 20px;
-}
-
-.explore-card h3 {
-    font-family: var(--font-title);
-    font-size: 1.3rem;
-    margin-bottom: 10px;
-}
-
-.explore-card p {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-
-/* BANNER DE SECCIÓN */
-.section-banner {
-    width: 100%;
-    max-height: 300px;
-    overflow: hidden;
-    border-radius: 8px;
-    margin-bottom: 40px;
-}
-
-.banner-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
-
-.about-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 50px;
-    align-items: center;
-}
-
-.about-text h2 {
-    font-family: var(--font-title);
-    font-size: 2rem;
-    margin-bottom: 10px;
-}
-
-.divider {
-    border: none;
-    border-top: 3px solid var(--primary-color);
-    width: 60px;
-    margin-bottom: 20px;
-}
-
-.about-text p {
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin-bottom: 15px;
-}
-
-.about-stats,
-.about-image {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-    justify-content: center;
-}
-
-.radio-illustration {
-    max-width: 200px;
-    height: auto;
-    filter: drop-shadow(0 0 20px rgba(76, 175, 80, 0.3));
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-.stat-card {
-    background-color: var(--surface-color);
-    padding: 25px;
-    border-radius: 6px;
-    border-left: 4px solid var(--accent-color);
-}
-
-.stat-card h3 {
-    font-family: var(--font-title);
-    font-size: 2rem;
-    color: var(--primary-color);
-    margin-bottom: 5px;
-}
-
-/* PARRILLA DE PROGRAMACIÓN */
-.schedule-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-}
-
-.schedule-card {
-    background-color: var(--surface-color);
-    padding: 25px;
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-    position: relative;
-}
-
-.schedule-card.current {
-    border-color: var(--accent-light);
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
-}
-
-.schedule-card .time {
-    display: block;
-    color: var(--primary-color);
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-}
-
-.schedule-card h3 {
-    font-family: var(--font-title);
-    margin-bottom: 10px;
-}
-
-.schedule-card p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-
-.current-badge {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background-color: var(--accent-light);
-    color: #fff;
-    font-size: 0.7rem;
-    padding: 2px 8px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-/* SECCIÓN ANUNCIOS */
-.ads-section {
-    background-color: var(--bg-color);
-    padding: 40px 0;
-}
-
-.ads-container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 var(--spacing);
-}
-
-.ad-banner {
-    background: linear-gradient(to right, var(--surface-color), var(--surface-light));
-    border: 1px dashed var(--primary-color);
-    padding: 40px;
-    border-radius: 8px;
-    text-align: center;
-}
-
-.ad-banner h4 {
-    font-size: 1.3rem;
-    margin-bottom: 10px;
-}
-
-.ad-banner p {
-    color: var(--text-muted);
-    margin-bottom: 20px;
-}
-
-.btn-secondary {
-    display: inline-block;
-    border: 2px solid var(--text-color);
-    padding: 10px 24px;
-    font-weight: bold;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.btn-secondary:hover {
-    background-color: var(--text-color);
-    color: var(--bg-color);
-}
+        .ads-section {
+            /* Mapea estas variables a tus colores globales si las tienes (ej. var(--color-primario)) */
+            --ads-purple: #8a2be2; 
+            --ads-green: #00ff00;
+            --ads-border: #111111;
+            --ads-bg: #ffffff;
+            
+            padding: 3rem 0;
+            width: 100%;
+        }
+        
+        .ads-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        /* Indicador de transmisión/actividad */
+        .pulse-indicator {
+            width: 12px;
+            height: 12px;
+            background-color: var(--ads-purple);
+            border-radius: 50%;
+            animation: pulse-purple 2s infinite;
+        }
+        
+        @keyframes pulse-purple {
+            0% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(138, 43, 226, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0); }
+        }
+        
+        .section-subtitle {
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--ads-border);
+        }
+        
+        /* Grilla responsive pura */
+        .explore-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        
+        /* Tarjetas inyectadas por JS */
+        .anuncio-card {
+            background-color: var(--ads-bg);
+            border: 2px solid var(--ads-border);
+            border-radius: 0; /* Bordes rectos para un look más gráfico/retro */
+            overflow: hidden;
+            position: relative;
+            box-shadow: 6px 6px 0px var(--ads-purple);
+            transition: all 0.2s ease-out;
+        }
+        
+        /* Interactividad de alto contraste al pasar el mouse */
+        .anuncio-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px var(--ads-green);
+        }
+        
+        .anuncio-card a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+        }
+        
+        .img-anuncio {
+            width: 100%;
+            height: auto;
+            display: block;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            filter: grayscale(15%) contrast(110%);
+            transition: filter 0.3s ease;
+        }
+        
+        .anuncio-card:hover .img-anuncio {
+            filter: grayscale(0%) contrast(100%);
+        }
+        
+        /* Estado vacío (cuando no hay banners activos) */
+        .no-ads {
+            grid-column: 1 / -1;
+            padding: 3rem;
+            text-align: center;
+            border: 3px dashed var(--ads-purple);
+            color: var(--ads-border);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(138, 43, 226, 0.05);
+        }
 
 /* NOTICIAS */
 .news-grid {
