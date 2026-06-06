@@ -267,6 +267,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
+    // VISTA NEPTUNO TV
+    // ==========================================
+
+    function renderNeptunoTV() {
+    const container = document.querySelector("#tv-player-container");
+    if (!container) return;
+
+    const tvConfig = appData.tv;
+
+    // Fallback por si la API no responde o el nodo viene vacío
+    if (!tvConfig) {
+        container.innerHTML = `<video autoplay loop muted playsinline><source src="assets/tv-loop.mp4" type="video/mp4"></video>`;
+        return;
+    }
+
+    if (tvConfig.activo && tvConfig.url_stream) {
+        // MODO EN VIVO: Inyecta tu iframe de Kick original
+        container.innerHTML = `
+            <iframe 
+                src="${tvConfig.url_stream}" 
+                allowfullscreen>
+            </iframe>
+        `;
+    } else {
+        // MODO OFF-AIR: Inyecta el video loop local usando la ruta de tu Sheets
+        const videoSrc = tvConfig.url_loop || "assets/tv-loop.mp4";
+        container.innerHTML = `
+            <video autoplay loop muted playsinline>
+                <source src="${videoSrc}" type="video/mp4">
+            </video>
+        `;
+    }
+}
+
+    // ==========================================
     // SISTEMA DE NOTICIAS DINÁMICAS
     // ==========================================
 
