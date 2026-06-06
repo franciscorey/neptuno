@@ -859,71 +859,71 @@ ul {
     }
     
 
-    /* ==========================================
-       SISTEMA DE ANUNCIOS (CSS PURO)
+   /* ==========================================
+       SISTEMA DE ANUNCIOS (SIN SALTO DE DOM)
        ========================================== */
     
     #ads-container {
-        --ad-purple: #8b5cf6; /* Ajusta a tu púrpura exacto */
-        --ad-green: #10b981;  /* Ajusta a tu verde exacto */
-        --ad-dark: #111111;
-        --ad-light: #ffffff;
+        /* Usamos variables más neutras para homogeneizar con tu web */
+        --ad-base-bg: var(--bg-color, #ffffff);
+        --ad-text: var(--text-color, #111111);
+        --ad-accent: #8b5cf6; /* Púrpura */
+        --ad-hover: #10b981;  /* Verde */
         
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 2rem;
         padding: 1rem 0;
     }
     
     /* Tarjeta Principal */
     .ad-dynamic-card {
-        background: var(--ad-light);
-        border: 2px solid var(--ad-dark);
+        background: var(--ad-base-bg);
+        border: 2px solid var(--ad-text);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         padding: 1.5rem;
         position: relative;
-        box-shadow: 6px 6px 0px var(--ad-purple);
-        transition: all 0.2s ease-out;
+        overflow: hidden; /* Mantiene la imagen dentro */
+        min-height: 250px; /* ALTO FIJO: Evita que el footer salte al hacer hover */
+        box-shadow: 6px 6px 0px var(--ad-text); /* Sombra homogénea oscura */
+        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
     }
     
-    /* Interactividad Hover */
     .ad-dynamic-card:hover {
         transform: translate(-4px, -4px);
-        box-shadow: 10px 10px 0px var(--ad-green);
+        box-shadow: 10px 10px 0px var(--ad-hover); /* Pasa a verde en interactividad */
     }
     
-    .ad-card-main-content {
-        display: flex;
-        flex-direction: column;
-        gap: 1.2rem;
-        margin-bottom: 1.5rem;
+    /* Contenido frontal (Asegura que quede sobre la imagen) */
+    .ad-card-content, .btn-ad-dynamic {
+        position: relative;
         z-index: 2;
     }
     
-    /* Cabecera del Anuncio (Icono + Textos) */
-    .ad-header-content {
+    .ad-header-group {
         display: flex;
         align-items: flex-start;
         gap: 12px;
+        margin-bottom: 1.5rem;
     }
     
     .ad-icon {
-        color: var(--ad-purple);
+        color: var(--ad-text);
         font-size: 1.4rem;
         margin-top: 2px;
         transition: color 0.2s ease;
     }
     
     .ad-dynamic-card:hover .ad-icon {
-        color: var(--ad-green);
+        color: var(--ad-hover);
     }
     
     .ad-text-group h3 {
         margin: 0 0 0.4rem 0;
-        color: var(--ad-dark);
-        font-size: 1.2rem;
+        color: var(--ad-text);
+        font-size: 1.25rem;
         font-weight: 800;
         line-height: 1.2;
     }
@@ -931,83 +931,72 @@ ul {
     .ad-text-group p {
         margin: 0;
         font-size: 0.95rem;
-        color: #444;
+        color: var(--ad-text);
+        opacity: 0.8;
         line-height: 1.4;
     }
     
-    /* Efecto Revelación de Imagen */
-    .ad-reveal-wrapper {
+    /* Imagen Revelable: Ahora es un fondo absoluto */
+    .ad-reveal-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-        max-height: 0;
-        overflow: hidden;
+        height: 100%;
+        z-index: 1;
         opacity: 0;
-        border: 2px solid transparent;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        transform: scale(1.05); /* Efecto zoom out */
+        background: var(--ad-base-bg); /* Oculta un poco si la imagen es muy ruidosa */
     }
     
-    .ad-dynamic-card:hover .ad-reveal-wrapper {
-        max-height: 200px; /* Ajusta según el tamaño de tus imágenes */
-        opacity: 1;
-        border-color: var(--ad-dark);
-        margin-top: 0.5rem;
-    }
-    
-    .ad-reveal-wrapper img {
+    .ad-reveal-bg img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        display: block;
-        filter: grayscale(100%);
-        transition: filter 0.3s ease;
+        filter: grayscale(100%) opacity(0.15); /* Blanco y negro translúcido para integrar el color */
     }
     
-    .ad-dynamic-card:hover .ad-reveal-wrapper img {
-        filter: grayscale(0%);
+    .ad-dynamic-card:hover .ad-reveal-bg {
+        opacity: 1;
+        transform: scale(1);
     }
     
-    /* Botón CTA */
+    /* Botón CTA (Estilo sólido) */
     .btn-ad-dynamic {
         display: block;
         text-align: center;
-        background: var(--ad-purple);
-        color: var(--ad-light);
+        background: var(--ad-text);
+        color: var(--ad-base-bg);
         text-decoration: none;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
         padding: 0.8rem 1.2rem;
-        border: 2px solid var(--ad-dark);
+        border: 2px solid var(--ad-text);
         transition: all 0.2s ease;
-        z-index: 3;
     }
     
     .btn-ad-dynamic:hover {
-        background: var(--ad-green);
-        color: var(--ad-dark);
+        background: var(--ad-accent);
+        color: var(--ad-base-bg);
     }
     
-    /* Estado Vacío (Fallback) */
+    /* Estado Vacío */
     .ad-empty-state {
         grid-column: 1 / -1;
         text-align: center;
         padding: 3rem;
-        border: 3px dashed var(--ad-purple);
-        background: rgba(139, 92, 246, 0.05);
+        border: 3px dashed var(--ad-text);
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 1rem;
+        opacity: 0.7;
     }
     
-    .ad-empty-state h3 {
-        margin: 0;
-        color: var(--ad-purple);
-    }
-    
-    .ad-empty-state p {
-        margin: 0;
-        max-width: 500px;
-    }
+    .ad-empty-state h3 { margin: 0; }
+    .ad-empty-state p { margin: 0; max-width: 500px; }
 
     /* ==========================================
        NOTICIAS
