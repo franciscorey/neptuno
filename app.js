@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         appData.anuncios = data.anuncios || [];
 
+        appData.tv = data.tv || null;
+
         console.log('Datos precargados');
 
     } catch(error) {
@@ -586,8 +588,9 @@ async function initData() {
         renderSchedule();
         updateLiveSchedule();
         initInformativos();
-        renderAnuncios(); // ¡INTEGRADO! Se dibuja justo al arrancar la app con los datos precargados
-
+        renderAnuncios();
+        renderNeptunoTV();
+    
         setInterval(updateLiveSchedule, 60000);
     }
     
