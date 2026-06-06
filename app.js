@@ -474,7 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // NUEVO: SISTEMA DE ANUNCIOS INTERACTIVOS
+    // SISTEMA DE ANUNCIOS INTERACTIVOS (Corregido)
     // ==========================================
         function renderAnuncios() {
             const container = document.querySelector("#ads-container");
@@ -482,7 +482,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
             const anuncios = appData.anuncios;
     
-            // Fallback si la hoja no tiene filas o falla
             if (!anuncios || anuncios.length === 0) {
                 container.innerHTML = `
                     <div class="ad-empty-state">
@@ -494,26 +493,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
     
-            // Renderizado interactivo limpio
             container.innerHTML = anuncios.map(ad => {
                 const tieneImagen = ad.imagen && ad.imagen.trim() !== "";
+                
+                // VALIDACIÓN DE ENLACE EXTERNO: Si no trae http/https, se lo agregamos automáticamente
+                let urlFinal = ad.link ? ad.link.trim() : '#';
+                if (urlFinal !== '#' && !/^https?:\/\//i.test(urlFinal)) {
+                    urlFinal = 'https://' + urlFinal;
+                }
+    
                 return `
-                    <div class="ad-dynamic-card ${tieneImagen ? 'has-reveal-image' : ''}">
-                        <div class="ad-card-main-content">
-                            <div class="ad-header-content">
+                    <div class="ad-dynamic-card ${tieneImagen ? 'has-image' : ''}">
+                        ${tieneImagen ? `
+                            <div class="ad-reveal-bg">
+                                <img src="${ad.imagen}" alt="${escapeHTML(ad.titulo)}" loading="lazy">
+                            </div>
+                        ` : ''}
+                        
+                        <div class="ad-card-content">
+                            <div class="ad-header-group">
                                 <i class="fas ${ad.icono || 'fa-star'} ad-icon"></i>
                                 <div class="ad-text-group">
                                     <h3>${escapeHTML(ad.titulo)}</h3>
                                     <p>${escapeHTML(ad.descripcion)}</p>
                                 </div>
                             </div>
-                            ${tieneImagen ? `
-                                <div class="ad-reveal-wrapper">
-                                    <img src="${ad.imagen}" alt="${escapeHTML(ad.titulo)}" loading="lazy">
-                                </div>
-                            ` : ''}
                         </div>
-                        <a href="${ad.link}" target="_blank" class="btn-ad-dynamic">
+                        
+                        <a href="${urlFinal}" target="_blank" rel="noopener noreferrer" class="btn-ad-dynamic">
                             ${escapeHTML(ad.textoBoton || 'Saber más')}
                         </a>
                     </div>
