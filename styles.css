@@ -661,23 +661,27 @@ ul {
 
 
 /* NEPTUNO TV */
-    .neptuno-tv-section {
-        padding: 20px 10px;
-        background: var(--surface-color);
-    }
-    
-    .tv-player {
-        margin-top: 15px;
-        border-radius: 8px;
-        overflow: hidden;
-        border: 1px solid var(--border-color);
-    }
-    
-    .tv-player iframe {
-        width: 100%;
-        aspect-ratio: 16/9;
-        border: none;
-    }
+.neptuno-tv-section {
+    padding: 20px 10px;
+    background: var(--surface-color);
+}
+
+.tv-player {
+    margin-top: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+/* El video nativo ahora comparte los mismos estilos exactos del iframe */
+.tv-player iframe, 
+.tv-player video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: none;
+    display: block;
+    object-fit: cover; /* Asegura que el video loop no se deforme */
+}
     
     /* SOBRE LA RADIO */
     .about-section {
