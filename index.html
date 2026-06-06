@@ -337,16 +337,20 @@
             </div>
         </section>
 
-        <!-- VISTA: PUBLICIDAD (siempre visible dentro del main) -->
-        <section class="ads-section view-section" id="ads-section">
-            <div class="ads-container">
-                <div class="ad-banner">
-                    <h4>¿Quieres que tu proyecto o comercio suene aquí?</h4>
-                    <p>Apoya a la radio comunitaria y llega a toda nuestra audiencia local. Tarifas especiales.</p>
-                    <a href="mailto:info@radioneptuno.cl" class="btn-secondary">Escríbenos Hoy</a>
-                </div>
-            </div>
-        </section>
+		<!-- VISTA: ANUNCIOS Y CLASIFICADOS (Dinámico y Reutilizable) -->
+		<section class="ads-section" id="ads-section">
+		    <div class="section-container">
+		        <div class="ads-header" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+		            <span class="pulse-indicator" style="width: 8px; height: 8px; background: var(--accent-light, #ff3cff); border-radius: 50%; box-shadow: 0 0 8px var(--accent-light);"></span>
+		            <h2 class="section-subtitle" style="margin: 0; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem;">Conexiones Neptuno</h2>
+		        </div>
+		        
+		        <!-- Reutilizamos la clase general de grillas de tu SPA -->
+		        <div class="explore-grid" id="ads-container">
+		            <!-- Se carga dinámicamente desde el JS -->
+		        </div>
+		    </div>
+		</section>
     </main>
 
     <!-- Widget Flotante de Radio -->
