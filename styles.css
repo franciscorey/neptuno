@@ -133,6 +133,12 @@ ul {
     color: var(--primary-color);
 }
 
+.logo img {
+    height: 60px;
+    width: auto;
+    display: block;
+}
+
 .main-nav ul {
     display: flex;
     gap: 30px;
