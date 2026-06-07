@@ -329,22 +329,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Función para mostrar Fecha y Hora en la Barra
 
-    function updateSignalDateTime() {
+    function updateDateTime() {
+    
+        const now = new Date();
+    
+        const dateOptions = {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        };
+    
+        const timeOptions = {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        };
+    
         const dateEl = document.getElementById('current-date');
         const timeEl = document.getElementById('current-time');
-        
-        if (!dateEl || !timeEl) return;
-        
-        const now = new Date();
-        
-        // Formato de fecha chilena (DD/MM/AAAA)
-        const dateOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        dateEl.textContent = now.toLocaleDateString('es-CL', dateOptions);
-        
-        // Formato de hora de 24 horas (HH:MM)
-        const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: false };
-        timeEl.textContent = now.toLocaleTimeString('es-CL', timeOptions);
+    
+        if (dateEl) {
+            dateEl.textContent =
+                now.toLocaleDateString('es-CL', dateOptions);
+        }
+    
+        if (timeEl) {
+            timeEl.textContent =
+                now.toLocaleTimeString('es-CL', timeOptions);
+        }
     }
+    
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
 
     // ==========================================
     // VISTA NEPTUNO TV
