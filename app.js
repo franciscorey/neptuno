@@ -85,17 +85,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const exploreSection = document.getElementById('explora');
         const tvSection = document.getElementById('neptuno-tv');
         const adsSection = document.getElementById('ads-section');
+        const widgetsSection = document.getElementById('datos-widgets');
         
         if (sectionId === 'inicio') {
             if (aboutSection) aboutSection.classList.add('active');
             if (exploreSection) exploreSection.classList.add('active');
             if (tvSection) tvSection.classList.add('active');
             if (adsSection) adsSection.classList.add('active');
+            if (widgetsSection) widgetsSection.classList.add('active');
         } else {
             if (aboutSection) aboutSection.classList.remove('active');
             if (exploreSection) exploreSection.classList.remove('active');
             if (tvSection) tvSection.classList.remove('active');
             if (adsSection) adsSection.classList.remove('active');
+            if (widgetsSection) widgetsSection.classList.remove('active');
         }
         
         // Actualizar navegación activa en el menú
@@ -187,10 +190,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const exploreSection = document.getElementById('explora');
     const tvSection = document.getElementById('neptuno-tv');
     const adsSection = document.getElementById('ads-section');
+    const widgetsSection = document.getElementById('datos-widgets');
     if (aboutSection) aboutSection.classList.add('active');
     if (exploreSection) exploreSection.classList.add('active');
     if (tvSection) tvSection.classList.add('active');
     if (adsSection) adsSection.classList.add('active');
+    if (widgetsSection) widgetsSection.classList.add('active');
 
     // Manejar botón "Volver" y navegación del historial
     window.addEventListener('popstate', (e) => {
