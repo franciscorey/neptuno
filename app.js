@@ -51,8 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log('Datos precargados');
 
-    } catch(error) {
+        // Ejecutar renders iniciales
+        renderInformativos(); 
+        if (currentSection === 'noticias') renderNoticias();
 
+    } catch(error) {
+        
         console.error(
             'Error precargando datos',
             error
@@ -198,6 +202,61 @@ document.addEventListener('DOMContentLoaded', () => {
             showSection('inicio');
         }
     });
+
+    // REFRESH DE DATA
+
+    
+    // 2. NUEVA FUNCIÓN: Actualizador en tiempo real exclusivo para NOTICIAS (Salta caché del navegador)
+        async function refreshNoticiasTiempoReal() {
+            try {
+                // Generamos el bypass solo para esta petición ligera de noticias
+                const cacheBuster = new Date().getTime();
+                const response = await fetch(`${API_URL}?action=noticias&_cb=${cacheBuster}`);
+                const data = await response.json();
+                
+                if (data.success && data.noticias) {
+                    // Sincronizamos los dos almacenes globales de noticias
+                    appData.noticias = data.noticias;
+                    allNews = data.noticias; 
+                    
+                    console.log("📰 Noticias actualizadas en tiempo real desde Sheets");
+                    
+                    // Si el usuario está parado justo en la sección de noticias, se las refrescamos usando la función correcta
+                    if (currentSection === 'noticias' && typeof renderNewsList === 'function') {
+                        renderNewsList();
+                    }
+                }
+            } catch (error) {
+                console.error("Error al refrescar noticias en segundo plano:", error);
+            }
+        }
+    
+    // 3. NUEVA FUNCIÓN: Actualizador en tiempo real para la BARRA DE INFO (Informativos) y TV
+    async function refreshBarraYTvTiempoReal() {
+        try {
+            const cacheBuster = new Date().getTime();
+            
+            // Pedimos informativos con bypass de navegador
+            const resInfo = await fetch(`${API_URL}?action=informativos&_cb=${cacheBuster}`);
+            const dataInfo = await resInfo.json();
+            if (dataInfo.success && dataInfo.informativos) {
+                appData.informativos = dataInfo.informativos;
+                if (typeof renderInformativos === 'function') renderInformativos();
+            }
+    
+            // Pedimos configuración de TV por si se activa o desactiva la transmisión en vivo
+            const resTv = await fetch(`${API_URL}?action=tv&_cb=${cacheBuster}`);
+            const dataTv = await resTv.json();
+            if (dataTv.success && dataTv.tv) {
+                appData.tv = dataTv.tv;
+                // Aquí puedes llamar a la función que actualice el reproductor de TV si existiera
+                console.log("📺 Estado de la TV verificado");
+            }
+            
+        } catch (error) {
+            console.error("Error al refrescar barra de información:", error);
+        }
+    }
 
     // ======================================
     // BARRA INFORMATIVA
@@ -576,13 +635,16 @@ document.addEventListener('DOMContentLoaded', () => {
 // SISTEMA DE PROGRAMACIÓN DINÁMICA
 // ==========================================
 
-async function initData() {
+    async function initData() {
+        // 1. Espera la precarga pesada inicial (Pasa por el caché largo de Google)
         await preloadData();
-
+    
+        // 2. Asignación de los datos iniciales
         allNews = appData.noticias;
         programasData = appData.programas;
         programacionData = appData.programacion;
-
+    
+        // 3. Renders e inicializaciones iniciales de la página
         renderNewsList();
         mergeScheduleData();
         renderSchedule();
@@ -590,8 +652,11 @@ async function initData() {
         initInformativos();
         renderAnuncios();
         renderNeptunoTV();
-    
-        setInterval(updateLiveSchedule, 60000);
+        
+        // 4. Temporizadores en segundo plano (Ciclos en tiempo real optimizados)
+        setInterval(updateLiveSchedule, 60000);       // Actualiza la aguja de la hora actual
+        setInterval(refreshBarraYTvTiempoReal, 60000); // Revisa la barra e hilos de TV cada 1 min
+        setInterval(refreshNoticiasTiempoReal, 300000); // Revisa noticias nuevas cada 5 min
     }
     
 async function loadProgramas() {
