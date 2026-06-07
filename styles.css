@@ -431,8 +431,8 @@ ul {
 /* ========================================== */
 
     .widgets-publicos-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        display: flex;
+        flex-wrap: wrap; /* Permite que las cajas bajen si no caben */
         gap: 16px;
         margin: 20px 0;
         width: 100%;
@@ -445,8 +445,22 @@ ul {
         font-family: var(--font-main);
         color: var(--text-color);
         box-shadow: 4px 4px 0px var(--border-color); /* Estilo bloque rígido retro */
+        flex: 1 1 250px; 
         display: flex;
         flex-direction: column;
+    }
+    
+    /* RESPONSIVE: Ajustes para pantallas pequeñas (Celulares) */
+    @media (max-width: 768px) {
+        .widgets-publicos-container {
+            flex-direction: column; /* Fuerzas el apilado vertical estricto */
+            gap: 10px;               /* Reduces el espaciado entre cajas */
+        }
+        
+        .data-widget-card {
+            flex: 1 1 auto;          /* Se adaptan al ancho completo disponible */
+            padding: 12px;           /* Aprovechas mejor el espacio interno en pantallas chicas */
+        }
     }
     
     .data-widget-card h3 {
@@ -455,7 +469,7 @@ ul {
         text-transform: uppercase;
         letter-spacing: 0.5px;
         margin-top: 0;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
         padding-bottom: 6px;
         border-bottom: 1px dashed var(--border-color);
         color: var(--primary-color);
