@@ -300,9 +300,10 @@ ul {
 
 .signal-date,
 .signal-time {
-    color: var(--primary-color);
+    color: var(--bg-color);
     display: flex;
     align-items: center;
+    font-weight: 500;
     gap: 6px;
 }
 
