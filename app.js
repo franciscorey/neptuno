@@ -333,32 +333,44 @@ document.addEventListener('DOMContentLoaded', () => {
     
         const now = new Date();
     
-        const dateOptions = {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        };
+        const dias = [
+            'Domingo',
+            'Lunes',
+            'Martes',
+            'Miércoles',
+            'Jueves',
+            'Viernes',
+            'Sábado'
+        ];
     
-        const timeOptions = {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-        };
+        const meses = [
+            'Ene',
+            'Feb',
+            'Mar',
+            'Abr',
+            'May',
+            'Jun',
+            'Jul',
+            'Ago',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dic'
+        ];
     
-        const dateEl = document.getElementById('current-date');
-        const timeEl = document.getElementById('current-time');
+        const fecha =
+            `${dias[now.getDay()]} ${now.getDate()}, ${meses[now.getMonth()]} ${now.getFullYear()}`;
     
-        if (dateEl) {
-            dateEl.textContent =
-                now.toLocaleDateString('es-CL', dateOptions);
-        }
+        const hora =
+            now.toLocaleTimeString('es-CL', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
     
-        if (timeEl) {
-            timeEl.textContent =
-                now.toLocaleTimeString('es-CL', timeOptions);
-        }
+        document.getElementById('current-date').textContent = fecha;
+        document.getElementById('current-time').textContent = hora;
     }
     
     updateDateTime();
