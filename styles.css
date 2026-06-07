@@ -434,7 +434,6 @@ ul {
         display: flex;
         flex-wrap: wrap; /* Permite que las cajas bajen si no caben */
         gap: 16px;
-        margin: 20px 0;
         width: 100%;
     }
     
