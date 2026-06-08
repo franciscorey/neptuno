@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Radio Neptuno - Radio online comunitaria con música independiente, cultura y noticias locales. Escúchanos en vivo 24/7.">
+    <meta name="description"
+        content="Radio Neptuno - Radio online comunitaria con música independiente, cultura y noticias locales. Escúchanos en vivo 24/7.">
     <meta name="keywords" content="radio, música, streaming, comunidad, noticias, cultura, independiente">
     <meta name="author" content="Radio Neptuno">
     <title>Radio Neptuno - Transmitiendo en Vivo</title>
-	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
 
     <header class="site-header">
         <div class="header-container">
             <div class="logo">
-			    <a href="/">
-			        <img src="/assets/logo-neptuno.png" alt="Radio Neptuno">
-			    </a>
-			</div>
+                <a href="/">
+                    <img src="/assets/logo-neptuno.png" alt="Radio Neptuno">
+                </a>
+            </div>
             <nav class="main-nav" id="mainNav">
                 <ul>
                     <li><a href="#" data-section="inicio" class="active">Radio</a></li>
@@ -30,8 +33,10 @@
                 </ul>
             </nav>
             <div class="social-header">
-                <a href="https://www.instagram.com/radioneptunocl/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.youtube.com/@radioneptuno" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.instagram.com/radioneptunocl/" target="_blank" aria-label="Instagram"><i
+                        class="fab fa-instagram"></i></a>
+                <a href="https://www.youtube.com/@radioneptuno" target="_blank" aria-label="YouTube"><i
+                        class="fab fa-youtube"></i></a>
                 <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -41,85 +46,121 @@
 
     <main>
 
-		<!-- BARRA INFORMATIVA -->
-		<div id="signal-bar" class="signal-bar">
-		    <div class="signal-label">
-		        INFO >
-		    </div>
-		    <div class="signal-content">
-		        <div id="signal-track"
-             		class="signal-track">
-        		</div>
-		    </div>
-			<div class="signal-datetime">
-			    <span class="signal-date">
-			        <i class="fas fa-calendar-alt"></i>
-			        <span id="current-date"></span>
-			    </span>
-			
-			    <span class="signal-time">
-			        <i class="fas fa-clock"></i>
-			        <span id="current-time"></span>
-			    </span>
-			</div>
-		</div>
+        <!-- BARRA INFORMATIVA -->
+        <div id="signal-bar" class="signal-bar">
+            <div class="signal-label">
+                INFO >
+            </div>
+            <div class="signal-content">
+                <div id="signal-track" class="signal-track">
+                </div>
+            </div>
+            <div class="signal-datetime">
+                <span class="signal-date">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="current-date"></span>
+                </span>
 
-		<!-- VISTA: INICIO -->
-		<section id="inicio" class="hero-section view-section active">
-		    <div class="hero-bg-overlay"></div>
-		    <div class="hero-content">
-		        <div class="hero-text">
-		            <span class="badge">Transmitiendo en Vivo</span>
-		            <h1>Navega y Sintoniza la corriente</h1>
-		            <p>Radio Neptuno esta online 24/7.</p>
-		        </div>
-		        <a href="#" class="btn-primary" id="ctaEscucharAhora">
-		            <i class="fas fa-play"></i>
-		            Escuchar Ahora
-		        </a>
-		    </div>
-		</section>
+                <span class="signal-time">
+                    <i class="fas fa-clock"></i>
+                    <span id="current-time"></span>
+                </span>
+            </div>
+        </div>
 
-		<!-- Sección Neptuno TV -->
-		<section id="neptuno-tv" class="neptuno-tv-section view-section">
-		    <div class="section-container">
-		        <h2 class="section-title">Neptuno TV</h2>
-		        <p class="section-subtitle">Nuestra transmisión audiovisual en directo</p>
-		        
-		        <div class="tv-player" id="tv-player-container"></div> 
-		    </div>
-		</section>
+        <!-- VISTA: INICIO -->
+        <section id="inicio" class="hero-section view-section active">
+            <div class="hero-bg-overlay"></div>
+            <div class="hero-content">
+                <div class="hero-text">
+                    <span class="badge">Transmitiendo en Vivo</span>
+                    <h1>Navega y Sintoniza la corriente</h1>
+                    <p>Radio Neptuno esta online 24/7.</p>
+                </div>
+                <a href="#" class="btn-primary" id="ctaEscucharAhora">
+                    <i class="fas fa-play"></i>
+                    Escuchar Ahora
+                </a>
+            </div>
+        </section>
 
-		<!-- Sección Widgets Datos Publicos -->
-		<section id="datos-widgets" class="view-section">
-			<div class="section-container widgets-publicos-container">
-			    <div id="widget-clima" class="data-widget-card"></div>
-			    <div id="widget-economico" class="data-widget-card"></div>		
-			    <div id="widget-datos-publicos" class="data-widget-card"></div>
-			</div>
-		</section>
+        <!-- Sección Neptuno TV -->
+        <section id="neptuno-tv" class="neptuno-tv-section view-section">
+            <div class="section-container">
+                <h2 class="section-title">Neptuno TV</h2>
+                <p class="section-subtitle">Nuestra transmisión audiovisual en directo</p>
+
+                <div class="tv-player" id="tv-player-container"></div>
+            </div>
+        </section>
+
+        <!-- Sección Widgets Datos Publicos -->
+        <section id="datos-widgets" class="view-section">
+            <div class="section-container widgets-publicos-container">
+                <div id="widget-clima" class="data-widget-card"></div>
+                <div id="widget-economico" class="data-widget-card"></div>
+                <div id="widget-datos-publicos" class="data-widget-card"></div>
+            </div>
+        </section>
 
         <!-- Sección Explora (solo visible en inicio) -->
         <section class="explore-section view-section" id="explora">
             <div class="section-container">
-                <h2 class="section-title">Explora</h2>
-                <p class="section-subtitle">Descubre todo nuestro contenido</p>
                 <div class="explore-grid">
+
                     <a href="#" data-section="programacion" class="explore-card">
-                        <i class="fas fa-calendar-alt"></i>
-                        <h3>Programación</h3>
-                        <p>Conoce nuestra parrilla de programas y horarios</p>
+                        <div class="explore-card-top">
+                            <div>
+                                <h3>Programación</h3>
+                                <p>Conoce nuestra parrilla</p>
+                            </div>
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="explore-card-bottom">
+                            <span class="card-label">AL AIRE</span>
+                            <div id="explore-onair">
+                                <strong>Cargando...</strong>
+                            </div>
+                            <div id="explore-onair-time" class="explore-card-time"></div>
+                            <p id="explore-onair-desc" class="explore-card-desc"></p>
+                        </div>
                     </a>
+
                     <a href="#" data-section="noticias" class="explore-card">
-                        <i class="fas fa-newspaper"></i>
-                        <h3>Noticias</h3>
-                        <p>Mantente informado con las últimas novedades</p>
+                        <div class="explore-card-top">
+                            <div>
+                                <h3>Noticias</h3>
+                                <p>Mantente informado</p>
+                            </div>
+                            <i class="fas fa-newspaper"></i>
+                        </div>
+                        <div class="explore-card-bottom">
+                            <img id="explore-news-image" class="explore-thumb" src="assets/default-news.jpg"
+                                alt="Noticia">
+                            <div id="explore-news-title">
+                                Cargando...
+                            </div>
+                        </div>
                     </a>
+
                     <a href="#" data-section="sonando" class="explore-card">
-                        <i class="fas fa-music"></i>
-                        <h3>Sonando</h3>
-                        <p>Vota y sugiere en nuestro Ranking musical</p>
+                        <div class="explore-card-top">
+                            <div>
+                                <h3>Sonando</h3>
+                                <p>Vota y sugiere música</p>
+                            </div>
+                            <i class="fas fa-music"></i>
+                        </div>
+                        <div class="explore-card-bottom">
+                            <img id="explore-top-cover" class="explore-thumb" src="assets/covers/default.webp"
+                                alt="Carátula Top 1" onerror="this.src='assets/covers/default.webp'">
+                            <span class="card-label">LO MÁS IMPULSADO</span>
+                            <div id="explore-top-track">
+                                Cargando...
+                            </div>
+                        </div>
                     </a>
+
                 </div>
             </div>
         </section>
@@ -131,8 +172,10 @@
                     <div class="about-text">
                         <h2>Sobre Radio Neptuno</h2>
                         <hr class="divider">
-                        <p>En el vasto mar de información, Radio Neptuno emerge como un proyecto joven, autogestionado dedicado a traer lo mejor de la música de todas las épocas.</p>
-                        <p>Somos la frecuencia donde tu voz también tiene espacio, conectamos relatos, el pulso de la ciudad con una propuesta auténtica.</p>
+                        <p>En el vasto mar de información, Radio Neptuno emerge como un proyecto joven, autogestionado
+                            dedicado a traer lo mejor de la música de todas las épocas.</p>
+                        <p>Somos la frecuencia donde tu voz también tiene espacio, conectamos relatos, el pulso de la
+                            ciudad con una propuesta auténtica.</p>
                     </div>
                     <div class="about-image">
                         <img src="assets/radio.png" alt="Radio Neptuno" class="radio-illustration">
@@ -149,7 +192,7 @@
                 </div>
                 <h2 class="section-title">Programas</h2>
                 <p class="section-subtitle">Conoce nuestra parrilla de programación y horarios</p>
-                
+
                 <div class="schedule-grid">
                     <!-- Programas cargados dinámicamente -->
                 </div>
@@ -163,7 +206,7 @@
                     <img src="assets/noticias.webp" alt="Estudio de Radio Neptuno" class="banner-image">
                 </div>
                 <h2 class="section-title">Últimas Noticias</h2>
-                
+
                 <div class="news-grid" id="newsGrid">
                     <!-- Las noticias se cargan dinámicamente desde noticias.json -->
                 </div>
@@ -225,18 +268,18 @@
                 <h2 class="section-title">Sonando</h2>
                 <p class="section-subtitle">Lo más sonado y nuevos lanzamientos</p>
 
-				<div id="top-one-container"></div>
+                <div id="top-one-container"></div>
 
-				<div class="vote-info">
-				    <h4>¿Cómo funciona la señal?</h4>
-				    <ul>
-				        <li>📡 Señaliza tus canciones favoritas.</li>
-				        <li>📈 Los votos ayudan a mover el ranking semanal.</li>
-				        <li>🕒 Puedes votar una vez cada 24 horas por canción.</li>
-				        <li>🚀 Los nuevos ingresos pueden llegar al Top 10.</li>
-				    </ul>
-				</div>
-				
+                <div class="vote-info">
+                    <h4>¿Cómo funciona la señal?</h4>
+                    <ul>
+                        <li>📡 Señaliza tus canciones favoritas.</li>
+                        <li>📈 Los votos ayudan a mover el ranking semanal.</li>
+                        <li>🕒 Puedes votar una vez cada 24 horas por canción.</li>
+                        <li>🚀 Los nuevos ingresos pueden llegar al Top 10.</li>
+                    </ul>
+                </div>
+
                 <div class="sonando-grid">
                     <div class="sonando-column">
                         <h3 class="sonando-column-title">Top 10</h3>
@@ -253,123 +296,82 @@
                 </div>
 
                 <!-- Formulario de Solicitud de Canciones -->
-	            <div class="request-form-container">
-	               <h3 class="sonando-column-title">
-	                  Sugierenos tu canción favorita
-	               </h3>
-	               <p class="request-form-intro">
-	                  Comparte ese tema que quieres escuchar en nuestra frecuencia.
-	               </p>
-	               <form id="request-form" class="request-form is-open">
-	                  <!-- Honeypot -->
-	                  <input
-	                     type="text"
-	                     id="honeypot-website"
-	                     name="website"
-	                     class="honeypot"
-	                     tabindex="-1"
-	                     autocomplete="off"
-	                     style="display:none;"
-	                     >
-	                  <div class="form-group">
-	                     <label for="request-name">
-	                     Nombre (opcional)
-	                     </label>
-	                     <input
-	                        type="text"
-	                        id="request-name"
-	                        name="name"
-	                        placeholder="Tu nombre"
-	                        maxlength="100"
-	                        >
-	                  </div>
-	                  <div class="form-group">
-	                     <label for="request-email">
-	                     Email (opcional)
-	                     </label>
-	                     <input
-	                        type="email"
-	                        id="request-email"
-	                        name="email"
-	                        placeholder="tu@email.com"
-	                        maxlength="100"
-	                        >
-	                  </div>
-	                  <div class="form-group">
-	                     <label for="request-artist">
-	                     Artista *
-	                     </label>
-	                     <input
-	                        type="text"
-	                        id="request-artist"
-	                        name="artist"
-	                        required
-	                        placeholder="Nombre del artista"
-	                        maxlength="100"
-	                        >
-	                  </div>
-	                  <div class="form-group">
-	                     <label for="request-song">
-	                     Canción *
-	                     </label>
-	                     <input
-	                        type="text"
-	                        id="request-song"
-	                        name="song"
-	                        required
-	                        placeholder="Nombre de la canción"
-	                        maxlength="100"
-	                        >
-	                  </div>
-	                  <div class="form-group">
-	                     <label for="request-message">
-	                     Mensaje (opcional)
-	                     </label>
-	                     <textarea
-	                        id="request-message"
-	                        name="message"
-	                        rows="3"
-	                        placeholder="Dedicatoria o mensaje especial"
-	                        maxlength="300"
-	                        ></textarea>
-	                  </div>
-	                  <div class="form-actions">
-	                     <button
-	                        type="submit"
-	                        class="btn-primary"
-	                        >
-	                     <i class="fas fa-paper-plane"></i>
-	                     Enviar sugerencia
-	                     </button>
-	                     <button
-	                        type="reset"
-	                        class="btn-secondary"
-	                        >
-	                     <i class="fas fa-eraser"></i>
-	                     Limpiar campos
-	                     </button>
-	                  </div>
-	               </form>
-					<p class="request-note">
-					Las sugerencias son revisadas por Radio Neptuno y pueden incorporarse a futuras programaciones.
-					</p>
-	            </div>
+                <div class="request-form-container">
+                    <h3 class="sonando-column-title">
+                        Sugierenos tu canción favorita
+                    </h3>
+                    <p class="request-form-intro">
+                        Comparte ese tema que quieres escuchar en nuestra frecuencia.
+                    </p>
+                    <form id="request-form" class="request-form is-open">
+                        <!-- Honeypot -->
+                        <input type="text" id="honeypot-website" name="website" class="honeypot" tabindex="-1"
+                            autocomplete="off" style="display:none;">
+                        <div class="form-group">
+                            <label for="request-name">
+                                Nombre (opcional)
+                            </label>
+                            <input type="text" id="request-name" name="name" placeholder="Tu nombre" maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="request-email">
+                                Email (opcional)
+                            </label>
+                            <input type="email" id="request-email" name="email" placeholder="tu@email.com"
+                                maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="request-artist">
+                                Artista *
+                            </label>
+                            <input type="text" id="request-artist" name="artist" required
+                                placeholder="Nombre del artista" maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="request-song">
+                                Canción *
+                            </label>
+                            <input type="text" id="request-song" name="song" required placeholder="Nombre de la canción"
+                                maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="request-message">
+                                Mensaje (opcional)
+                            </label>
+                            <textarea id="request-message" name="message" rows="3"
+                                placeholder="Dedicatoria o mensaje especial" maxlength="300"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                Enviar sugerencia
+                            </button>
+                            <button type="reset" class="btn-secondary">
+                                <i class="fas fa-eraser"></i>
+                                Limpiar campos
+                            </button>
+                        </div>
+                    </form>
+                    <p class="request-note">
+                        Las sugerencias son revisadas por Radio Neptuno y pueden incorporarse a futuras programaciones.
+                    </p>
+                </div>
             </div>
         </section>
 
-	<!-- SECCION: ANUNCIOS -->
-		<section class="ads-section" id="ads-section">
-		    <div class="section-container">
-		        <div class="ads-header">
-		            <span class="pulse-indicator"></span>
-		            <h2 class="section-subtitle">Anuncios</h2>
-		        </div>
-		        
-		        <div class="explore-grid" id="ads-container">
-		            </div>
-		    </div>
-		</section>
-			
+        <!-- SECCION: ANUNCIOS -->
+        <section class="ads-section" id="ads-section">
+            <div class="section-container">
+                <div class="ads-header">
+                    <span class="pulse-indicator"></span>
+                    <h2 class="section-subtitle">Anuncios</h2>
+                </div>
+
+                <div class="explore-grid" id="ads-container">
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Widget Flotante de Radio -->
@@ -417,7 +419,8 @@
                     <button id="widgetMuteBtn" class="widget-mute-btn" aria-label="Silenciar">
                         <i class="fas fa-volume-up" id="widgetVolumeIcon"></i>
                     </button>
-                    <input type="range" id="widgetVolumeSlider" min="0" max="1" step="0.05" value="0.8" aria-label="Volumen">
+                    <input type="range" id="widgetVolumeSlider" min="0" max="1" step="0.05" value="0.8"
+                        aria-label="Volumen">
                 </div>
             </div>
         </div>
@@ -445,8 +448,10 @@
             <div class="footer-social">
                 <h4>Nuestras redes</h4>
                 <div class="social-icons">
-                    <a href="https://www.instagram.com/radioneptunocl/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i> Instagram</a>
-                    <a href="https://www.youtube.com/@radioneptuno" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i> YouTube</a>
+                    <a href="https://www.instagram.com/radioneptunocl/" target="_blank" aria-label="Instagram"><i
+                            class="fab fa-instagram"></i> Instagram</a>
+                    <a href="https://www.youtube.com/@radioneptuno" target="_blank" aria-label="YouTube"><i
+                            class="fab fa-youtube"></i> YouTube</a>
                 </div>
             </div>
         </div>
@@ -457,6 +462,7 @@
 
     <script src="sonando.js"></script>
     <script src="app.js"></script>
-	<script src="widgets.js" defer></script>
+    <script src="widgets.js" defer></script>
 </body>
+
 </html>

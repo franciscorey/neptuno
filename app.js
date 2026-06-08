@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // SISTEMA DE NAVEGACIÓN SPA
     // ==========================================
-    
+
     // Estado de la aplicación
     let appData = {
         noticias: [],
@@ -22,48 +22,47 @@ document.addEventListener('DOMContentLoaded', () => {
     let scheduleData = [];
 
     const API_URL =
-'https://script.google.com/macros/s/AKfycbxMmITY5Bf7euH5iYwFKFACLc_7Dt0GxLDtY_rc6cy_CVqAK1WJZ_ynM955qqWc9Sfl/exec';
+        'https://script.google.com/macros/s/AKfycbxMmITY5Bf7euH5iYwFKFACLc_7Dt0GxLDtY_rc6cy_CVqAK1WJZ_ynM955qqWc9Sfl/exec';
 
     // Precarga
+    // Precarga Unificada Eficiente (Ahorra cuotas de Apps Script)
     async function preloadData() {
+        try {
+            const response = await fetch(`${API_URL}?action=all`);
+            const data = await response.json();
 
-    try {
+            // 1. Guardar estado general de la radio
+            appData.noticias = data.noticias || [];
+            appData.programas = data.programas || [];
+            appData.programacion = data.programacion || [];
+            appData.informativos = data.informativos || [];
+            appData.anuncios = data.anuncios || [];
+            appData.tv = data.tv || null;
 
-        const response =
-            await fetch(`${API_URL}?action=all`);
+            // 2. Capturar el ranking que ahora viene en el mismo viaje
+            appData.ranking = data.top10 || [];
 
-        const data =
-            await response.json();
+            // 3. Sincronizar localmente para blindar a sonando.js sin causarle peticiones extras
+            localStorage.setItem('sonando_cache', JSON.stringify({
+                top10: data.top10 || [],
+                nuevos: data.nuevos || []
+            }));
+            localStorage.setItem('sonando_cache_time', Date.now().toString());
 
-        appData.noticias = data.noticias || [];
+            console.log('✅ Base de datos unificada cargada: ' + appData.ranking.length + ' tracks en memoria.');
 
-        appData.programas = data.programas || [];
+            // 4. Disparar los renders en cascada
+            renderInformativos();          // La barra informativa ahora sí leerá el TOP 1
+            updateExploreProgramacion();   // Muestra horario, título y descripción
+            updateExploreNoticias();       // Muestra última noticia con asset correcto
+            updateExploreSonando();        // Muestra la canción más votada del ranking
 
-        appData.programacion = data.programacion || [];
+            if (currentSection === 'noticias') renderNoticias();
 
-        appData.informativos = data.informativos || [];
-
-        appData.ranking = data.top10 || [];
-
-        appData.anuncios = data.anuncios || [];
-
-        appData.tv = data.tv || null;
-
-        console.log('Datos precargados');
-
-        // Ejecutar renders iniciales
-        renderInformativos(); 
-        if (currentSection === 'noticias') renderNoticias();
-
-    } catch(error) {
-        
-        console.error(
-            'Error precargando datos',
-            error
-        );
-
+        } catch (error) {
+            console.error('Error cargando la data centralizada:', error);
+        }
     }
-}
 
     // Función principal para mostrar secciones
     function showSection(sectionId, articleId = null) {
@@ -71,14 +70,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.view-section').forEach(section => {
             section.classList.remove('active');
         });
-        
+
         // Mostrar la sección seleccionada
         const targetSection = document.getElementById(sectionId);
         if (targetSection) {
             targetSection.classList.add('active');
             currentSection = sectionId;
         }
-        
+
         // Manejo especial para la sección "Sobre Radio Neptuno" y "Explora"
         // Solo deben ser visibles cuando estamos en la vista 'inicio'
         const aboutSection = document.getElementById('sobre-radio');
@@ -86,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tvSection = document.getElementById('neptuno-tv');
         const adsSection = document.getElementById('ads-section');
         const widgetsSection = document.getElementById('datos-widgets');
-        
+
         if (sectionId === 'inicio') {
             if (aboutSection) aboutSection.classList.add('active');
             if (exploreSection) exploreSection.classList.add('active');
@@ -100,18 +99,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (adsSection) adsSection.classList.remove('active');
             if (widgetsSection) widgetsSection.classList.remove('active');
         }
-        
+
         // Actualizar navegación activa en el menú
         updateNavActive(sectionId);
-        
+
         // Scroll al inicio del main
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        
+
         // Si es una vista de detalle de artículo, cargar el contenido
         if (sectionId === 'noticia-detalle' && articleId !== null) {
             loadArticleDetail(articleId);
         }
-        
+
         // Guardar estado en el historial del navegador
         if (articleId !== null) {
             history.pushState({ section: sectionId, articleId: articleId }, '', `?view=${sectionId}&id=${articleId}`);
@@ -119,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             history.pushState({ section: sectionId }, '', `?view=${sectionId}`);
         }
     }
-    
+
     // Exponer showSection al scope global para que funcione desde los onclick del HTML
     window.showSection = showSection;
 
@@ -128,10 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.main-nav a').forEach(link => {
             link.classList.remove('active');
         });
-        
+
         // Mapeo especial para la sección de detalle de noticia
         const navSectionId = sectionId === 'noticia-detalle' ? 'noticias' : sectionId;
-        
+
         const activeLink = document.querySelector(`.main-nav a[data-section="${navSectionId}"]`);
         if (activeLink) {
             activeLink.classList.add('active');
@@ -144,14 +143,14 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const sectionId = link.getAttribute('data-section');
             showSection(sectionId);
-            
+
             // Cargar datos dinámicos si es la sección SONANDO
             if (sectionId === 'sonando' && typeof loadSonando === 'function') {
                 loadSonando();
             }
         });
     });
-    
+
     // Manejar navegación desde tarjetas de exploración (explore-card)
     document.querySelectorAll('.explore-card[data-section]').forEach(card => {
         card.addEventListener('click', (e) => {
@@ -167,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const sectionId = link.getAttribute('data-section');
             showSection(sectionId);
-            
+
             // Cargar datos dinámicos si es la sección SONANDO
             if (sectionId === 'sonando' && typeof loadSonando === 'function') {
                 loadSonando();
@@ -210,37 +209,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // REFRESH DE DATA
 
-    
+
     // 2. NUEVA FUNCIÓN: Actualizador en tiempo real exclusivo para NOTICIAS (Salta caché del navegador)
-        async function refreshNoticiasTiempoReal() {
-            try {
-                // Generamos el bypass solo para esta petición ligera de noticias
-                const cacheBuster = new Date().getTime();
-                const response = await fetch(`${API_URL}?action=noticias&_cb=${cacheBuster}`);
-                const data = await response.json();
-                
-                if (data.success && data.noticias) {
-                    // Sincronizamos los dos almacenes globales de noticias
-                    appData.noticias = data.noticias;
-                    allNews = data.noticias; 
-                    
-                    console.log("📰 Noticias actualizadas en tiempo real desde Sheets");
-                    
-                    // Si el usuario está parado justo en la sección de noticias, se las refrescamos usando la función correcta
-                    if (currentSection === 'noticias' && typeof renderNewsList === 'function') {
-                        renderNewsList();
-                    }
+    async function refreshNoticiasTiempoReal() {
+        try {
+            // Generamos el bypass solo para esta petición ligera de noticias
+            const cacheBuster = new Date().getTime();
+            const response = await fetch(`${API_URL}?action=noticias&_cb=${cacheBuster}`);
+            const data = await response.json();
+
+            if (data.success && data.noticias) {
+                // Sincronizamos los dos almacenes globales de noticias
+                appData.noticias = data.noticias;
+                allNews = data.noticias;
+
+                console.log("📰 Noticias actualizadas en tiempo real desde Sheets");
+
+                // Si el usuario está parado justo en la sección de noticias, se las refrescamos usando la función correcta
+                if (currentSection === 'noticias' && typeof renderNewsList === 'function') {
+                    renderNewsList();
                 }
-            } catch (error) {
-                console.error("Error al refrescar noticias en segundo plano:", error);
             }
+        } catch (error) {
+            console.error("Error al refrescar noticias en segundo plano:", error);
         }
-    
+    }
+
     // 3. NUEVA FUNCIÓN: Actualizador en tiempo real para la BARRA DE INFO (Informativos) y TV
     async function refreshBarraYTvTiempoReal() {
         try {
             const cacheBuster = new Date().getTime();
-            
+
             // Pedimos informativos con bypass de navegador
             const resInfo = await fetch(`${API_URL}?action=informativos&_cb=${cacheBuster}`);
             const dataInfo = await resInfo.json();
@@ -248,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 appData.informativos = dataInfo.informativos;
                 if (typeof renderInformativos === 'function') renderInformativos();
             }
-    
+
             // Pedimos configuración de TV por si se activa o desactiva la transmisión en vivo
             const resTv = await fetch(`${API_URL}?action=tv&_cb=${cacheBuster}`);
             const dataTv = await resTv.json();
@@ -257,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Aquí puedes llamar a la función que actualice el reproductor de TV si existiera
                 console.log("📺 Estado de la TV verificado");
             }
-            
+
         } catch (error) {
             console.error("Error al refrescar barra de información:", error);
         }
@@ -266,18 +265,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // ======================================
     // BARRA INFORMATIVA
     // ======================================
-    
+
     let informativoActual = 0;
 
     function initInformativos() {
         const track = document.getElementById("signal-track");
         if (!track) return;
-    
+
         let mensajes = [];
-    
+
         // 1. INFORMATIVOS SHEETS (Filtro booleano estricto)
         const informativos = appData.informativos.filter(item => item.activo === true);
-    
+
         informativos.forEach(item => {
             if (item.texto) {
                 mensajes.push({
@@ -286,39 +285,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });
-    
-        // 2. TOP 1 SONANDO
+
+        // 2. TOP 1 SONANDO (Ahora lee directo de appData.ranking ordenado)
         if (appData.ranking && appData.ranking.length) {
-            const top = appData.ranking[0];
-            mensajes.unshift({
-                tipo: "SONANDO",
-                texto: `${top.artista} - ${top.cancion} lidera con ${top.votos} votos`
-            });
+            const top = [...appData.ranking].sort((a, b) => Number(b.votos || 0) - Number(a.votos || 0))[0];
+            if (top && top.artista && top.cancion) {
+                mensajes.unshift({
+                    tipo: "SONANDO",
+                    texto: `${top.artista} - ${top.cancion} lidera con ${top.votos || 0} votos`
+                });
+            }
         }
-    
+
         // 3. PROGRAMA ACTUAL Y PRÓXIMO
         const actual = getCurrentProgram();
         if (actual) {
             mensajes.unshift({
                 tipo: "AL AIRE",
-                texto: actual.nombre
+                texto: actual.nombre || actual.programa
             });
         }
-    
+
         const siguiente = getNextProgram();
         if (siguiente) {
             mensajes.push({
                 tipo: "SIGUE",
-                texto: siguiente.nombre
+                texto: siguiente.nombre || siguiente.programa
             });
         }
-    
+
         // 4. MENSAJE FIJO TV
         mensajes.push({
             tipo: "TV",
             texto: "Neptuno TV transmite en vivo"
         });
-    
+
         // 5. RENDERIZADO AL DOM
         const contenidoHTML = mensajes.map(msg => `
             <span class="signal-item">
@@ -327,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </span>
             <span class="signal-separator">●</span>
         `).join('');
-    
+
         // Inyectar doble para evitar saltos en la animación CSS de marquesina infinita
         track.innerHTML = contenidoHTML + contenidoHTML;
     }
@@ -335,9 +336,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Función para mostrar Fecha y Hora en la Barra
 
     function updateDateTime() {
-    
+
         const now = new Date();
-    
+
         const dias = [
             'Domingo',
             'Lunes',
@@ -347,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'Viernes',
             'Sábado'
         ];
-    
+
         const meses = [
             'Ene',
             'Feb',
@@ -362,10 +363,10 @@ document.addEventListener('DOMContentLoaded', () => {
             'Nov',
             'Dic'
         ];
-    
+
         const fecha =
             `${dias[now.getDay()]} ${now.getDate()}, ${meses[now.getMonth()]} ${now.getFullYear()}`;
-    
+
         const hora =
             now.toLocaleTimeString('es-CL', {
                 hour: '2-digit',
@@ -373,11 +374,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 second: '2-digit',
                 hour12: false
             });
-    
+
         document.getElementById('current-date').textContent = fecha;
         document.getElementById('current-time').textContent = hora;
     }
-    
+
     updateDateTime();
     setInterval(updateDateTime, 1000);
 
@@ -386,35 +387,103 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
 
     function renderNeptunoTV() {
-    const container = document.querySelector("#tv-player-container");
-    if (!container) return;
+        const container = document.querySelector("#tv-player-container");
+        if (!container) return;
 
-    const tvConfig = appData.tv;
+        const tvConfig = appData.tv;
 
-    // Fallback por si la API no responde o el nodo viene vacío
-    if (!tvConfig) {
-        container.innerHTML = `<video autoplay loop muted playsinline><source src="assets/tv-loop.mp4" type="video/mp4"></video>`;
-        return;
-    }
+        // Fallback por si la API no responde o el nodo viene vacío
+        if (!tvConfig) {
+            container.innerHTML = `<video autoplay loop muted playsinline><source src="assets/tv-loop.mp4" type="video/mp4"></video>`;
+            return;
+        }
 
-    if (tvConfig.activo && tvConfig.url_stream) {
-        // MODO EN VIVO: Inyecta tu iframe de Kick original
-        container.innerHTML = `
+        if (tvConfig.activo && tvConfig.url_stream) {
+            // MODO EN VIVO: Inyecta tu iframe de Kick original
+            container.innerHTML = `
             <iframe 
                 src="${tvConfig.url_stream}" 
                 allowfullscreen>
             </iframe>
         `;
-    } else {
-        // MODO OFF-AIR: Inyecta el video loop local usando la ruta de tu Sheets
-        const videoSrc = tvConfig.url_loop || "assets/tv-loop.mp4";
-        container.innerHTML = `
+        } else {
+            // MODO OFF-AIR: Inyecta el video loop local usando la ruta de tu Sheets
+            const videoSrc = tvConfig.url_loop || "assets/tv-loop.mp4";
+            container.innerHTML = `
             <video autoplay loop muted playsinline>
                 <source src="${videoSrc}" type="video/mp4">
             </video>
         `;
+        }
     }
-}
+
+    // ==========================================
+    // RESUMEN SECCION EXPLORA (INTEGRADO)
+    // ==========================================
+
+    function updateExploreProgramacion() {
+        const ahora = getCurrentProgram(); // Tu función que calcula el show actual según la hora
+
+        const elTitle = document.getElementById("explore-onair");
+        const elTime = document.getElementById("explore-onair-time");
+        const elDesc = document.getElementById("explore-onair-desc");
+
+        if (ahora) {
+            if (elTitle) elTitle.textContent = ahora.nombre || ahora.programa || "Programa Especial";
+            if (elTime) elTime.textContent = `${ahora.inicio || '--:--'} - ${ahora.fin || '--:--'}`;
+            if (elDesc) elDesc.textContent = ahora.descripcion || "Sintoniza nuestra señal en vivo.";
+        } else {
+            if (elTitle) elTitle.textContent = "Sin transmisión";
+            if (elTime) elTime.textContent = "--:-- - --:--";
+            if (elDesc) elDesc.textContent = "Disfruta de nuestra música de continuidad.";
+        }
+    }
+
+    function updateExploreNoticias() {
+        if (!appData.noticias || appData.noticias.length === 0) return;
+
+        const noticia = appData.noticias[0];
+        const titleEl = document.getElementById("explore-news-title");
+        const imgEl = document.getElementById("explore-news-image");
+
+        if (titleEl) titleEl.textContent = noticia.titulo;
+        if (imgEl) {
+            imgEl.src = noticia.imagen ? `assets/noticias/${noticia.imagen}` : '';
+        }
+    }
+
+    function updateExploreSonando() {
+        if (!appData.ranking || appData.ranking.length === 0) return;
+
+        // Ordenamos el ranking por votos para asegurar el TOP 1 real
+        const topTrack = [...appData.ranking].sort((a, b) => {
+            const votosA = Number(a.votos || 0);
+            const votosB = Number(b.votos || 0);
+            return votosB - votosA;
+        })[0];
+
+        const textEl = document.getElementById("explore-top-track");
+        const imgEl = document.getElementById("explore-top-cover");
+
+        if (!topTrack) return;
+
+        // 1. Inyectamos texto limpio en tu contenedor original
+        if (textEl) {
+            textEl.innerHTML = `
+            <strong>${topTrack.cancion || 'Canción'}</strong><br>
+            <span>${topTrack.artista || 'Artista'}</span><br>
+            <small>⚡ ${topTrack.votos || 0} impulsos</small>
+        `;
+        }
+
+        // 2. Acoplamos dinámicamente el nombre del archivo que viene desde Sheets
+        if (imgEl) {
+            // Al concatenar con la carpeta raíz de carátulas, la URL queda: assets/covers/xyz.webp
+            imgEl.src = topTrack.cover ? `assets/covers/${topTrack.cover}` : 'assets/covers/default.webp';
+            imgEl.alt = `${topTrack.cancion} - ${topTrack.artista}`;
+        }
+    }
+
 
     // ==========================================
     // SISTEMA DE NOTICIAS DINÁMICAS
@@ -453,9 +522,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Si aún no hemos cargado las noticias, hacerlo ahora
             if (allNews.length === 0) {
 
-    allNews = appData.noticias;
+                allNews = appData.noticias;
 
-}
+            }
 
             const article = allNews.find(item => item.id === articleId);
             currentArticleId = articleId;
@@ -489,7 +558,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Sanitización básica: crear elementos DOM en lugar de insertar HTML crudo
             // Esto previene XSS al evitar que se ejecuten scripts maliciosos
             const articleContainer = document.createElement('div');
-            
+
             // Crear breadcrumb
             const breadcrumb = document.createElement('nav');
             breadcrumb.className = 'breadcrumb';
@@ -512,7 +581,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Crear header del artículo
             const header = document.createElement('div');
             header.className = 'article-header';
-            
+
             const category = document.createElement('span');
             category.className = 'article-category';
             category.textContent = article.categoria || '';
@@ -527,7 +596,7 @@ document.addEventListener('DOMContentLoaded', () => {
             title.className = 'article-title';
             title.textContent = article.titulo || '';
             header.appendChild(title);
-            
+
             articleContainer.appendChild(header);
 
             // Crear cuerpo del artículo - USAR textContent para seguridad
@@ -626,33 +695,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // SISTEMA DE ANUNCIOS INTERACTIVOS (Corregido)
     // ==========================================
-        function renderAnuncios() {
-            const container = document.querySelector("#ads-container");
-            if (!container) return;
-    
-            const anuncios = appData.anuncios;
-    
-            if (!anuncios || anuncios.length === 0) {
-                container.innerHTML = `
+    function renderAnuncios() {
+        const container = document.querySelector("#ads-container");
+        if (!container) return;
+
+        const anuncios = appData.anuncios;
+
+        if (!anuncios || anuncios.length === 0) {
+            container.innerHTML = `
                     <div class="ad-empty-state">
                         <h3>¿Quieres anunciarte en Radio Neptuno?</h3>
                         <p>Apoya nuestra señal independiente y llega a toda la comunidad local.</p>
                         <a href="mailto:info@radioneptuno.cl" class="btn-ad-dynamic">Escríbenos Hoy</a>
                     </div>
                 `;
-                return;
+            return;
+        }
+
+        container.innerHTML = anuncios.map(ad => {
+            const tieneImagen = ad.imagen && ad.imagen.trim() !== "";
+
+            // VALIDACIÓN DE ENLACE EXTERNO: Si no trae http/https, se lo agregamos automáticamente
+            let urlFinal = ad.link ? ad.link.trim() : '#';
+            if (urlFinal !== '#' && !/^https?:\/\//i.test(urlFinal)) {
+                urlFinal = 'https://' + urlFinal;
             }
-    
-            container.innerHTML = anuncios.map(ad => {
-                const tieneImagen = ad.imagen && ad.imagen.trim() !== "";
-                
-                // VALIDACIÓN DE ENLACE EXTERNO: Si no trae http/https, se lo agregamos automáticamente
-                let urlFinal = ad.link ? ad.link.trim() : '#';
-                if (urlFinal !== '#' && !/^https?:\/\//i.test(urlFinal)) {
-                    urlFinal = 'https://' + urlFinal;
-                }
-    
-                return `
+
+            return `
                     <div class="ad-dynamic-card ${tieneImagen ? 'has-image' : ''}">
                         ${tieneImagen ? `
                             <div class="ad-reveal-bg">
@@ -675,29 +744,29 @@ document.addEventListener('DOMContentLoaded', () => {
                         </a>
                     </div>
                 `;
-            }).join('');
-        }
-    
-        function escapeHTML(str) {
-            if (!str) return '';
-            return String(str).replace(/[&<>'"]/g, 
-                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-            );
-        }
-    
-// ==========================================
-// SISTEMA DE PROGRAMACIÓN DINÁMICA
-// ==========================================
+        }).join('');
+    }
+
+    function escapeHTML(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>'"]/g,
+            tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+        );
+    }
+
+    // ==========================================
+    // SISTEMA DE PROGRAMACIÓN DINÁMICA
+    // ==========================================
 
     async function initData() {
         // 1. Espera la precarga pesada inicial (Pasa por el caché largo de Google)
         await preloadData();
-    
+
         // 2. Asignación de los datos iniciales
         allNews = appData.noticias;
         programasData = appData.programas;
         programacionData = appData.programacion;
-    
+
         // 3. Renders e inicializaciones iniciales de la página
         renderNewsList();
         mergeScheduleData();
@@ -706,91 +775,86 @@ document.addEventListener('DOMContentLoaded', () => {
         initInformativos();
         renderAnuncios();
         renderNeptunoTV();
-        
+        updateExploreProgramacion();
+        updateExploreNoticias();
+        updateExploreSonando();
+
         // 4. Temporizadores en segundo plano (Ciclos en tiempo real optimizados)
         setInterval(updateLiveSchedule, 60000);       // Actualiza la aguja de la hora actual
         setInterval(refreshBarraYTvTiempoReal, 60000); // Revisa la barra e hilos de TV cada 1 min
         setInterval(refreshNoticiasTiempoReal, 300000); // Revisa noticias nuevas cada 5 min
     }
-    
-async function loadProgramas() {
 
-    try {
+    async function loadProgramas() {
 
-        const response =
-            await fetch(`${API_URL}?action=programas`);
+        try {
+            const response =
+                await fetch(`${API_URL}?action=programas`);
+            const data =
+                await response.json();
 
-        const data =
-            await response.json();
+            programasData =
+                data.programas || [];
 
-        programasData =
-            data.programas || [];
-
-    } catch(error) {
-
-        console.error(
-            'Error cargando programas:',
-            error
-        );
+        } catch (error) {
+            console.error(
+                'Error cargando programas:',
+                error
+            );
+        }
     }
-}
 
-async function loadSchedule() {
+    async function loadSchedule() {
 
-    try {
+        try {
+            const response =
+                await fetch(`${API_URL}?action=programacion`);
+            const data =
+                await response.json();
 
-        const response =
-            await fetch(`${API_URL}?action=programacion`);
+            programacionData =
+                data.programacion || [];
 
-        const data =
-            await response.json();
+            mergeScheduleData();
+            renderSchedule();
+            updateLiveSchedule();
+            setInterval(updateLiveSchedule, 60000);
 
-        programacionData =
-            data.programacion || [];
+        } catch (error) {
 
-        mergeScheduleData();
-
-        renderSchedule();
-
-        updateLiveSchedule();
-
-        setInterval(updateLiveSchedule, 60000);
-
-    } catch(error) {
-
-        console.error(
-            'Error cargando programación:',
-            error
-        );
+            console.error(
+                'Error cargando programación:',
+                error
+            );
+        }
     }
-}
 
-function mergeScheduleData() {
+    function mergeScheduleData() {
 
-    const programasMap = {};
+        const programasMap = {};
 
-    programasData.forEach(programa => {
+        programasData.forEach(programa => {
 
-        programasMap[programa.id] = programa;
-    });
+            programasMap[programa.id] = programa;
+        });
 
-    scheduleData = programacionData.map(item => ({
+        scheduleData = programacionData.map(item => ({
 
-        ...item,
+            ...item,
 
-        ...(programasMap[item.programa_id] || {})
-    }));
-}
+            ...(programasMap[item.programa_id] || {})
+        }));
+    }
 
-function renderSchedule() {
+    function renderSchedule() {
 
-    const container =
-        document.querySelector('.schedule-grid');
+        const container =
+            document.querySelector('.schedule-grid');
 
-    if (!container) return;
+        if (!container) return;
 
-    container.innerHTML =
-        scheduleData.map((item, index) => `
+        container.innerHTML =
+            scheduleData.map((item, index) => `
 
         <div
             class="schedule-card"
@@ -811,66 +875,66 @@ function renderSchedule() {
         </div>
 
     `).join('');
-}
-    
+    }
 
-function isCurrentProgram(
-    currentMinutes,
-    startMinutes,
-    endMinutes
-) {
 
-    if (endMinutes < startMinutes) {
+    function isCurrentProgram(
+        currentMinutes,
+        startMinutes,
+        endMinutes
+    ) {
+
+        if (endMinutes < startMinutes) {
+
+            return (
+                currentMinutes >= startMinutes ||
+                currentMinutes < endMinutes
+            );
+
+        }
 
         return (
-            currentMinutes >= startMinutes ||
+            currentMinutes >= startMinutes &&
             currentMinutes < endMinutes
         );
 
     }
 
-    return (
-        currentMinutes >= startMinutes &&
-        currentMinutes < endMinutes
-    );
-
-}
-
     function getCurrentProgram() {
         if (!scheduleData || scheduleData.length === 0) return null;
-        
+
         const now = new Date();
         const currentMinutes = now.getHours() * 60 + now.getMinutes();
-        
+
         for (let i = 0; i < scheduleData.length; i++) {
             const programa = scheduleData[i];
             const [startHour, startMinute] = programa.inicio.split(':').map(Number);
             const [endHour, endMinute] = programa.fin.split(':').map(Number);
-            
+
             const startMinutes = startHour * 60 + startMinute;
             const endMinutes = endHour * 60 + endMinute;
-            
+
             if (isCurrentProgram(currentMinutes, startMinutes, endMinutes)) {
                 return programa;
             }
         }
         return null;
     }
-    
+
     function getNextProgram() {
         if (!scheduleData || scheduleData.length === 0) return null;
-        
+
         const now = new Date();
         const currentMinutes = now.getHours() * 60 + now.getMinutes();
-        
+
         for (let i = 0; i < scheduleData.length; i++) {
             const programa = scheduleData[i];
             const [startHour, startMinute] = programa.inicio.split(':').map(Number);
             const [endHour, endMinute] = programa.fin.split(':').map(Number);
-            
+
             const startMinutes = startHour * 60 + startMinute;
             const endMinutes = endHour * 60 + endMinute;
-            
+
             if (isCurrentProgram(currentMinutes, startMinutes, endMinutes)) {
                 // Retorna el siguiente programa, o el primero del día si es el último
                 return scheduleData[i + 1] || scheduleData[0];
@@ -878,144 +942,144 @@ function isCurrentProgram(
         }
         return null;
     }
-    
-function updateLiveSchedule() {
 
-    const now = new Date();
+    function updateLiveSchedule() {
 
-    const currentMinutes =
-        now.getHours() * 60 +
-        now.getMinutes();
+        const now = new Date();
 
-    let currentShow = null;
+        const currentMinutes =
+            now.getHours() * 60 +
+            now.getMinutes();
 
-    document
-        .querySelectorAll('.schedule-card')
-        .forEach(card => {
+        let currentShow = null;
 
-            card.classList.remove('current');
+        document
+            .querySelectorAll('.schedule-card')
+            .forEach(card => {
 
-            const badge =
-                card.querySelector(
-                    '.current-badge'
+                card.classList.remove('current');
+
+                const badge =
+                    card.querySelector(
+                        '.current-badge'
+                    );
+
+                if (badge)
+                    badge.remove();
+            });
+
+        scheduleData.forEach((programa, index) => {
+
+            const [startHour, startMinute] =
+                programa.inicio
+                    .split(':')
+                    .map(Number);
+
+            const [endHour, endMinute] =
+                programa.fin
+                    .split(':')
+                    .map(Number);
+
+            const startMinutes =
+                startHour * 60 +
+                startMinute;
+
+            const endMinutes =
+                endHour * 60 +
+                endMinute;
+
+            const active =
+                isCurrentProgram(
+                    currentMinutes,
+                    startMinutes,
+                    endMinutes
                 );
 
-            if (badge)
-                badge.remove();
+            if (!active) return;
+
+            currentShow = programa;
+
+            const card =
+                document.querySelectorAll(
+                    '.schedule-card'
+                )[index];
+
+            if (!card) return;
+
+            card.classList.add('current');
+
+            const badge =
+                document.createElement(
+                    'span'
+                );
+
+            badge.className =
+                'current-badge';
+
+            badge.textContent =
+                'Al Aire';
+
+            card.appendChild(badge);
+
         });
 
-    scheduleData.forEach((programa, index) => {
-
-        const [startHour, startMinute] =
-            programa.inicio
-                .split(':')
-                .map(Number);
-
-        const [endHour, endMinute] =
-            programa.fin
-                .split(':')
-                .map(Number);
-
-        const startMinutes =
-            startHour * 60 +
-            startMinute;
-
-        const endMinutes =
-            endHour * 60 +
-            endMinute;
-
-        const active =
-            isCurrentProgram(
-                currentMinutes,
-                startMinutes,
-                endMinutes
-            );
-
-        if (!active) return;
-
-        currentShow = programa;
-
-        const card =
-            document.querySelectorAll(
-                '.schedule-card'
-            )[index];
-
-        if (!card) return;
-
-        card.classList.add('current');
-
-        const badge =
-            document.createElement(
-                'span'
-            );
-
-        badge.className =
-            'current-badge';
-
-        badge.textContent =
-            'Al Aire';
-
-        card.appendChild(badge);
-
-    });
-
-    updateWidgetSchedule(
-        currentShow
-    );
-
-}
-
-function updateWidgetSchedule(
-    currentShow
-) {
-
-    const widgetShowName =
-        document.getElementById(
-            'widgetShowName'
+        updateWidgetSchedule(
+            currentShow
         );
-
-    const widgetShowTime =
-        document.getElementById(
-            'widgetShowTime'
-        );
-
-    if (
-        !widgetShowName ||
-        !widgetShowTime
-    ) return;
-
-    if (currentShow) {
-
-        widgetShowName.textContent =
-            currentShow.nombre;
-
-        widgetShowTime.textContent =
-            `${currentShow.inicio} - ${currentShow.fin}`;
-
-    } else {
-
-        widgetShowName.textContent =
-            'Sin programación';
-
-        widgetShowTime.textContent =
-            '--:-- - --:--';
 
     }
 
-}
-    
+    function updateWidgetSchedule(
+        currentShow
+    ) {
+
+        const widgetShowName =
+            document.getElementById(
+                'widgetShowName'
+            );
+
+        const widgetShowTime =
+            document.getElementById(
+                'widgetShowTime'
+            );
+
+        if (
+            !widgetShowName ||
+            !widgetShowTime
+        ) return;
+
+        if (currentShow) {
+
+            widgetShowName.textContent =
+                currentShow.nombre;
+
+            widgetShowTime.textContent =
+                `${currentShow.inicio} - ${currentShow.fin}`;
+
+        } else {
+
+            widgetShowName.textContent =
+                'Sin programación';
+
+            widgetShowTime.textContent =
+                '--:-- - --:--';
+
+        }
+
+    }
+
     // ==========================================
     // PARÁMETROS DE CONFIGURACIÓN DE TU EMISORA
     // ==========================================
     const ZENO_CONFIG = {
         // 1. URL de tu stream de audio de Zeno (Asegúrate de incluir el ID de tu stream al final)
         streamUrl: "https://stream.zeno.fm/lqnwrpclo7hvv",
-        
+
         // 2. ID de tu estación en Zeno (Se usa para consultar los metadatos en vivo)
         stationId: "lqnwrpclo7hvv",
-        
+
         // Intervalo de actualización de metadatos en milisegundos (ej: 15000 = 15 segundos)
-        updateInterval: 15000 
+        updateInterval: 15000
     };
 
     // Elementos del DOM del Menú
@@ -1024,7 +1088,7 @@ function updateWidgetSchedule(
 
     // Elementos del DOM del Reproductor (usando el mismo audio que antes)
     const audio = document.getElementById('zenoAudio');
-    
+
     // Elementos del widget flotante
     const radioWidget = document.getElementById('radio-widget');
     const widgetExpandBtn = document.getElementById('widgetExpandBtn');
@@ -1036,7 +1100,7 @@ function updateWidgetSchedule(
     const widgetVolumeIcon = document.getElementById('widgetVolumeIcon');
     const widgetMiniStatus = document.getElementById('widgetMiniStatus');
     const widgetLiveBadge = document.getElementById('widgetLiveBadge');
-    
+
     // Elementos de Metadatos del widget
     const widgetTrackTitle = document.getElementById('widgetTrackTitle');
     const widgetTrackArtist = document.getElementById('widgetTrackArtist');
@@ -1059,12 +1123,12 @@ function updateWidgetSchedule(
             const icon = menuToggle.querySelector('i');
             icon.classList.toggle('fa-bars');
             icon.classList.toggle('fa-times');
-            
+
             // Toggle aria-expanded para accesibilidad
             const isExpanded = mainNav.classList.contains('open');
             menuToggle.setAttribute('aria-expanded', isExpanded);
         });
-        
+
         // Cerrar menú al hacer clic en un enlace (mejora UX móvil)
         mainNav.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
@@ -1082,7 +1146,7 @@ function updateWidgetSchedule(
     // ==========================================
     // LÓGICA DEL REPRODUCTOR AUDIO HTML5
     // ==========================================
-    
+
     // Control de expansión/colapso del widget
     if (widgetExpandBtn && radioWidget) {
         widgetExpandBtn.addEventListener('click', () => {
@@ -1090,27 +1154,27 @@ function updateWidgetSchedule(
             radioWidget.classList.add('widget-expanded');
         });
     }
-    
+
     if (widgetCollapseBtn && radioWidget) {
         widgetCollapseBtn.addEventListener('click', () => {
             radioWidget.classList.remove('widget-expanded');
             radioWidget.classList.add('widget-minimized');
         });
     }
-    
+
     // Control de reproducción desde el widget
     if (widgetPlayBtn) {
         widgetPlayBtn.addEventListener('click', () => {
             if (!isPlaying) {
                 if (widgetMiniStatus) widgetMiniStatus.textContent = "CONECTANDO...";
-                
+
                 audio.play()
                     .then(() => {
                         isPlaying = true;
                         widgetPlayIcon.classList.replace('fa-play', 'fa-pause');
                         if (widgetMiniStatus) widgetMiniStatus.textContent = "ON";
                         if (widgetLiveBadge) widgetLiveBadge.style.display = 'inline-block';
-                        
+
                         // Iniciar la consulta de metadatos cuando empiece a sonar
                         fetchZenoMetadata();
                         metadataTimer = setInterval(fetchZenoMetadata, ZENO_CONFIG.updateInterval);
@@ -1122,12 +1186,12 @@ function updateWidgetSchedule(
             } else {
                 // Detener por completo el buffer en streams en vivo para evitar delays al retomar
                 audio.pause();
-                audio.load(); 
+                audio.load();
                 isPlaying = false;
                 widgetPlayIcon.classList.replace('fa-pause', 'fa-play');
                 if (widgetMiniStatus) widgetMiniStatus.textContent = "OFF";
                 if (widgetLiveBadge) widgetLiveBadge.style.display = 'none';
-                
+
                 // Detener las peticiones de metadatos para optimizar rendimiento
                 clearInterval(metadataTimer);
                 resetMetadataUI();
@@ -1144,7 +1208,7 @@ function updateWidgetSchedule(
             updateVolumeIcon();
         });
     }
-    
+
     // Control de mute desde el widget
     if (widgetMuteBtn) {
         widgetMuteBtn.addEventListener('click', () => {
@@ -1161,12 +1225,12 @@ function updateWidgetSchedule(
             updateVolumeIcon();
         });
     }
-    
+
     function updateVolumeIcon() {
         if (!widgetVolumeIcon) return;
-        
+
         widgetVolumeIcon.classList.remove('fa-volume-up', 'fa-volume-down', 'fa-volume-mute');
-        
+
         if (isMuted || audio.volume === 0) {
             widgetVolumeIcon.classList.add('fa-volume-mute');
         } else if (audio.volume < 0.5) {
@@ -1184,7 +1248,7 @@ function updateWidgetSchedule(
     audio.addEventListener('playing', () => {
         if (isPlaying && widgetMiniStatus) widgetMiniStatus.textContent = "ON";
     });
-    
+
     audio.addEventListener('error', () => {
         if (widgetMiniStatus) widgetMiniStatus.textContent = "ERROR";
     });
@@ -1272,24 +1336,24 @@ function updateWidgetSchedule(
     if (ctaEscucharAhora && radioWidget) {
         ctaEscucharAhora.addEventListener('click', (e) => {
             e.preventDefault();
-            
+
             // Expandir el widget si está minimizado
             if (radioWidget.classList.contains('widget-minimized')) {
                 radioWidget.classList.remove('widget-minimized');
                 radioWidget.classList.add('widget-expanded');
             }
-            
+
             // Iniciar reproducción si no está sonando
             if (!isPlaying) {
                 if (widgetMiniStatus) widgetMiniStatus.textContent = "CONECTANDO...";
-                
+
                 audio.play()
                     .then(() => {
                         isPlaying = true;
                         widgetPlayIcon.classList.replace('fa-play', 'fa-pause');
                         if (widgetMiniStatus) widgetMiniStatus.textContent = "ON";
                         if (widgetLiveBadge) widgetLiveBadge.style.display = 'inline-block';
-                        
+
                         // Iniciar la consulta de metadatos cuando empiece a sonar
                         fetchZenoMetadata();
                         metadataTimer = setInterval(fetchZenoMetadata, ZENO_CONFIG.updateInterval);

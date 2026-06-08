@@ -165,26 +165,29 @@ async function loadSonando() {
     }
 }
 
-// Función para obtener datos frescos
+// Función para obtener datos frescos en sonando.js (CORREGIDA)
 async function fetchFreshData() {
     try {
-        const response = await fetch(API_URL);
+        // Hacemos la llamada a la acción centralizada para no saltarnos el motor de caché global
+        const response = await fetch(`${API_URL}?action=all`);
         const data = await response.json();
         
-        // 1. Primero renderizamos si la sección está activa.
-        // Al hacerlo aquí, getTrackMovement() usará el "previous_ranking" de la ejecución anterior.
+        // Mapeamos el top10 y nuevos desde el paquete combinado
+        const top10 = data.top10 || [];
+        const nuevos = data.nuevos || [];
+
         const sonandoSection = document.querySelector('#sonando');
         if (sonandoSection && sonandoSection.classList.contains('active')) {
-            renderTop10(data.top10);
-            renderNuevos(data.nuevos);
+            renderTop10(top10);
+            renderNuevos(nuevos);
         }
         
-        // 2. AHORA guardamos en caché, actualizando el "previous_ranking" para la PRÓXIMA carga.
-        sonandoData = data;
-        saveToCache(data);
+        // Guardamos en caché local con la estructura que tu script espera
+        sonandoData = { top10, nuevos };
+        saveToCache(sonandoData);
         
     } catch (error) {
-        console.error("Error obteniendo datos frescos:", error);
+        console.error("Error obteniendo datos frescos en módulo de votación:", error);
         if (!getCachedData()) {
             document.querySelector("#top10-list").innerHTML = '<p class="error-message">Se perdió la transmisión. Intente más tarde.</p>';
             document.querySelector("#new-list").innerHTML = '<p class="error-message">Se perdió la transmisión. Intente más tarde.</p>';
