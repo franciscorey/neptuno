@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (json.status === 'success' && json.data) {
                 const d = json.data;
                 card.innerHTML = `
-                    <h3><i class="fas fa-cloud-sun"></i> METEOROLOGÍA</h3>
+                    <h3><i class="fas fa-cloud-sun"></i> Meteorología</h3>
                     <div class="data-widget-list">
                         <div class="data-widget-item">
                             <span class="data-widget-label">Estación</span>
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (err) {
             console.error("Error Widget Clima:", err);
-            card.innerHTML = `<h3><i class="fas fa-cloud-sun"></i> METEOROLOGÍA</h3><p class="no-data">Señal climática débil.</p>`;
+            card.innerHTML = `<h3><i class="fas fa-cloud-sun"></i> Meteorología</h3><p class="no-data">Señal climática débil.</p>`;
         }
     }
 
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
 
             card.innerHTML = `
-                <h3><i class="fas fa-chart-line"></i> MERCADO DIARIO</h3>
+                <h3><i class="fas fa-chart-line"></i> Mercado diario</h3>
                 <div class="data-widget-list">
                     <div class="data-widget-item">
                         <span class="data-widget-label">Valor UF</span>
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         } catch (err) {
             console.error("Error Widget Económico:", err);
-            card.innerHTML = `<h3><i class="fas fa-chart-line"></i> MERCADO DIARIO</h3><p class="no-data">Indicadores no disponibles.</p>`;
+            card.innerHTML = `<h3><i class="fas fa-chart-line"></i> Mercado diario</h3><p class="no-data">Indicadores no disponibles.</p>`;
         }
     }
 
@@ -141,14 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             card.innerHTML = `
-                <h3><i class="fas fa-exclamation-triangle"></i> DATOS PÚBLICOS</h3>
+                <h3><i class="fas fa-exclamation-triangle"></i> Datos públicos</h3>
                 <div class="data-widget-list">
                     ${itemsHTML}
                 </div>
             `;
         } catch (err) {
             console.error("Error Widget Datos Públicos:", err);
-            card.innerHTML = `<h3><i class="fas fa-exclamation-triangle"></i> DATOS PÚBLICOS</h3><p class="no-data">Conexión con SENAPRED interrumpida.</p>`;
+            card.innerHTML = `<h3><i class="fas fa-exclamation-triangle"></i> Datos públicos</h3><p class="no-data">Conexión con SENAPRED interrumpida.</p>`;
         }
     }
 

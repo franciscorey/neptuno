@@ -463,12 +463,13 @@ ul {
 }
 
 .data-widget-card {
-    background-color: var(--surface-color);
-    border: 2px solid var(--border-color);
-    padding: 16px;
-    font-family: var(--font-main);
-    color: var(--text-color);
-    box-shadow: 4px 4px 0px var(--border-color);
+    background-color: var(--surface-light);
+    padding: 10px 8px;
+    border-radius: 8px;
+    text-align: left;
+    overflow: hidden;
+    text-decoration: none;
+    border: 1px solid var(--border-color);
     /* Estilo bloque rígido retro */
     flex: 1 1 250px;
     display: flex;
@@ -495,7 +496,7 @@ ul {
 .data-widget-card h3 {
     font-family: var(--font-title);
     font-size: 1rem;
-    text-transform: uppercase;
+    text-transform: lowercase;
     letter-spacing: 0.5px;
     margin-top: 0;
     margin-bottom: 8px;
@@ -956,7 +957,8 @@ ul {
     font-size: 0.8rem;
     font-weight: bold;
     margin-top: 4px;
-    color: var(--primary-color); /* O el color de énfasis de tu paleta */
+    color: var(--primary-color);
+    /* O el color de énfasis de tu paleta */
 }
 
 .explore-card-desc {
@@ -1328,6 +1330,54 @@ ul {
     color: var(--primary-color);
     font-weight: bold;
     font-size: 0.9rem;
+}
+
+
+/* =========================================================================
+   PAGINACIÓN DE NOTICIAS
+   ========================================================================= */
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+    padding: 10px;
+}
+
+/* Botones numéricos y de flechas */
+.pagination-btn {
+    background-color: var(--surface-light);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-title);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+/* Hover: Cuando el mouse pasa por encima */
+.pagination-btn:hover:not(:disabled) {
+    background-color: var(--primary-color);
+    color: #000000;
+    border-color: var(--primary-color);
+}
+
+/* Estado Activo: La página en la que está parado el oyente */
+.pagination-btn.active {
+    background-color: var(--accent-color);
+    color: #000000;
+    border-color: var(--accent-color);
+    font-weight: bold;
+}
+
+/* Estado Deshabilitado: Cuando no se puede ir más atrás (pág 1) o más adelante */
+.pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
 /* ==========================================
