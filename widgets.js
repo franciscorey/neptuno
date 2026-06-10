@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- CAJA 3: DATOS PÚBLICOS / EMERGENCIAS (SENAPRED) ---
+    // --- CAJA 3: DATOS PÚBLICOS / EMERGENCIAS ---
     async function renderDatosPublicos() {
         const card = document.getElementById('widget-datos-publicos');
         if (!card) return;
