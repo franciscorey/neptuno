@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Sincronizamos variables locales críticas para renderizados y grillas
             window.allNews = data.noticias || [];
+            scheduleData = window.appData.programacion;
             programasData = data.programas || [];
             programacionData = data.programacion || [];
 
@@ -698,13 +699,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.querySelector('.schedule-grid');
         if (!container) return;
 
-        container.innerHTML = scheduleData.map((item, index) => `
-            <div class="schedule-card" data-index="${index}" data-start="${item.inicio}" data-end="${item.fin}">
-                <span class="time"><i class="fas ${item.icono || 'fa-clock'}"></i> ${item.inicio} - ${item.fin}</span>
-                <h3>${item.nombre || item.programa || 'Programa'}</h3>
-                <p>${item.descripcion || ''}</p>
-            </div>
-        `).join('');
+        container.innerHTML = scheduleData.map((item, index) => {
+            // 🌟 APLICAMOS EL MISMO BLINDAJE VISUAL AQUÍ
+            const nombre = item.nombre || item.programa || item.Programa || 'Programa Especial';
+            const inicio = item.inicio || item.Hora_Inicio || item.inicio_hora || '--:--';
+            const fin = item.fin || item.Hora_Fin || item.fin_hora || '--:--';
+            const descripcion = item.descripcion || item.Descripcion || item.extracto || '';
+            const icono = item.icono || item.Icono || 'fa-clock';
+
+            return `
+                <div class="schedule-card" data-index="${index}" data-start="${inicio}" data-end="${fin}">
+                    <span class="time"><i class="fas ${icono}"></i> ${inicio} - ${fin}</span>
+                    <h3>${nombre}</h3>
+                    <p>${descripcion}</p>
+                </div>
+            `;
+        }).join('');
+
+        // 🌟 LA CLAVE: Forzar a que la tarjeta destacada "AL AIRE" se llene tras armar la grilla
+        updateLiveSchedule();
     }
 
     function isCurrentProgram(currentMinutes, startMinutes, endMinutes) {
@@ -721,8 +734,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = 0; i < scheduleData.length; i++) {
             const p = scheduleData[i];
-            const [startHour, startMinute] = p.inicio.split(':').map(Number);
-            const [endHour, endMinute] = p.fin.split(':').map(Number);
+
+            // 🌟 Blindaje adaptativo de propiedades horarias
+            const horaInicio = p.inicio || p.Hora_Inicio || p.inicio_hora;
+            const horaFin = p.fin || p.Hora_Fin || p.fin_hora;
+
+            if (!horaInicio || !horaFin) continue;
+
+            const [startHour, startMinute] = horaInicio.split(':').map(Number);
+            const [endHour, endMinute] = horaFin.split(':').map(Number);
+
             if (isCurrentProgram(currentMinutes, startHour * 60 + startMinute, endHour * 60 + endMinute)) {
                 return p;
             }
@@ -737,8 +758,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = 0; i < scheduleData.length; i++) {
             const p = scheduleData[i];
-            const [startHour, startMinute] = p.inicio.split(':').map(Number);
-            const [endHour, endMinute] = p.fin.split(':').map(Number);
+
+            // 🌟 Blindaje adaptativo de propiedades horarias
+            const horaInicio = p.inicio || p.Hora_Inicio || p.inicio_hora;
+            const horaFin = p.fin || p.Hora_Fin || p.fin_hora;
+
+            if (!horaInicio || !horaFin) continue;
+
+            const [startHour, startMinute] = horaInicio.split(':').map(Number);
+            const [endHour, endMinute] = horaFin.split(':').map(Number);
+
             if (isCurrentProgram(currentMinutes, startHour * 60 + startMinute, endHour * 60 + endMinute)) {
                 return scheduleData[i + 1] || scheduleData[0];
             }
@@ -746,90 +775,143 @@ document.addEventListener('DOMContentLoaded', () => {
         return null;
     }
 
-    // ¡RESTAURADO COMPLETO!: Inyecta los datos reales al Widget de Programación Resumen del index
+    // =========================================================================
+    // 1. WIDGET DE RESUMEN (RANKING MUSICAL) - CORREGIDO PROPIEDADES
+    // =========================================================================
+    function updateSonandoWidget() {
+        if (!window.appData.ranking || window.appData.ranking.length === 0) return;
+
+        // Ordenamos el ranking asegurando que lea 'votos' o 'Votos'
+        const topTrack = [...window.appData.ranking].sort((a, b) => {
+            const votosA = Number(a.votos || a.Votos || 0);
+            const votosB = Number(b.votos || b.Votos || 0);
+            return votosB - votosA;
+        })[0];
+
+        const textEl = document.getElementById("explore-top-track");
+        const imgEl = document.getElementById("explore-top-cover");
+
+        if (!topTrack) return;
+
+        // Extraemos las variables soportando mayúsculas y minúsculas de Sheets
+        const cancion = topTrack.cancion || topTrack.Cancion || topTrack.CANCION || 'Canción';
+        const artista = topTrack.artista || topTrack.Artista || topTrack.ARTISTA || 'Artista';
+        const votos = topTrack.votos || topTrack.Votos || topTrack.VOTOS || 0;
+        const cover = topTrack.cover || topTrack.Cover || topTrack.COVER || 'default.webp';
+
+        if (textEl) {
+            textEl.innerHTML = `
+                <strong>${cancion}</strong><br>
+                <span>${artista}</span><br>
+                <small>⚡ ${votos} impulsos</small>
+            `;
+        }
+
+        if (imgEl) {
+            imgEl.src = `assets/covers/${cover}`;
+            imgEl.alt = `${cancion} - ${artista}`;
+        }
+
+        console.log(`🎵 Widget Sonando actualizado con el #1 real: ${cancion}`);
+    }
+
+    // =========================================================================
+    // 2. WIDGET REPRODUCTOR DE RADIO (CONEXIÓN NATIVA)
+    // =========================================================================
+    function updateWidgetSchedule(currentShow) {
+        const widgetShowName = document.getElementById('widgetShowName');
+        const widgetShowTime = document.getElementById('widgetShowTime');
+
+        if (!widgetShowName || !widgetShowTime) return;
+
+        if (currentShow) {
+            const nombre = currentShow.nombre || currentShow.programa || currentShow.Programa || "Programa Especial";
+            const inicio = currentShow.inicio || currentShow.Hora_Inicio || "--:--";
+            const fin = currentShow.fin || currentShow.Hora_Fin || "--:--";
+
+            widgetShowName.textContent = nombre;
+            widgetShowTime.textContent = `${inicio} - ${fin}`;
+        } else {
+            widgetShowName.textContent = 'Sin programación';
+            widgetShowTime.textContent = '--:-- - --:--';
+        }
+    }
+
+    // =========================================================================
+    // CONTROL MASTER DE PROGRAMA AL AIRE (GRILLA ORIGINAL + PORTADA + WIDGET)
+    // =========================================================================
+
     function updateLiveSchedule() {
         const now = new Date();
         const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        let currentShow = null;
 
+        // 1. LÓGICA ORIGINAL RESTAURADA: Limpiar la grilla de programas
         document.querySelectorAll('.schedule-card').forEach(card => {
             card.classList.remove('current');
             const badge = card.querySelector('.current-badge');
             if (badge) badge.remove();
         });
 
-        scheduleData.forEach((programa, index) => {
-            const [startHour, startMinute] = programa.inicio.split(':').map(Number);
-            const [endHour, endMinute] = programa.fin.split(':').map(Number);
+        // 2. Buscar el programa actual e iluminar su tarjeta en la grilla
+        if (scheduleData && scheduleData.length > 0) {
+            scheduleData.forEach((programa, index) => {
 
-            if (isCurrentProgram(currentMinutes, startHour * 60 + startMinute, endHour * 60 + endMinute)) {
+                // Blindaje para soportar minúsculas o mayúsculas de Sheets
+                const horaInicio = programa.inicio || programa.Hora_Inicio || "--:--";
+                const horaFin = programa.fin || programa.Hora_Fin || "--:--";
+
+                if (horaInicio === "--:--" || horaFin === "--:--") return;
+
+                const [startHour, startMinute] = horaInicio.split(':').map(Number);
+                const [endHour, endMinute] = horaFin.split(':').map(Number);
+
+                const startMinutes = startHour * 60 + startMinute;
+                const endMinutes = endHour * 60 + endMinute;
+
+                const active = isCurrentProgram(currentMinutes, startMinutes, endMinutes);
+
+                if (!active) return;
+
+                // Si está al aire, lo guardamos y modificamos su tarjeta HTML
+                currentShow = programa;
+
                 const card = document.querySelectorAll('.schedule-card')[index];
-                if (card) {
-                    card.classList.add('current');
-                    const badge = document.createElement('span');
-                    badge.className = 'current-badge';
-                    badge.textContent = 'Al Aire';
-                    card.appendChild(badge);
-                }
-            }
-        });
+                if (!card) return;
 
-        // Llama inmediatamente a la actualización del widget de portada
-        updateExploreProgramacion();
-    }
+                card.classList.add('current');
 
-    function updateExploreProgramacion() {
-        const ahora = getCurrentProgram();
+                const badge = document.createElement('span');
+                badge.className = 'current-badge';
+                badge.textContent = 'Al Aire';
+                card.appendChild(badge);
+            });
+        }
 
+        // 3. ACTUALIZAR LA PORTADA (Sección Explora / Home)
         const elTitle = document.getElementById("explore-onair");
         const elTime = document.getElementById("explore-onair-time");
         const elDesc = document.getElementById("explore-onair-desc");
 
-        if (ahora) {
-            if (elTitle) elTitle.textContent = ahora.nombre || ahora.programa || "Programa Especial";
-            if (elTime) elTime.textContent = `${ahora.inicio || '--:--'} - ${ahora.fin || '--:--'}`;
-            if (elDesc) elDesc.textContent = ahora.descripcion || "Sintoniza nuestra señal en vivo.";
+        if (currentShow) {
+            const nombreShow = currentShow.nombre || currentShow.programa || currentShow.Programa || "Programa Especial";
+            const hInicio = currentShow.inicio || currentShow.Hora_Inicio || "--:--";
+            const hFin = currentShow.fin || currentShow.Hora_Fin || "--:--";
+            const descShow = currentShow.descripcion || currentShow.extracto || currentShow.Descripcion || "Sintoniza nuestra señal en vivo.";
+
+            if (elTitle) elTitle.textContent = nombreShow;
+            if (elTime) elTime.textContent = `${hInicio} - ${hFin}`;
+            if (elDesc) elDesc.textContent = descShow;
         } else {
-            if (elTitle) elTitle.textContent = "Sin transmisión";
+            if (elTitle) elTitle.textContent = "Música de Continuidad";
             if (elTime) elTime.textContent = "--:-- - --:--";
-            if (elDesc) elDesc.textContent = "Disfruta de nuestra música de continuidad.";
+            if (elDesc) elDesc.textContent = "Disfruta de la mejor selección musical de Neptuno.";
         }
+
+        // 4. ACTUALIZAR EL REPRODUCTOR FLOTANTE
+        updateWidgetSchedule(currentShow);
     }
 
-    // ¡RESTAURADO COMPLETO!: Sincroniza la canción número 1 del ranking al widget resumen de la portada
-    function updateSonandoWidget() {
-        // Validación segura del pool de datos global
-        if (!window.appData.ranking || window.appData.ranking.length === 0) return;
-
-        // Ordenamos el ranking por votos para asegurar el TOP 1 real
-        const topTrack = [...window.appData.ranking].sort((a, b) => {
-            const votosA = Number(a.votos || 0);
-            const votosB = Number(b.votos || 0);
-            return votosB - votosA;
-        })[0];
-
-        // IDs nativos reales de tu HTML
-        const textEl = document.getElementById("explore-top-track");
-        const imgEl = document.getElementById("explore-top-cover");
-
-        if (!topTrack) return;
-
-        // 1. Inyectamos texto limpio con estructura HTML en tu contenedor original
-        if (textEl) {
-            textEl.innerHTML = `
-                <strong>${topTrack.cancion || 'Canción'}</strong><br>
-                <span>${topTrack.artista || 'Artista'}</span><br>
-                <small>⚡ ${topTrack.votos || 0} impulsos</small>
-            `;
-        }
-
-        // 2. Acoplamos dinámicamente el nombre del archivo de la carátula desde Sheets
-        if (imgEl) {
-            imgEl.src = topTrack.cover ? `assets/covers/${topTrack.cover}` : 'assets/covers/default.webp';
-            imgEl.alt = `${topTrack.cancion} - ${topTrack.artista}`;
-        }
-
-        console.log(`🎵 Widget Sonando actualizado con el #1 real: ${topTrack.cancion}`);
-    }
 
     // =========================================================================
     // REPRODUCTOR AUDIO (ZENO RADIO) Y MENÚ RESPONSIVE
