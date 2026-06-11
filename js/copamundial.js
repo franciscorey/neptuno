@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         refreshInterval: 600000 // Actualización silenciosa cada 10 minutos
     };
 
-    // Diccionario de banderas FlagCDN para los 48 equipos
+    // Diccionario de banderas FlagCDN para los 48 equipos (Nombres oficiales en inglés de la API)
     const mapaBanderas = {
         "Argentina": "ar", "Australia": "au", "Belgium": "be", "Brazil": "br", "Cameroon": "cm",
         "Canada": "ca", "Costa Rica": "cr", "Croatia": "hr", "Denmark": "dk", "Ecuador": "ec",
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!res.ok) throw new Error("Señal interrumpida con Openfootball");
             const datos = await res.json();
 
-            // Fechas locales reales basadas en el huso horario de Santiago (Formato YYYY-MM-DD)
+            // Fechas locales de control (Formato YYYY-MM-DD)
             const hoyObj = new Date();
             const hoyStr = hoyObj.toLocaleDateString('sv-SE'); 
             
@@ -49,51 +49,79 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!jornada.matches) return;
                     
                     jornada.matches.forEach(partido => {
-                        if (partido.date === hoyStr) partidosHoy.push(partido);
-                        if (partido.date === mananaStr) partidosManana.push(partido);
+                        
+                        // 🌟 CAPA DEFENSIVA 1: Normalización de Equipos (Soporta String u Objeto)
+                        const t1 = (partido.team1 && typeof partido.team1 === 'object') ? partido.team1.name : partido.team1;
+                        const t2 = (partido.team2 && typeof partido.team2 === 'object') ? partido.team2.name : partido.team2;
+                        
+                        if (!t1 || !t2) return; // Salto de seguridad
 
-                        // Procesamiento matemático de estadísticas de grupo
-                        const grupo = partido.group || "Fase Final";
+                        // 🌟 CAPA DEFENSIVA 2: Normalización de Marcadores (Soporta score1 o score.ft)
+                        let s1 = null;
+                        let s2 = null;
+
+                        if (partido.score1 !== undefined && partido.score1 !== null) {
+                            s1 = Number(partido.score1);
+                            s2 = Number(partido.score2);
+                        } else if (partido.score && Array.isArray(partido.score.ft)) {
+                            s1 = partido.score.ft[0] !== null ? Number(partido.score.ft[0]) : null;
+                            s2 = partido.score.ft[1] !== null ? Number(partido.score.ft[1]) : null;
+                        }
+
+                        // Construcción de objeto limpio unificado
+                        const partidoLimpio = {
+                            date: partido.date,
+                            team1: t1,
+                            team2: t2,
+                            score1: s1,
+                            score2: s2
+                        };
+
+                        // Clasificación por fecha
+                        if (partido.date === hoyStr) partidosHoy.push(partidoLimpio);
+                        if (partido.date === mananaStr) partidosManana.push(partidoLimpio);
+
+                        // Procesamiento matemático para la tabla de posiciones
+                        const grupo = partido.group || "Fase de Grupos";
                         if (!estructuraGrupos[grupo]) estructuraGrupos[grupo] = {};
                         
-                        [partido.team1, partido.team2].forEach(eq => {
+                        [t1, t2].forEach(eq => {
                             if (!estructuraGrupos[grupo][eq]) {
                                 estructuraGrupos[grupo][eq] = { PJ: 0, G: 0, E: 0, P: 0, GF: 0, GC: 0, Pts: 0 };
                             }
                         });
 
-                        if (partido.score1 !== undefined && partido.score2 !== undefined && partido.score1 !== null) {
-                            const g1 = Number(partido.score1);
-                            const g2 = Number(partido.score2);
-                            
-                            estructuraGrupos[grupo][partido.team1].PJ++;
-                            estructuraGrupos[grupo][partido.team2].PJ++;
-                            estructuraGrupos[grupo][partido.team1].GF += g1;
-                            estructuraGrupos[grupo][partido.team1].GC += g2;
-                            estructuraGrupos[grupo][partido.team2].GF += g2;
-                            estructuraGrupos[grupo][partido.team2].GC += g1;
+                        // Solo sumar a la tabla si el partido ya se jugó y tiene goles registrados
+                        if (s1 !== null && s2 !== null) {
+                            estructuraGrupos[grupo][t1].PJ++;
+                            estructuraGrupos[grupo][t2].PJ++;
+                            estructuraGrupos[grupo][t1].GF += s1;
+                            estructuraGrupos[grupo][t1].GC += s2;
+                            estructuraGrupos[grupo][t2].GF += s2;
+                            estructuraGrupos[grupo][t2].GC += s1;
 
-                            if (g1 > g2) {
-                                estructuraGrupos[grupo][partido.team1].G++;
-                                estructuraGrupos[grupo][partido.team1].Pts += 3;
-                                estructuraGrupos[grupo][partido.team2].P++;
-                            } else if (g1 < g2) {
-                                estructuraGrupos[grupo][partido.team2].G++;
-                                estructuraGrupos[grupo][partido.team2].Pts += 3;
-                                estructuraGrupos[grupo][partido.team1].P++;
+                            if (s1 > s2) {
+                                estructuraGrupos[grupo][t1].G++;
+                                estructuraGrupos[grupo][t1].Pts += 3;
+                                estructuraGrupos[grupo][t2].P++;
+                            } else if (s1 < s2) {
+                                estructuraGrupos[grupo][t2].G++;
+                                estructuraGrupos[grupo][t2].Pts += 3;
+                                estructuraGrupos[grupo][t1].P++;
                             } else {
-                                estructuraGrupos[grupo][partido.team1].E++;
-                                estructuraGrupos[grupo][partido.team1].Pts += 1;
-                                estructuraGrupos[grupo][partido.team2].E++;
-                                estructuraGrupos[grupo][partido.team2].Pts += 1;
+                                estructuraGrupos[grupo][t1].E++;
+                                estructuraGrupos[grupo][t1].Pts += 1;
+                                estructuraGrupos[grupo][t2].E++;
+                                estructuraGrupos[grupo][t2].Pts += 1;
                             }
                         }
                     });
                 });
             }
 
-            pintarPartidos(partidosHoy, 'partidos-hoy', false);
-            pintarPartidos(partidosManana, 'partidos-manana', true);
+            // Inyección en el DOM
+            pintarPartidos(partidosHoy, 'partidos-hoy');
+            pintarPartidos(partidosManana, 'partidos-manana');
             pintarTablas(estructuraGrupos, 'tablas-grupos');
 
         } catch (error) {
@@ -105,19 +133,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function pintarPartidos(lista, contenedorId, esFuturo = false) {
+    function pintarPartidos(lista, contenedorId) {
         const contenedor = document.getElementById(contenedorId);
         if (!contenedor) return;
         contenedor.innerHTML = '';
         
         if (lista.length === 0) {
-            contenedor.innerHTML = '<div class="no-data-mundial">No hay partidos fijados para esta fecha</div>';
+            contenedor.innerHTML = '<div class="no-data-mundial">No hay partidos fijados para hoy</div>';
             return;
         }
 
         lista.forEach(partido => {
-            const mar1 = partido.score1 !== undefined && partido.score1 !== null ? partido.score1 : '';
-            const mar2 = partido.score2 !== undefined && partido.score2 !== null ? partido.score2 : '';
+            const mar1 = partido.score1 !== null ? partido.score1 : '';
+            const mar2 = partido.score2 !== null ? partido.score2 : '';
             const visualScore = (mar1 === '' && mar2 === '') ? 'VS' : `${mar1} - ${mar2}`;
 
             const html = `
@@ -145,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let tablasRenderizadas = 0;
 
         for (const grupoNombre in grupos) {
-            if (grupoNombre.includes("Fase Final")) continue;
+            if (grupoNombre.includes("Fase Final") || grupoNombre.includes("Eliminatorias")) continue;
 
             const equiposOrdenados = Object.keys(grupos[grupoNombre]).map(nombre => {
                 return { nombre, ...grupos[grupoNombre][nombre] };
@@ -176,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <tr>
                         <td class="text-izquierda">
                             <div class="tabla-equipo-celda">
-                                <img src="https://flagcdn.com/${mapaBanderas[eq.nombre] || 'un'}.png" class="flag-icon" alt="${eq.nombre}">
+                                ${obtenerBanderaHtml(eq.nombre)}
                                 <span class="equipo-nombre">${eq.nombre}</span>
                             </div>
                         </td>
@@ -192,11 +220,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (tablasRenderizadas === 0) {
-            contenedor.innerHTML = '<div class="no-data-mundial">Tablas de posiciones en preparación...</div>';
+            contenedor.innerHTML = '<div class="no-data-mundial">Tablas en preparación...</div>';
         }
     }
 
-    // Ejecución inicial y bucle de fondo
+    // Encendido de transmisiones
     renderWidgetMundial();
     setInterval(renderWidgetMundial, MUNDIAL_CONFIG.refreshInterval);
 });
