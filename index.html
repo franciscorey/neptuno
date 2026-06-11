@@ -99,7 +99,7 @@
             <div class="section-container widgets-publicos-container">
                 <div id="widget-clima" class="data-widget-card"></div>
                 <div id="widget-economico" class="data-widget-card"></div>
-                <div id="widget-datos-publicos" class="data-widget-card"></div>
+                <div id="widget-hoy-dia" class="data-widget-card"></div>
             </div>
         </section>
 
@@ -135,6 +135,7 @@
                             <i class="fas fa-newspaper"></i>
                         </div>
                         <div class="explore-card-bottom">
+                            <span class="card-label">ÚLTIMA NOTICIA</span>
                             <img id="explore-news-image" class="explore-thumb" src="assets/default-news.jpg"
                                 alt="Noticia">
                             <div id="explore-news-title">
@@ -152,11 +153,12 @@
                             <i class="fas fa-music"></i>
                         </div>
                         <div class="explore-card-bottom">
-                            <img id="explore-top-cover" class="explore-thumb" src="assets/covers/default.webp"
-                                alt="Carátula Top 1" onerror="this.src='assets/covers/default.webp'">
                             <span class="card-label">LO MÁS IMPULSADO</span>
-                            <div id="explore-top-track">
-                                Cargando...
+                                <div class="explore-card-bottom-group"><img id="explore-top-cover" class="explore-thumb" src="assets/covers/default.webp"
+                                    alt="Carátula Top 1" onerror="this.src='assets/covers/default.webp'">
+                                <div id="explore-top-track">
+                                    Cargando...
+                                </div>
                             </div>
                         </div>
                     </a>
@@ -172,10 +174,8 @@
                     <div class="about-text">
                         <h2>Sobre Radio Neptuno</h2>
                         <hr class="divider">
-                        <p>En el vasto mar de información, Radio Neptuno emerge como un proyecto joven, autogestionado
-                            dedicado a traer lo mejor de la música de todas las épocas.</p>
-                        <p>Somos la frecuencia donde tu voz también tiene espacio, conectamos relatos, el pulso de la
-                            ciudad con una propuesta auténtica.</p>
+                        <p>En el vasto mar de información, Radio Neptuno emerge como un proyecto joven, autogestionado dedicado a traer lo mejor de la música de todas las épocas.</p>
+                        <p>Somos la frecuencia donde tu voz también tiene espacio, conectamos relatos, el pulso de la ciudad con una propuesta auténtica.</p>
                     </div>
                     <div class="about-image">
                         <img src="assets/radio.png" alt="Radio Neptuno" class="radio-illustration">
@@ -206,6 +206,7 @@
                     <img src="assets/noticias.webp" alt="Estudio de Radio Neptuno" class="banner-image">
                 </div>
                 <h2 class="section-title">Últimas Noticias</h2>
+                <p class="section-subtitle">Mantente informado</p>
 
                 <div id="newsGrid" class="news-grid">
                     <!-- Las noticias se cargarán dinámicamente aquí -->

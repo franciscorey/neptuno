@@ -1,0 +1,46 @@
+{
+    "02-12": {
+        "nombre": "Fundación de Santiago",
+        "anio": 1541
+    },
+    "04-05": {
+        "nombre": "Batalla de Maipú",
+        "anio": 1818
+    },
+    "05-21": {
+        "nombre": "Combate Naval de Iquique",
+        "anio": 1879
+    },
+    "06-07": {
+        "nombre": "Asalto y Toma del Morro de Arica",
+        "anio": 1880
+    },
+    "08-20": {
+        "nombre": "Nacimiento de Bernardo O'Higgins",
+        "anio": 1778
+    },
+    "09-18": {
+        "nombre": "Primera Junta Nacional de Gobierno",
+        "anio": 1810
+    },
+    "09-19": {
+        "nombre": "Primeras Glorias del Ejército de Chile",
+        "anio": 1810
+    },
+    "10-09": {
+        "nombre": "Creación de la Primera Escuadra Nacional",
+        "anio": 1818
+    },
+    "10-21": {
+        "nombre": "Combate Naval de Angamos",
+        "anio": 1879
+    },
+    "11-03": {
+        "nombre": "Fundación de Valdivia",
+        "anio": 1552
+    },
+    "12-10": {
+        "nombre": "Premio Nobel de Literatura a Gabriela Mistral",
+        "anio": 1945
+    }
+}

@@ -2,7 +2,7 @@
  * RADIO NEPTUNO - Módulo de Widgets del Tablón Público
  * Gestiona de forma aislada las 3 cajas independientes de datos.
  */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
     const CONFIG = {
         climaUrl: 'https://api.boostr.cl/weather/SCEL.json', // Estación AMB / Santiago Centro
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function initTablonWidgets() {
         renderClima();
         renderEconomico();
-        renderDatosPublicos();
+        renderWidgetHoyDia();
     }
 
     // --- CAJA 1: CLIMA ---
@@ -96,61 +96,108 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- CAJA 3: DATOS PÚBLICOS / EMERGENCIAS ---
-    async function renderDatosPublicos() {
-        const card = document.getElementById('widget-datos-publicos');
+    // --- CAJA 3: HOY DIA ---
+    // Función genérica para cargar archivos JSON locales
+    async function cargarJSON(url) {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Error cargando ${url}`);
+        }
+
+        return await response.json();
+    }
+
+    // Definimos una función genérica para cargar archivos JSON locales
+    const feriados = await cargarJSON('data/feriados.json');
+    const onomasticos = await cargarJSON('data/onomasticos.json');
+    const efemerides = await cargarJSON('data/efemerides.json')
+
+    // Función para cargar datos
+    function obtenerDatosDelDia() {
+        const hoy = new Date();
+
+        const clave = `${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
+
+        return {
+            fecha: hoy,
+            clave,
+            feriado: feriados[clave] || null,
+            onomastico: onomasticos[clave] || null,
+            efemeride: efemerides[clave] || null
+        };
+    }
+    // Función para renderizar el widget de Hoy Día
+    function renderWidgetHoyDia() {
+        // Enlaza al contenedor real de tu HTML
+        const card = document.getElementById('widget-datos-publicos') || document.getElementById('widget-hoy-dia');
         if (!card) return;
 
         try {
-            const res = await fetch(CONFIG.senapredUrl);
-            const data = await res.json();
+            const datos = obtenerDatosDelDia();
+            
+            // Formateamos la fecha para el encabezado estándar h3
+            const fechaTexto = datos.fecha.toLocaleDateString('es-CL', {
+                day: 'numeric',
+                month: 'long'
+            });
 
-            let itemsHTML = "";
+            // Estructura base idéntica a Clima y Economía
+            let html = `<h3><i class="fas fa-calendar-day"></i> hoy: ${fechaTexto}</h3>`;
 
-            if (data.status === 'ok' && data.items && data.items.length > 0) {
-                // Filtramos las 3 alertas más recientes publicadas
-                const alertas = data.items.slice(0, 3);
-                
-                itemsHTML = alertas.map(alerta => {
-                    // Limpieza estética de títulos largos oficiales
-                    let titulo = alerta.title.replace("Monitoreo para la comuna de", "Monit.").replace("Alerta Metropolitana", "R.M.");
-                    if (titulo.length > 32) titulo = titulo.substring(0, 30) + "...";
-                    
-                    const esRoja = alerta.title.toLowerCase().includes("roja");
+            // Si el día viene completamente vacío en tus JSON locales
+            if (!datos.feriado && !datos.onomastico && (!datos.efemeride || datos.efemeride.efemerides.length === 0)) {
+                card.innerHTML = html + `<p class="no-data">Sin registros para hoy.</p>`;
+                return;
+            }
 
-                    return `
-                        <div class="data-widget-item">
-                            <span class="data-widget-label" title="${alerta.title}">• ${titulo}</span>
-                            <span class="data-widget-value ${esRoja ? 'alerta-activa' : ''}">
-                                ${esRoja ? '🔴 ROJA' : '⚠️ AVISO'}
-                            </span>
-                        </div>
-                    `;
-                }).join('');
-            } else {
-                // Fallback si no hay eventos climáticos o geológicos decretados
-                itemsHTML = `
+            html += `<div class="data-widget-list">`;
+
+            // 1. Item: Feriado
+            if (datos.feriado) {
+                html += `
                     <div class="data-widget-item">
-                        <span class="data-widget-label">Alerta Nacional</span>
-                        <span class="data-widget-value" style="color: var(--primary-color);">🟢 NORMAL</span>
-                    </div>
-                    <div class="data-widget-item" style="font-size:0.8rem; color:var(--text-muted);">
-                        No hay reportes de catástrofes activos.
+                        <span class="data-widget-label"><i class="fas fa-flag"></i> Feriado</span>
+                        <span class="data-widget-value">${datos.feriado.nombre}</span>
                     </div>
                 `;
             }
 
-            card.innerHTML = `
-                <h3><i class="fas fa-exclamation-triangle"></i> Datos públicos</h3>
-                <div class="data-widget-list">
-                    ${itemsHTML}
-                </div>
-            `;
+            // 2. Item: Onomástico / Santoral
+            if (datos.onomastico) {
+                html += `
+                    <div class="data-widget-item">
+                        <span class="data-widget-label"><i class="fas fa-user"></i> Santoral</span>
+                        <span class="data-widget-value">${datos.onomastico.nombres.join(', ')}</span>
+                    </div>
+                `;
+            }
+
+            // 3. Items dinámicos: Efemérides (Se despliegan como filas individuales del mismo estilo)
+            if (datos.efemeride && datos.efemeride.efemerides) {
+                datos.efemeride.efemerides.forEach(item => {
+                    // Usamos el año histórico como etiqueta izquierda para mantener la simetría perfecta
+                    const etiquetaAnio = item.anio ? `${item.anio}` : 'Hito';
+                    
+                    html += `
+                        <div class="data-widget-item">
+                            <span class="data-widget-label"><i class="fas fa-history"></i> ${etiquetaAnio}</span>
+                            <span class="data-widget-value">${item.nombre}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            html += `</div>`;
+            card.innerHTML = html;
+
         } catch (err) {
-            console.error("Error Widget Datos Públicos:", err);
-            card.innerHTML = `<h3><i class="fas fa-exclamation-triangle"></i> Datos públicos</h3><p class="no-data">Conexión con SENAPRED interrumpida.</p>`;
+            console.error("Error Widget Hoy Día:", err);
+            card.innerHTML = `<h3><i class="fas fa-calendar-day"></i> Efemérides</h3><p class="no-data">Archivo de bitácora no disponible.</p>`;
         }
     }
+
+
 
     // Disparar la carga inicial del tablón
     initTablonWidgets();

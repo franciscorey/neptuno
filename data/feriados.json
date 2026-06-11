@@ -1,0 +1,66 @@
+{
+    "01-01": {
+        "nombre": "Año Nuevo",
+        "irrenunciable": true
+    },
+    "04-03": {
+        "nombre": "Viernes Santo",
+        "irrenunciable": false
+    },
+    "04-04": {
+        "nombre": "Sábado Santo",
+        "irrenunciable": false
+    },
+    "05-01": {
+        "nombre": "Día Nacional del Trabajo",
+        "irrenunciable": true
+    },
+    "05-21": {
+        "nombre": "Día de las Glorias Navales",
+        "irrenunciable": false
+    },
+    "06-21": {
+        "nombre": "Día Nacional de los Pueblos Indígenas",
+        "irrenunciable": false
+    },
+    "06-29": {
+        "nombre": "San Pedro y San Pablo",
+        "irrenunciable": false
+    },
+    "07-16": {
+        "nombre": "Virgen del Carmen",
+        "irrenunciable": false
+    },
+    "08-15": {
+        "nombre": "Asunción de la Virgen",
+        "irrenunciable": false
+    },
+    "09-18": {
+        "nombre": "Independencia Nacional",
+        "irrenunciable": true
+    },
+    "09-19": {
+        "nombre": "Día de las Glorias del Ejército",
+        "irrenunciable": true
+    },
+    "10-12": {
+        "nombre": "Encuentro de Dos Mundos",
+        "irrenunciable": false
+    },
+    "10-31": {
+        "nombre": "Día de las Iglesias Evangélicas y Protestantes",
+        "irrenunciable": false
+    },
+    "11-01": {
+        "nombre": "Día de Todos los Santos",
+        "irrenunciable": false
+    },
+    "12-08": {
+        "nombre": "Inmaculada Concepción",
+        "irrenunciable": false
+    },
+    "12-25": {
+        "nombre": "Navidad",
+        "irrenunciable": true
+    }
+}

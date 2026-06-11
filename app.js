@@ -440,6 +440,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const bgStyle = news.imagen ? `style="background-image: url('${rutaImagen}'); background-size: cover; background-position: center;"` : 'style="background-color: var(--border-color); display: flex; align-items: center; justify-content: center;"';
 
+            const fechaArticulo = news.fecha || news.Fecha || news.FECHA || '';
+
             return `
                 <article class="news-card" data-id="${news.id}">
                     <div class="news-img-placeholder" ${bgStyle}>
@@ -447,6 +449,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="news-body">
                         <span class="news-tag">${news.categoria || 'General'}</span>
+                        
+                        ${fechaArticulo ? `<div class="news-date"><i class="far fa-calendar-alt"></i> ${fechaArticulo}</div>` : ''}
+                        
                         <h3>${news.titulo || 'Sin Título'}</h3>
                         <p>${news.extracto || ''}</p>
                         <a href="#" class="news-link" onclick="event.preventDefault(); showSection('noticia-detalle', ${news.id});">
