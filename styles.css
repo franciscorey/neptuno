@@ -551,6 +551,103 @@ ul {
     }
 }
 
+/* ==========================================
+   WIDGET MUNDIAL - ESTILOS PUROS NEPTUNO
+   ========================================== */
+.mundial-seccion {
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border-color);
+}
+.mundial-seccion.no-border {
+    border-bottom: none;
+}
+.lista-partidos {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.partido-fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 4px;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.02);
+}
+.equipo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 42%;
+}
+.equipo-wrapper.derecha {
+    justify-content: flex-end;
+    text-align: right;
+}
+.flag-icon {
+    width: 20px;
+    height: 14px;
+    object-fit: cover;
+    border: 1px solid var(--border-color);
+}
+.equipo-nombre {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.marcador {
+    width: 16%;
+    text-align: center;
+    font-weight: bold;
+    background: var(--border-color);
+    color: var(--bg-color, #000); /* Alto contraste */
+    padding: 2px 4px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+.grupo-contenedor {
+    margin-top: 10px;
+    margin-bottom: 14px;
+}
+.grupo-nombre {
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+.tabla-pos {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    text-align: center;
+}
+.tabla-pos th {
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--text-muted);
+    font-weight: normal;
+    padding: 4px;
+}
+.tabla-pos td {
+    padding: 5px 2px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.text-izquierda {
+    text-align: left;
+}
+.tabla-equipo-celda {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.no-data-mundial {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 4px 0;
+}
+
 /* ========================================== */
 /* WIDGET FLOTANTE DE RADIO                   */
 /* ========================================== */
