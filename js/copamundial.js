@@ -5,7 +5,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     const MUNDIAL_CONFIG = {
-        apiUrl: 'https://raw.githubusercontent.com/openfootball/world-cup/master/2026/cup.json',
+        apiUrl: 'https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json',
         refreshInterval: 600000 // Actualización silenciosa cada 10 minutos
     };
 
