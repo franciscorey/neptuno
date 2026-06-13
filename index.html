@@ -96,37 +96,46 @@
 
         <!-- Sección Widgets Datos Publicos -->
         <section id="datos-widgets" class="view-section">
+
             <div class="section-container widgets-publicos-container">
+
                 <div id="widget-clima" class="data-widget-card"></div>
                 <div id="widget-economico" class="data-widget-card"></div>
                 <div id="widget-hoy-dia" class="data-widget-card"></div>
-            </div>
-        </section>
 
-        <!-- Sección Widget Copa Mundial -->
-<!--        <div id="widget-mundial" class="data-widget-card">
-            <h3><i class="fas fa-trophy"></i> Copa Mundial 2026</h3>
-            <div class="data-widget-list">
-                
-                <div class="mundial-seccion">
-                    <span class="data-widget-label"><i class="fas fa-calendar-day"></i> Partidos de Hoy</span>
-                    <div id="partidos-hoy" class="lista-partidos">
-                        <p class="no-data-mundial">Sintonizando señal satelital...</p>
+                <div id="widget-mundial" class="data-widget-card">
+                    <h3><i class="fas fa-trophy"></i> Copa Mundial 2026</h3>
+                    <div class="data-widget-grid">
+
+                        <div class="mundial-seccion">
+                            <span class="data-widget-label"><i class="fas fa-history"></i> Jornada de Ayer</span>
+                            <div id="partidos-ayer" class="lista-partidos">
+                                <p class="no-data-mundial">Cargando archivo de transmisiones...</p>
+                            </div>
+                        </div>
+
+                        <div class="mundial-seccion">
+                            <span class="data-widget-label"><i class="fas fa-calendar-day"></i> Partidos de Hoy</span>
+                            <div id="partidos-hoy" class="lista-partidos">
+                                <p class="no-data-mundial">Sintonizando señal satelital...</p>
+                            </div>
+                        </div>
+
+                        <div class="mundial-seccion">
+                            <span class="data-widget-label"><i class="fas fa-hourglass-half"></i> Partidos de
+                                Mañana</span>
+                            <div id="partidos-manana" class="lista-partidos"></div>
+                        </div>
+
+                        <div class="mundial-seccion no-border">
+                            <div id="tablas-grupos" class="tablas-grupos-contenedor"></div>
+                        </div>
+
                     </div>
                 </div>
-        
-                <div class="mundial-seccion">
-                    <span class="data-widget-label"><i class="fas fa-hourglass-half"></i> Partidos de Mañana</span>
-                    <div id="partidos-manana" class="lista-partidos"></div>
-                </div>
-        
-                <div class="mundial-seccion no-border">
-                    <span class="data-widget-label"><i class="fas fa-table"></i> Posiciones de Grupo</span>
-                    <div id="tablas-grupos" class="tablas-grupos-contenedor"></div>
-                </div>
-        
+
             </div>
-        </div> -->
+        </section>
 
         <!-- Sección Explora (solo visible en inicio) -->
         <section class="explore-section view-section" id="explora">
@@ -179,8 +188,9 @@
                         </div>
                         <div class="explore-card-bottom">
                             <span class="card-label">LO MÁS IMPULSADO</span>
-                                <div class="explore-card-bottom-group"><img id="explore-top-cover" class="explore-thumb" src="assets/covers/default.webp"
-                                    alt="Carátula Top 1" onerror="this.src='assets/covers/default.webp'">
+                            <div class="explore-card-bottom-group"><img id="explore-top-cover" class="explore-thumb"
+                                    src="assets/covers/default.webp" alt="Carátula Top 1"
+                                    onerror="this.src='assets/covers/default.webp'">
                                 <div id="explore-top-track">
                                     Cargando...
                                 </div>
@@ -199,8 +209,10 @@
                     <div class="about-text">
                         <h2>Sobre Radio Neptuno</h2>
                         <hr class="divider">
-                        <p>En el vasto mar de información, Radio Neptuno emerge como un proyecto joven, autogestionado dedicado a traer lo mejor de la música de todas las épocas.</p>
-                        <p>Somos la frecuencia donde tu voz también tiene espacio, conectamos relatos, el pulso de la ciudad con una propuesta auténtica.</p>
+                        <p>En el vasto mar de información, Radio Neptuno emerge como un proyecto joven, autogestionado
+                            dedicado a traer lo mejor de la música de todas las épocas.</p>
+                        <p>Somos la frecuencia donde tu voz también tiene espacio, conectamos relatos, el pulso de la
+                            ciudad con una propuesta auténtica.</p>
                     </div>
                     <div class="about-image">
                         <img src="assets/radio.png" alt="Radio Neptuno" class="radio-illustration">
@@ -493,7 +505,7 @@
     <script src="sonando.js"></script>
     <script src="app.js"></script>
     <script src="widgets.js" defer></script>
-    <!-- <script src="js/copamundial.js" defer></script> -->
+    <script src="js/copamundial.js" defer></script>
 </body>
 
 </html>
