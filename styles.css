@@ -451,48 +451,140 @@ ul {
 
 
 /* ========================================== */
-/* WIDGETS DATOS PUBLICOS APIS                */
+/* 1. CONFIGURACIÓN BASE Y MÓVIL (0px - 767px)*/
 /* ========================================== */
 
+/* Contenedor Macro: Todo en una sola columna vertical */
 .widgets-publicos-container {
-    display: flex;
-    flex-wrap: wrap;
-    /* Permite que las cajas bajen si no caben */
-    gap: 16px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
     width: 100%;
 }
 
+/* Tarjeta Base de Datos (Comportamiento común) */
 .data-widget-card {
     background-color: var(--surface-light);
-    padding: 10px 8px;
+    padding: 12px;
     border-radius: 8px;
     text-align: left;
     overflow: hidden;
     text-decoration: none;
     border: 1px solid var(--border-color);
-    /* Estilo bloque rígido retro */
-    flex: 1 1 250px;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
 }
 
-/* RESPONSIVE: Ajustes para pantallas pequeñas (Celulares) */
-@media (max-width: 768px) {
+/* Variación específica para el Widget del Mundial en Móvil */
+#widget-mundial {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+
+/* Estructura Interna del Mundial (Por defecto 1 columna) */
+.data-widget-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 10px 0;
+}
+
+.mundial-seccion {
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border-color, #444);
+}
+
+
+/* ========================================== */
+/* 2. PANTALLAS MEDIANAS (Tablets: 768px - 1149px) */
+/* ========================================== */
+@media (min-width: 768px) and (max-width: 1149px) {
+    
+    /* Macro-Layout: Datos a la izquierda (1fr), Copa a la derecha (1.5fr) */
     .widgets-publicos-container {
-        flex-direction: column;
-        /* Fuerzas el apilado vertical estricto */
-        gap: 10px;
-        /* Reduces el espaciado entre cajas */
+        grid-template-columns: 1fr 1.5fr; 
+        align-items: start;
+        gap: 16px;
     }
 
-    .data-widget-card {
-        flex: 1 1 auto;
-        /* Se adaptan al ancho completo disponible */
-        padding: 12px;
-        /* Aprovechas mejor el espacio interno en pantallas chicas */
+    /* Forzar tarjetas de datos comunes a apilarse estrictamente en la columna 1 */
+    .widgets-publicos-container .data-widget-card:not(#widget-mundial) {
+        grid-column: 1;
+    }
+
+    /* Ubicar el Mundial en la columna 2 expandiéndose hacia abajo */
+    #widget-mundial {
+        grid-column: 2;
+        grid-row: 1 / span 3;
+        margin: 0;
+    }
+
+    /* Micro-Layout Interno de la Copa: Se abre a una rejilla de 2x2 */
+    .data-widget-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    /* Remover bordes inferiores en los bloques de abajo de la rejilla interna */
+    .mundial-seccion:nth-child(3),
+    .mundial-seccion:nth-child(4) {
+        border-bottom: none;
     }
 }
 
+
+/* ========================================== */
+/* 3. PANTALLAS GRANDES (Desktop: 1150px+)     */
+/* ========================================== */
+@media (min-width: 1150px) {
+
+    /* Macro-Layout: 3 columnas paralelas para las tarjetas de datos */
+    .widgets-publicos-container {
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 20px;
+    }
+
+    /* Las tarjetas de datos normales se posicionan solas en la fila 1 */
+    .widgets-publicos-container .data-widget-card:not(#widget-mundial) {
+        grid-column: auto;
+        grid-row: auto;
+    }
+
+    /* El mundial se va al fondo y toma las 3 columnas completas */
+    #widget-mundial {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        margin: 0;
+    }
+
+    /* Micro-Layout Interno de la Copa: Los 4 bloques se alinean en horizontal */
+    .data-widget-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    /* Los bordes cambian de horizontales a verticales (separadores de lectura) */
+    .mundial-seccion {
+        padding: 0 16px 0 0;
+        border-bottom: none;
+        border-right: 1px dashed var(--border-color, #444);
+    }
+
+    .mundial-seccion.no-border,
+    .mundial-seccion:last-child {
+        border-right: none;
+        padding-right: 0;
+    }
+}
+
+
+/* ========================================== */
+/* 4. COMPONENTES INTERNOS Y DETALLES ESTÁTICOS */
+/* ========================================== */
+
+/* Títulos */
 .data-widget-card h3 {
     font-family: var(--font-title);
     font-size: 1rem;
@@ -508,144 +600,198 @@ ul {
     gap: 8px;
 }
 
+/* Listas comunes de datos */
 .data-widget-list {
     list-style: none;
-    padding: 0;
+    padding: 10px;
     margin: 0;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
-
 .data-widget-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 0.9rem;
 }
-
-.data-widget-label {
-    color: var(--text-muted);
-}
-
-.data-widget-value {
+.data-widget-label { 
+    color: var(--text-muted); 
+    font-size: 0.8rem;
     font-weight: 500;
-    color: var(--text-color);
+    text-transform: uppercase;    
 }
 
-/* Estado dinámico para Alertas */
+.data-widget-value { font-weight: 500; color: var(--text-color); }
+
+/* Alertas */
 .data-widget-value.alerta-activa {
     color: var(--accent-light);
     animation: widget-blink 2s infinite;
 }
-
 @keyframes widget-blink {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.6;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
 }
 
-/* ==========================================
-   WIDGET MUNDIAL - ESTILOS PUROS NEPTUNO
-   ========================================== */
-.mundial-seccion {
-    padding: 12px 0;
-    border-bottom: 1px dashed var(--border-color);
+/* selectores y cabeceras internas de la copa */
+.mundial-header-control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    margin-top: 4px;
 }
-.mundial-seccion.no-border {
-    border-bottom: none;
+.mundial-titulo-widget {
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--text-muted, #888);
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
+.mundial-dropdown {
+    background: rgba(0, 0, 0, 0.4);
+    color: var(--text-color, #fff);
+    border: 1px solid var(--border-color, #444);
+    padding: 2px 4px;
+    font-size: 0.75rem;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Estructura de Partidos */
 .lista-partidos {
     margin-top: 8px;
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
-.partido-fila {
+.partido-tarjeta-mini {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    display: flex;
+    flex-direction: column;
+}
+.partido-fila-compacta {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 4px;
-    font-size: 0.9rem;
-    background: rgba(255, 255, 255, 0.02);
+    padding: 6px 4px 4px 4px;
+    font-size: 0.85rem;
 }
-.equipo-wrapper {
+#widget-mundial .equipo-wrapper {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     width: 42%;
+    overflow: hidden;
 }
-.equipo-wrapper.derecha {
+#widget-mundial .equipo-wrapper.derecha {
     justify-content: flex-end;
     text-align: right;
 }
-.flag-icon {
-    width: 20px;
-    height: 14px;
+#widget-mundial .flag-icon {
+    width: 20px !important;
+    height: 14px !important;
+    max-width: 20px !important;
+    max-height: 14px !important;
     object-fit: cover;
-    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid var(--border-color, #444);
 }
 .equipo-nombre {
+    font-size: 0.75rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* Goles y Marcadores */
+.partido-goles-detalle {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 4px 6px 4px;
+    font-size: 0.68rem;
+    color: var(--text-muted, #888);
+    line-height: 1.2;
+}
+.goles-col {
+    width: 42%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.goles-col.text-derecha { text-align: right; }
+.goles-col-vacia { width: 16%; }
 .marcador {
     width: 16%;
     text-align: center;
     font-weight: bold;
-    background: var(--border-color);
-    color: var(--bg-color, #000); /* Alto contraste */
-    padding: 2px 4px;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
+    background: var(--border-color, #fff);
+    color: var(--bg-color, #000); 
+    padding: 2px 0;
+    margin: 0 8px;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
 }
-.grupo-contenedor {
-    margin-top: 10px;
-    margin-bottom: 14px;
-}
-.grupo-nombre {
-    font-size: 0.8rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-}
-.tabla-pos {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.78rem;
-    text-align: center;
-}
-.tabla-pos th {
+.vs-badge { font-size: 0.7rem; opacity: 0.7; }
+
+/* Tablas */
+.grupo-tabla-nodo { width: 100%; }
+.tabla-pos-mini { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+.tabla-pos-mini th {
     background: rgba(0, 0, 0, 0.2);
-    color: var(--text-muted);
+    color: var(--text-muted, #888);
     font-weight: normal;
-    padding: 4px;
+    padding: 4px 6px;
+    text-transform: uppercase;
+    font-size: 0.7rem;
 }
-.tabla-pos td {
-    padding: 5px 2px;
+.tabla-pos-mini td {
+    padding: 6px 4px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
 }
-.text-izquierda {
-    text-align: left;
-}
-.tabla-equipo-celda {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-.no-data-mundial {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    font-style: italic;
-    padding: 4px 0;
+.text-izquierda { text-align: left; }
+.text-centro { text-align: center; }
+.text-mutado { color: var(--text-muted, #888); }
+.text-resaltado { font-weight: bold; color: var(--accent-color, #fff); }
+.tabla-equipo-celda { display: flex; align-items: center; gap: 6px; max-width: 120px; }
+.no-data-mundial { font-size: 0.8rem; color: var(--text-muted, #888); font-style: italic; padding: 8px 0; text-align: center; }
+
+/* ========================================== */
+/* OPTIMIZACIÓN DE CONTENIDO EN MÓVILES       */
+/* ========================================== */
+
+@media (max-width: 767px) {
+    .widgets-publicos-container {
+        gap: 12px;
+    }
+    .data-widget-card {
+        padding: 12px;
+    }
+    #widget-mundial {
+        margin-bottom: 20px;
+    }
+
+    /* ─── AQUÍ LAS NUEVAS REGLAS DE RECORTE ─── */
+
+    /* Oculta el 3er bloque (Mañana) y el 4to bloque (Tablas) */
+    #widget-mundial .mundial-seccion:nth-child(3),
+    #widget-mundial .mundial-seccion:nth-child(4) {
+        display: none;
+    }
+
+    /* Limpieza visual: Al quitar los bloques de abajo, el 2do bloque (Hoy) 
+       queda al final, así que le removemos su línea discontinua inferior */
+    #widget-mundial .mundial-seccion:nth-child(2) {
+        border-bottom: none;
+    }
 }
 
 /* ========================================== */
