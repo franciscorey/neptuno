@@ -9,6 +9,7 @@
     /* Verde negrusco oscuro */
     --surface-light: #1b261b;
     /* Verde profundo */
+    --bg-gradient: linear-gradient(0deg, var(--bg-color) 0%, var(--surface-light) 100%);
 
     /* Acentos vibrantes */
     --primary-color: #4CAF50;
@@ -722,9 +723,6 @@ ul {
 }
 .goles-col {
     width: 42%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 .goles-col.text-derecha { text-align: right; }
 .goles-col-vacia { width: 16%; }
@@ -732,10 +730,11 @@ ul {
     width: 16%;
     text-align: center;
     font-weight: bold;
-    background: var(--border-color, #fff);
-    color: var(--bg-color, #000); 
+    background: var(--border-color);
+    color: white; 
     padding: 2px 0;
     margin: 0 8px;
+    border-radius: 2px;
     font-size: 0.75rem;
     letter-spacing: 0.5px;
 }
@@ -1121,7 +1120,7 @@ ul {
 /* NEPTUNO TV */
 .neptuno-tv-section {
     padding: 20px 10px;
-    background: var(--surface-color);
+    background-image: var(--bg-gradient);
 }
 
 .tv-player {
