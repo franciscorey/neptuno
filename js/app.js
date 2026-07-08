@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const contenidoHTML = mensajes.map(msg => `
             <span class="signal-item">
-                <span class="signal-badge">${msg.tipo}</span>
+                <span class="signal-badge" data-type="${msg.tipo}">${msg.tipo}</span>
                 ${msg.texto}
             </span>
             <span class="signal-separator">●</span>
@@ -646,7 +646,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="ad-empty-state">
                     <h3>¿Quieres anunciarte en Radio Neptuno?</h3>
                     <p>Apoya nuestra señal independiente y llega a toda la comunidad local.</p>
-                    <a href="mailto:info@radioneptuno.cl" class="btn-ad-dynamic">Escríbenos Hoy</a>
+                    <a href="mailto:avisoslegalesneptuno@gmail.com" class="btn-ad-dynamic">Escríbenos Hoy</a>
                 </div>
             `;
             return;

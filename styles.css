@@ -24,6 +24,8 @@
     /* Verde éxito para votación confirmada */
     --signal-color: #0a0e0a;
     /* Oscuro para barra de info */
+    --primary-light: #A3FF65;
+    /* Oscuro para barra de info */
 
     /* Textos */
     --text-color: #e8ede8;
@@ -265,7 +267,7 @@ ul {
     padding: 14px 24px;
     font-size: 1rem;
     font-weight: 700;
-
+    background-color: var(--primary-light);
     white-space: nowrap;
 }
 
@@ -416,9 +418,9 @@ ul {
     letter-spacing: 0.05em;
 }
 
-.signal-badge[data-type="AL AIRE"],
-.signal-badge[data-type="SONANDO"] {
-    background: #ffff00 !important;
+.signal-badge[data-type="AL AIRE" i],
+.signal-badge[data-type="SONANDO" i] {
+    background: var(--primary-light);
 }
 
 .signal-separator {
@@ -730,8 +732,8 @@ ul {
     width: 16%;
     text-align: center;
     font-weight: bold;
-    background: var(--border-color);
-    color: white; 
+    background: var(--bg-color);
+    color: var(--primary-light); 
     padding: 2px 0;
     margin: 0 8px;
     border-radius: 2px;
