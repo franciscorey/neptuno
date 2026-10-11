@@ -1,440 +1,1064 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radio Cooperativa - Reproductor En Vivo</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for icons -->
+    <title>Radio Neptuno - En Vivo</title>
+    <!-- Google Fonts: Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        /* RESET & VARIABLES GLOBALES */
-        @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&display=swap');
-
         :root {
-            --bg-blue: #16428c;
-            --bg-blue-dark: #0d2e6c;
-            --bg-panel: #2358b1;
-            --bg-panel-dark: #1b4899;
-            --border-blue: #3b72cf;
+            --header-bg: #133e27;       /* Verde oscuro */
+            --orange-btn: #f57c00;      /* Naranja estilo Beethoven */
+            --bg-dark: #666666;         /* Gris de fondo */
+            --panel-left-bg: #777777;   /* Fondo panel izquierdo */
+            --card-item-bg: #616161;    /* Fondo tarjetas inactivas */
+            --active-black-bg: #111111; /* Fondo NEGRO para el programa actual activo */
+            --border-line: rgba(255, 255, 255, 0.2);
+            --text-main: #ffffff;
+            --text-muted: #d0d0d0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-blue);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Marca de agua al fondo */
+/* Marca de agua al fondo con imagen */
+        body::before {
+content: "";
+            position: fixed; /* 'fixed' para que se quede fija aunque hagas scroll */
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('../assets/123.jpg');; /* Cambia esto por la ruta o URL de tu imagen */
+            background-size: contain; /* Hace que la imagen se ajuste sin deformarse */
+            background-repeat: repeat;
+            background-position: center;
+            opacity: 0.3; /* Controla la transparencia (equivalente al rgba anterior) */
+            pointer-events: none;
+            z-index: 0;
+            user-select: none;
+        }
+
+        /* ----- HEADER SUPERIOR ----- */
+        header {
+            background-color: var(--header-bg);
+            height: 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            height: 42px;
+        }
+
+        .radio-title-text {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        .header-social {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+
+        .header-divider {
+            width: 1px;
+            height: 25px;
+            background-color: rgba(255, 255, 255, 0.4);
+            margin: 0 5px;
+        }
+
+        .social-circle-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .social-circle-btn:hover {
+            background-color: #ffffff;
+            color: var(--header-bg);
+        }
+
+        /* ----- LAYOUT PRINCIPAL ----- */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            z-index: 1;
+            position: relative;
+        }
+
+        /* Panel Izquierdo: Programación */
+        .left-panel {
+            width: 42%;
+            background-color: var(--panel-left-bg);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-line);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            transform: translateX(0);
+            opacity: 1;
+            z-index: 5;
+            position: relative;
+        }
+
+        .left-panel.is-hidden {
+            transform: translateX(-100%);
+            opacity: 0;
+            position: absolute;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .panel-nav-bar {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid var(--border-line);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Botón Ocultar (Naranja) */
+        .btn-ocultar {
+            background-color: var(--orange-btn);
+            color: #ffffff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .btn-ocultar .circle-icon {
+            width: 18px;
+            height: 18px;
+            background: #ffffff;
+            color: var(--orange-btn);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.9rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-tab-item {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 2px;
+        }
+
+        .program-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Tarjeta de Programa */
+        .program-card {
+            background-color: var(--card-item-bg);
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 4px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            border-left: 4px solid transparent;
+            user-select: none;
+        }
+
+        /* ESTADO ACTIVO EN NEGRO */
+        .program-card.active-now {
+            background-color: var(--active-black-bg) !important;
+            border-left: 4px solid var(--orange-btn) !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .program-card.active-now .program-title {
+            color: var(--orange-btn);
+        }
+
+        .program-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            object-fit: cover;
+            margin-right: 15px;
+            flex-shrink: 0;
+            background-color: #333;
+        }
+
+        .program-details {
+            flex: 1;
+        }
+
+        .program-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 3px;
             color: #ffffff;
         }
-        /* Custom scrollbar for left panel history */
-        ::-webkit-scrollbar {
-            width: 6px;
+
+        .program-desc {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 4px;
+            line-height: 1.2;
         }
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1);
+
+        .program-time {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.7);
         }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
+
+        .day-badge {
+            display: inline-block;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
             border-radius: 3px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px;
+            text-transform: uppercase;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
+
+        /* Panel Derecho: Reproductor Principal */
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 30px;
+            position: relative;
+            width: 100%;
+        }
+
+        /* Botón Flotante "+" de Mostrar */
+        .btn-mostrar-plus {
+            display: none;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--orange-btn);
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            font-weight: 700;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .btn-mostrar-plus:hover {
+            transform: scale(1.08);
+        }
+
+        .player-center-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* ----- ESTILO PREDETERMINADO (PC / TABLET) ----- */
+        .player-frame {
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 6px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            background-color: rgba(0, 0, 0, 0.15);
+            position: relative;
+            width: 100%;
+            max-width: 680px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .cover-art {
+            width: 170px;
+            height: 170px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            background-color: #222;
+            display: block;
+        }
+
+        .player-info-block {
+            flex: 1;
+        }
+
+        .tag-start {
+            background-color: rgba(60, 60, 60, 0.8);
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .current-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            line-height: 1.1;
+        }
+
+        .current-desc {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .controls-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+
+        .btn-main-play {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #555555;
+            color: #ffffff;
+            border: none;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn-main-play:hover {
+            background-color: #444444;
+            transform: scale(1.05);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .volume-icon-btn {
+            border: 0;
+            padding: 3px;
+            color: #fff;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        #volume-slider {
+            --volume-fill: 80%;
+            width: 95px;
+            height: 5px;
+            border-radius: 5px;
+            appearance: none;
+            -webkit-appearance: none;
+            background: linear-gradient(to right, var(--orange-btn) var(--volume-fill), rgba(255,255,255,.35) var(--volume-fill));
+            cursor: pointer;
+        }
+        #volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #fff;
+        }
+        #volume-slider::-moz-range-thumb {
+            width: 13px;
+            height: 13px;
+            border: none;
+            border-radius: 50%;
+            background: #fff;
+        }
+        @media (max-width: 768px) {
+            #volume-slider { width: 75px; }
+            .controls-row { gap: 8px; }
+        }
+
+        .controls-row i {
+            cursor: pointer;
+        }
+
+        .controls-row i:hover {
+            color: #ffffff;
+        }
+
+        .heart-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.2rem;
+            color: #ffffff;
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        /* ----- BARRA INFERIOR DE TIEMPO ----- */
+        .timeline-wrapper {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid var(--border-line);
+            width: 100%;
+        }
+
+        .timeline-header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .timeline-bar {
+            display: flex;
+            height: 42px;
+            background-color: rgba(0, 0, 0, 0.25);
+            border-top: 1px solid var(--border-line);
+            position: relative;
+        }
+
+        .timeline-zoom-btn {
+            width: 50px;
+            background-color: var(--orange-btn);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .timeline-slots {
+            flex: 1;
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .timeline-slots::-webkit-scrollbar {
+            display: none;
+        }
+
+        .time-slot {
+            flex: 1;
+            min-width: 110px;
+            border-right: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 0 4px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .time-slot.active-slot {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border-top: 3px solid var(--orange-btn);
+        }
+
+        /* ----- ADAPTACIÓN ÚNICAMENTE PARA CELULARES (< 768px) ----- */
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+            }
+
+            header {
+                padding: 0 15px;
+            }
+
+            .main-container {
+                flex-direction: column;
+                height: auto;
+                overflow: visible;
+            }
+
+            .left-panel {
+                width: 100% !important;
+                transform: none !important;
+                position: relative !important;
+                opacity: 1 !important;
+                border-right: none;
+                border-top: 1px solid var(--border-line);
+            }
+
+            .left-panel.is-hidden {
+                display: none;
+            }
+
+            .right-panel {
+                padding: 15px;
+            }
+
+            .player-frame {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px 15px;
+                min-height: 300px;
+                justify-content: flex-end;
+                background-size: cover !important;
+                background-position: center !important;
+                position: relative;
+            }
+
+            .player-frame::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.75) 50%, rgba(0, 0, 0, 0.95) 100%);
+                z-index: 1;
+            }
+
+            .cover-art {
+                display: none;
+            }
+
+            .tag-start {
+                position: relative;
+                z-index: 2;
+                margin-bottom: 8px;
+            }
+
+            .current-title {
+                font-size: 1.3rem;
+                position: relative;
+                z-index: 2;
+            }
+
+            .current-desc {
+                font-size: 0.8rem;
+                position: relative;
+                z-index: 2;
+                margin-bottom: 15px;
+            }
+
+            .controls-row {
+                width: 100%;
+                justify-content: space-between;
+                position: relative;
+                z-index: 2;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white">
+<body>
 
-    <header class="w-full bg-[#0d2e6c] py-3 px-4 md:px-8 border-b border-[#1b4f9c] flex justify-between items-center shadow-md">
-        <!-- Logo Cooperativa -->
-        <div class="flex items-center space-x-3">
-            <div class="text-white font-black text-2xl tracking-tighter italic flex items-center select-none">
-                cooperativa
-                <span class="w-2.5 h-2.5 bg-red-500 rounded-full ml-0.5 mb-2"></span>
+    <!-- Header / Barra Superior -->
+    <header>
+            <div class="logo-container">
+                <a class="logo-link" href="/">
+                    <img class="logo-img" src="/assets/logo-neptuno.png" alt="Radio Neptuno">
+                </a>
             </div>
-            <span class="hidden sm:inline-block text-xs uppercase bg-blue-900/60 text-blue-200 px-2 py-0.5 rounded border border-blue-500/30">
-                En Vivo
-            </span>
-        </div>
-
-        <!-- Social Icons -->
-        <div class="flex items-center space-x-3">
-            <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook" class="w-8 h-8 rounded-full bg-[#1852a3] hover:bg-[#2563eb] flex items-center justify-center text-white transition-colors">
-                <i class="fab fa-facebook-f text-sm"></i>
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter" class="w-8 h-8 rounded-full bg-[#1852a3] hover:bg-[#2563eb] flex items-center justify-center text-white transition-colors">
-                <i class="fab fa-twitter text-sm"></i>
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram" class="w-8 h-8 rounded-full bg-[#1852a3] hover:bg-[#2563eb] flex items-center justify-center text-white transition-colors">
-                <i class="fab fa-instagram text-sm"></i>
-            </a>
+        <div class="header-social">
+            <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+            <div class="header-divider"></div>
+            <a href="#" class="social-circle-btn"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="social-circle-btn"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#" class="social-circle-btn"><i class="fa-brands fa-instagram"></i></a>
         </div>
     </header>
 
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
-        <!-- LEFT COLUMN: Live Metadata History Log -->
-        <section class="lg:col-span-6 bg-[#2358b1] rounded-lg shadow-xl border border-[#3b72cf] flex flex-col h-[580px] overflow-hidden">
-            
-            <!-- Panel Toolbar -->
-            <div class="bg-[#1b4899] px-4 py-3 flex justify-between items-center border-b border-[#2e68ce]">
-                <div class="flex items-center space-x-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                    <span class="text-xs uppercase font-bold tracking-wider text-slate-100">Historial en Vivo</span>
-                </div>
-                <div class="text-[11px] uppercase tracking-wider text-blue-200" id="last-update-tag">
-                    Sincronizando Zeno.fm...
+    <!-- Contenido Principal -->
+    <div class="main-container">
+
+        <!-- Panel Izquierdo: Programación -->
+        <div class="left-panel" id="left-panel">
+            <div class="panel-nav-bar">
+                <button class="btn-ocultar" onclick="hidePanel()">
+                    <span class="circle-icon">-</span> Ocultar
+                </button>
+                <div class="nav-tabs">
+                    <div class="nav-tab-item">Programación</div>
                 </div>
             </div>
 
-            <!-- Date/Status Bar -->
-            <div class="bg-[#2052a6] px-4 py-2 flex justify-between items-center text-xs font-medium border-b border-[#3067c2] text-blue-100">
-                <span id="current-date-display" class="font-bold tracking-wide">
-                    Cargando fecha...
-                </span>
-                <span class="text-[11px] bg-[#16428c] px-2 py-0.5 rounded border border-blue-400/30">
-                    Transmisión Continua
-                </span>
-            </div>
+            <div class="program-list" id="program-list">
 
-            <!-- Dynamic Track History Container -->
-            <div id="history-list" class="flex-1 overflow-y-auto p-3 space-y-2">
-                <!-- Program/Song items inserted dynamically -->
-            </div>
-        </section>
-
-        <!-- RIGHT COLUMN: Active Player with Live Cover Art & Stream Controls -->
-        <section class="lg:col-span-6 flex flex-col space-y-6">
-            
-            <!-- Player Card -->
-            <div class="bg-[#2358b1] border border-[#3b72cf] rounded-xl p-5 shadow-2xl relative">
-                
-                <div class="flex flex-col sm:flex-row items-center gap-5">
-                    
-                    <!-- Cover Art Container -->
-                    <div class="relative w-44 h-44 sm:w-48 sm:h-48 shrink-0 rounded-xl overflow-hidden shadow-2xl bg-[#0d2857] border-2 border-blue-400/30 group">
-                        <img id="player-cover-art" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80" alt="Carátula" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                        
-                        <!-- Badge sobre la carátula -->
-                        <div class="absolute bottom-2 left-2 right-2 flex justify-between items-center">
-                            <span class="text-[10px] font-bold uppercase tracking-widest bg-blue-600/80 backdrop-blur-md px-2 py-0.5 rounded text-white shadow">
-                                En Vivo
-                            </span>
-                        </div>
+                <!-- EXCLUSIVO FIN DE SEMANA -->
+                <div class="program-card" id="card-continuidad">
+                    <img class="program-img" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&auto=format&fit=crop" alt="Continuidad Musical">
+                    <div class="program-details">
+                        <span class="day-badge">Fin de Semana</span>
+                        <div class="program-title">Continuidad Musical</div>
+                        <div class="program-desc">La mejor selección musical sin interrupciones durante todo el fin de semana.</div>
+                        <div class="program-time">08:00 | 23:00 hrs.</div>
                     </div>
+                </div>
 
-                    <!-- Song Info & Player Controls -->
-                    <div class="flex-1 w-full flex flex-col justify-between space-y-4 text-center sm:text-left">
-                        
-                        <div>
-                            <!-- Audio Status Badge -->
-                            <div class="inline-flex items-center bg-[#16428c] text-blue-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full mb-2 shadow-sm border border-blue-500/30">
-                                <span id="player-status-badge" class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block mr-1.5 animate-pulse"></span>
-                                <span id="player-status-text">Listo para reproducir</span>
-                            </div>
+                <!-- 08:00 - 11:30 (Lunes a Viernes) -->
+                <div class="program-card" id="prog-matinal">
+                    <img class="program-img" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&auto=format&fit=crop" alt="El Matinal de Neptuno">
+                    <div class="program-details">
+                        <div class="program-title">El Matinal de Neptuno</div>
+                        <div class="program-desc">Música vibrante para comenzar el día con energía positiva.</div>
+                        <div class="program-time">08:00 | 11:30 hrs.</div>
+                    </div>
+                </div>
 
-                            <!-- Live Track Title & Artist -->
-                            <h2 id="player-track-title" class="text-lg sm:text-xl font-bold text-white tracking-tight leading-snug line-clamp-2">
-                                Radio Cooperativa
-                            </h2>
-                            <p id="player-track-artist" class="text-sm font-medium text-blue-200 mt-1 line-clamp-1">
-                                Transmisión Oficial
-                            </p>
-                        </div>
+                <!-- 11:30 - 17:00 (Lunes a Viernes) -->
+                <div class="program-card" id="prog-musica">
+                    <img class="program-img" src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&auto=format&fit=crop" alt="Musica en Neptuno">
+                    <div class="program-details">
+                        <div class="program-title">Musica en Neptuno</div>
+                        <div class="program-desc">La mejor selección musical para impulsar la jornada.</div>
+                        <div class="program-time">11:30 | 17:00 hrs.</div>
+                    </div>
+                </div>
 
-                        <!-- Audio Control Toolbar -->
-                        <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-blue-400/20">
-                            
-                            <!-- Volume Controls -->
-                            <div class="flex items-center space-x-2 bg-[#16428c]/60 px-3 py-1.5 rounded-lg border border-blue-400/20">
-                                <button id="btn-mute" aria-label="Silenciar" class="text-blue-200 hover:text-white transition-colors">
-                                    <i id="volume-icon" class="fas fa-volume-high text-sm"></i>
-                                </button>
-                                <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.8" class="w-16 sm:w-20 accent-blue-400 cursor-pointer h-1.5 bg-blue-900 rounded-lg">
-                            </div>
+                <!-- 17:00 - 19:00 (Lunes a Viernes) -->
+                <div class="program-card" id="prog-movimiento">
+                    <img class="program-img" src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&auto=format&fit=crop" alt="En Movimiento">
+                    <div class="program-details">
+                        <div class="program-title">En Movimiento</div>
+                        <div class="program-desc">Actualidad nacional, rock y pop, eventos, tránsito y servicios.</div>
+                        <div class="program-time">17:00 | 19:00 hrs.</div>
+                    </div>
+                </div>
 
-                            <!-- Big Play/Pause Button -->
-                            <div class="flex items-center space-x-3">
-                                <button id="btn-main-play" aria-label="Reproducir / Pausar" class="w-14 h-14 rounded-full bg-blue-500 hover:bg-blue-400 text-white flex items-center justify-center shadow-xl transition-all transform active:scale-95 border-2 border-white/20">
-                                    <i id="main-play-icon" class="fas fa-play text-xl ml-1"></i>
-                                </button>
-                            </div>
+                <!-- 19:00 - 20:45 (Lunes a Viernes) -->
+                <div class="program-card" id="prog-pica">
+                    <img class="program-img" src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&auto=format&fit=crop" alt="La Pica de Neptuno">
+                    <div class="program-details">
+                        <div class="program-title">La Pica de Neptuno</div>
+                        <div class="program-desc">Música Chilena, Actualidad, datos y mucho mas!.</div>
+                        <div class="program-time">19:00 | 20:45 hrs.</div>
+                    </div>
+                </div>
 
-                            <!-- Action Icons -->
-                            <div class="flex items-center space-x-2 text-blue-200">
-                                <button id="btn-share" title="Compartir Emisora" class="p-2 hover:bg-blue-700/50 rounded-lg hover:text-white transition-colors">
-                                    <i class="fas fa-share-nodes text-sm"></i>
-                                </button>
-                                <button id="btn-info" title="Información de la Emisora" class="p-2 hover:bg-blue-700/50 rounded-lg hover:text-white transition-colors">
-                                    <i class="fas fa-circle-info text-sm"></i>
-                                </button>
-                            </div>
+                <!-- 20:45 - 23:00 (Lunes a Viernes) -->
+                <div class="program-card" id="prog-auditor">
+                    <img class="program-img" src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=300&auto=format&fit=crop" alt="La Noche del Auditor">
+                    <div class="program-details">
+                        <div class="program-title">La Noche del Auditor</div>
+                        <div class="program-desc">Música variada para acompañar trabajo y estudio.</div>
+                        <div class="program-time" id="time-noche-auditor">20:45 | 23:00 hrs.</div>
+                    </div>
+                </div>
 
-                        </div>
+                <!-- SOLO VIERNES: 22:00 - 23:00 -->
+                <div class="program-card" id="card-frecuencia-arcana" style="display: none;">
+                    <img class="program-img" src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300&auto=format&fit=crop" alt="Frecuencia Arcana">
+                    <div class="program-details">
+                        <span class="day-badge">Especial Viernes</span>
+                        <div class="program-title">Frecuencia Arcana</div>
+                        <div class="program-desc">Tarot, predicciones, Signos, Cartas y mucho mas con Agustín Soto.</div>
+                        <div class="program-time">22:00 | 23:00 hrs.</div>
+                    </div>
+                </div>
 
+                <!-- 23:00 - 08:00 (Todos los días) -->
+                <div class="program-card" id="prog-trasnoche">
+                    <img class="program-img" src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300&auto=format&fit=crop" alt="El Trasnoche en Neptuno">
+                    <div class="program-details">
+                        <div class="program-title">El Trasnoche en Neptuno</div>
+                        <div class="program-desc">Musica y discos de culto.</div>
+                        <div class="program-time">23:00 | 08:00 hrs.</div>
                     </div>
                 </div>
 
             </div>
-
-        </section>
-
-    </main>
-
-    <!-- Hidden HTML5 Audio Element -->
-    <audio id="audio-stream" preload="none"></audio>
-
-    <!-- Modal para Notificaciones (reemplazo de alert) -->
-    <div id="custom-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-[#1b4899] border border-blue-400/30 rounded-xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
-            <div class="w-12 h-12 bg-blue-600/30 text-blue-300 rounded-full flex items-center justify-center mx-auto text-xl">
-                <i class="fas fa-radio"></i>
-            </div>
-            <h3 id="modal-title" class="text-lg font-bold text-white">Radio Cooperativa</h3>
-            <p id="modal-message" class="text-sm text-blue-100">Mensaje del reproductor.</p>
-            <button id="modal-close-btn" class="w-full py-2 bg-blue-500 hover:bg-blue-400 text-white rounded-lg font-semibold shadow transition-colors">
-                Aceptar
-            </button>
         </div>
+
+        <!-- Panel Derecho: Reproductor Principal -->
+        <div class="right-panel" id="right-panel">
+            
+            <button class="btn-mostrar-plus" id="btn-show-plus" onclick="showPanel()" title="Mostrar programación">
+                +
+            </button>
+
+            <div class="player-center-wrapper">
+                <div class="player-frame" id="player-frame">
+                    <i class="fa-solid fa-heart heart-icon"></i>
+                    <img id="main-art" class="cover-art" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&auto=format&fit=crop" alt="Portada de la emisión">
+                    <div class="player-info-block">
+                        <div class="tag-start">Presiona para iniciar</div>
+                        <div class="current-title" id="main-title">Radio Neptuno</div>
+                        <div class="current-desc" id="main-desc">Cargando programación en vivo...</div>
+                        
+                        <div class="controls-row">
+                            <div class="volume-control">
+                                <button type="button" id="mute-btn" class="volume-icon-btn" aria-label="Silenciar radio" title="Silenciar o activar sonido">
+                                    <i class="fa-solid fa-volume-high" id="volume-icon"></i>
+                                </button>
+                                <input type="range" id="volume-slider" min="0" max="100" value="80" step="1" aria-label="Volumen" title="Volumen: 80%">
+                            </div>
+                            <i class="fa-solid fa-caret-left"></i>
+
+                            <button class="btn-main-play" id="play-btn" onclick="togglePlay()">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+
+                            <i class="fa-solid fa-caret-right"></i>
+                            <i class="fa-solid fa-share-nodes"></i>
+                            <i class="fa-solid fa-file-lines"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Línea de tiempo inferior -->
+            <div class="timeline-wrapper">
+                <div class="timeline-header-info">
+                    <span id="live-clock">--/--/---- --:--:--</span>
+                    <i class="fa-regular fa-calendar-days" style="font-size: 1.1rem;"></i>
+                </div>
+                <div class="timeline-bar">
+                    <div class="timeline-zoom-btn"><i class="fa-solid fa-magnifying-glass-minus"></i></div>
+                    <div class="timeline-slots" id="timeline-slots">
+                        <!-- Generado dinámicamente según el día -->
+                    </div>
+                    <div class="timeline-zoom-btn"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
     <script>
-        // CONFIGURATION
-        const CONFIG = {
-            streamUrl: "https://stream.zeno.fm/lqnwrpclo7hvv",
-            stationId: "lqnwrpclo7hvv",
-            metaUrl: "https://api.zeno.fm/mounts/v2/snippet/lqnwrpclo7hvv",
-            updateInterval: 15000, // 15 seconds
-            defaultCover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80"
-        };
+        const radioAudio = new Audio("https://stream.zeno.fm/lqnwrpclo7hvv");
+        radioAudio.preload = "none";
+        let lastActiveId = "";
+        let lastIsWeekend = null;
 
-        // STATE VARIABLES
-        let isPlaying = false;
-        let currentRawSong = "";
-        let songHistory = [];
-
-        // DOM ELEMENTS
-        const audioElement = document.getElementById('audio-stream');
-        audioElement.src = CONFIG.streamUrl;
-
-        const btnMainPlay = document.getElementById('btn-main-play');
-        const mainPlayIcon = document.getElementById('main-play-icon');
-        const playerTrackTitle = document.getElementById('player-track-title');
-        const playerTrackArtist = document.getElementById('player-track-artist');
-        const playerCoverArt = document.getElementById('player-cover-art');
-        const playerStatusBadge = document.getElementById('player-status-badge');
-        const playerStatusText = document.getElementById('player-status-text');
-        const volumeSlider = document.getElementById('volume-slider');
-        const btnMute = document.getElementById('btn-mute');
-        const volumeIcon = document.getElementById('volume-icon');
-        const historyList = document.getElementById('history-list');
-        const lastUpdateTag = document.getElementById('last-update-tag');
-        const currentDateDisplay = document.getElementById('current-date-display');
-        
-        const customModal = document.getElementById('custom-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalMessage = document.getElementById('modal-message');
-        const modalCloseBtn = document.getElementById('modal-close-btn');
-
-        function togglePlayPause() {
-            if (isPlaying) {
-                audioElement.pause();
-                isPlaying = false;
-                mainPlayIcon.className = "fas fa-play text-xl ml-1";
-                playerStatusBadge.className = "w-1.5 h-1.5 rounded-full bg-amber-400 inline-block mr-1.5";
-                playerStatusText.textContent = "Pausado";
-            } else {
-                audioElement.play().then(() => {
-                    isPlaying = true;
-                    mainPlayIcon.className = "fas fa-pause text-xl";
-                    playerStatusBadge.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block mr-1.5 animate-pulse";
-                    playerStatusText.textContent = "Reproduciendo en Vivo";
-                }).catch(err => {
-                    showModal("Error de Reproducción", "No se pudo iniciar el audio automáticamente. Haz clic en reproducir nuevamente.");
-                });
-            }
+        function hidePanel() {
+            document.getElementById('left-panel').classList.add('is-hidden');
+            document.getElementById('btn-show-plus').style.display = 'flex';
         }
 
-        btnMainPlay.addEventListener('click', togglePlayPause);
-
-        // Volume control
-        volumeSlider.addEventListener('input', (e) => {
-            const val = parseFloat(e.target.value);
-            audioElement.volume = val;
-            audioElement.muted = (val === 0);
-            updateVolumeIcon(val);
-        });
-
-        btnMute.addEventListener('click', () => {
-            audioElement.muted = !audioElement.muted;
-            if (audioElement.muted) {
-                volumeIcon.className = "fas fa-volume-xmark text-sm text-red-400";
-                volumeSlider.value = 0;
-            } else {
-                volumeSlider.value = audioElement.volume > 0 ? audioElement.volume : 0.8;
-                audioElement.volume = volumeSlider.value;
-                updateVolumeIcon(audioElement.volume);
-            }
-        });
-
-        function updateVolumeIcon(val) {
-            if (val === 0 || audioElement.muted) {
-                volumeIcon.className = "fas fa-volume-xmark text-sm text-red-400";
-            } else if (val < 0.5) {
-                volumeIcon.className = "fas fa-volume-low text-sm";
-            } else {
-                volumeIcon.className = "fas fa-volume-high text-sm";
-            }
+        function showPanel() {
+            document.getElementById('left-panel').classList.remove('is-hidden');
+            document.getElementById('btn-show-plus').style.display = 'none';
         }
 
-        async function fetchiTunesCover(artist, title) {
-            try {
-                const query = encodeURIComponent(`${artist} ${title}`.trim());
-                if (!query) return CONFIG.defaultCover;
-
-                const response = await fetch(`https://itunes.apple.com/search?term=${query}&entity=song&limit=1`);
-                if (!response.ok) return CONFIG.defaultCover;
-
-                const data = await response.json();
-                if (data.results && data.results.length > 0) {
-                    const artwork100 = data.results[0].artworkUrl100;
-                    // Upgrade artwork to 600x600 resolution
-                    return artwork100.replace('100x100bb', '600x600bb');
-                }
-            } catch (err) {
-                console.warn("Error buscando carátula en iTunes:", err);
-            }
-            return CONFIG.defaultCover;
-        }
-
-        async function fetchZenoMetadata() {
-            try {
-                // Cache-busting timestamp
-                const res = await fetch(`${CONFIG.metaUrl}?_=${Date.now()}`);
-                if (!res.ok) throw new Error("Error en servidor Zeno");
-
-                const data = await res.json();
-                let rawTitle = data.streamTitle || data.title || "";
-
-                if (!rawTitle || rawTitle.trim() === "") {
-                    rawTitle = "Radio Cooperativa - Transmisión en Vivo";
-                }
-
-                // If song changed
-                if (rawTitle !== currentRawSong) {
-                    currentRawSong = rawTitle;
-                    await processNewTrack(rawTitle);
-                }
-
-                const now = new Date();
-                lastUpdateTag.textContent = `Actualizado: ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
-
-            } catch (error) {
-                console.warn("No se pudo obtener metadata de Zeno.fm:", error);
-                lastUpdateTag.textContent = "Modo de emisión continua";
-            }
-        }
-
-        // Process title & artist parsing
-        async function processNewTrack(rawString) {
-            let artist = "Radio Cooperativa";
-            let title = rawString;
-
-            // Common Zeno delimiter format: "Artist - Title"
-            if (rawString.includes(" - ")) {
-                const parts = rawString.split(" - ");
-                artist = parts[0].trim();
-                title = parts.slice(1).join(" - ").trim();
-            }
-
-            // Update main player text
-            playerTrackTitle.textContent = title;
-            playerTrackArtist.textContent = artist;
-
-            // Fetch Artwork
-            const coverUrl = await fetchiTunesCover(artist, title);
-            playerCoverArt.src = coverUrl;
-
-            // Push to history
-            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const trackObj = {
-                id: Date.now(),
-                artist: artist,
-                title: title,
-                time: `${timeStr} hrs`,
-                cover: coverUrl
-            };
-
-            songHistory.unshift(trackObj);
-            renderHistory();
-        }
-
-        function renderHistory() {
-            historyList.innerHTML = '';
-            songHistory.forEach((item, index) => {
-                const isLatest = index === 0;
-                const div = document.createElement('div');
-                div.className = `flex items-center justify-between p-2.5 rounded-lg transition-all ${isLatest ? 'bg-[#1b4899] border-l-4 border-blue-400 shadow-md' : 'bg-[#1d4c9e]/40 hover:bg-[#1d4c9e]'}`;
-
-                div.innerHTML = `
-                    <div class="flex items-center space-x-3 overflow-hidden">
-                        <img src="${item.cover}" alt="Cover" class="w-12 h-12 rounded object-cover shrink-0 border border-blue-400/20 shadow-sm">
-                        <div class="truncate">
-                            <h4 class="text-xs sm:text-sm font-semibold text-white truncate">${escapeHtml(item.title)}</h4>
-                            <p class="text-[11px] text-blue-200 truncate">${escapeHtml(item.artist)}</p>
-                            <span class="text-[10px] text-blue-300/80 font-mono">${item.time}</span>
-                        </div>
-                    </div>
-                    <div class="shrink-0 ml-2">
-                        ${isLatest ? '<span class="text-[10px] font-bold uppercase bg-blue-500/30 text-blue-200 px-2 py-0.5 rounded border border-blue-400/30">Sonando</span>' : ''}
-                    </div>
-                `;
-
-                historyList.appendChild(div);
-            });
-        }
-
-        // Helper escape HTML
-        function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-        }
-
-        // Modal helper
-        function showModal(title, msg) {
-            modalTitle.textContent = title;
-            modalMessage.textContent = msg;
-            customModal.classList.remove('hidden');
-        }
-
-        modalCloseBtn.addEventListener('click', () => {
-            customModal.classList.add('hidden');
-        });
-
-        document.getElementById('btn-share').addEventListener('click', () => {
-            showModal("Compartir", "Sintonizando Radio Cooperativa en Vivo: " + window.location.href);
-        });
-
-        document.getElementById('btn-info').addEventListener('click', () => {
-            showModal("Radio Cooperativa", "Estación en vivo conectada a Zeno.fm con detección en tiempo real de títulos y carátulas de iTunes.");
-        });
-
-        // Update current date string
-        function updateDateDisplay() {
+        function syncScheduleWithTime() {
             const now = new Date();
-            const options = { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' };
-            currentDateDisplay.textContent = now.toLocaleDateString('es-CL', options).toUpperCase();
+            const day = now.getDay(); // 0 = Domingo, 5 = Viernes, 6 = Sábado
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const totalMinutes = hours * 60 + minutes;
+
+            const isWeekend = (day === 0 || day === 6);
+            const isFriday = (day === 5);
+
+            const continuityCard = document.getElementById('card-continuidad');
+            const arcanaCard = document.getElementById('card-frecuencia-arcana');
+            const timeNocheAuditor = document.getElementById('time-noche-auditor');
+            const matinalCard = document.getElementById('prog-matinal');
+            const musicaCard = document.getElementById('prog-musica');
+            const movimientoCard = document.getElementById('prog-movimiento');
+            const picaCard = document.getElementById('prog-pica');
+            const auditorCard = document.getElementById('prog-auditor');
+            const timelineSlots = document.getElementById('timeline-slots');
+
+            // Actualizar la estructura de la barra inferior dinámicamente si cambia el tipo de día
+            if (lastIsWeekend !== isWeekend) {
+                lastIsWeekend = isWeekend;
+                if (isWeekend) {
+                    timelineSlots.innerHTML = `
+                        <div class="time-slot" id="ts-continuidad">08:00 Continuidad</div>
+                        <div class="time-slot" id="ts-trasnoche">23:00 Trasnoche</div>
+                    `;
+                } else {
+                    timelineSlots.innerHTML = `
+                        <div class="time-slot" id="ts-matinal">08:00 Matinal</div>
+                        <div class="time-slot" id="ts-musica">11:30 Música</div>
+                        <div class="time-slot" id="ts-movimiento">17:00 Movimiento</div>
+                        <div class="time-slot" id="ts-pica">19:00 Pica</div>
+                        <div class="time-slot" id="ts-auditor">20:45 Auditor</div>
+                        <div class="time-slot" id="ts-trasnoche">23:00 Trasnoche</div>
+                    `;
+                }
+            }
+
+            // Visibilidad de lista en panel izquierdo según día
+            if (isWeekend) {
+                continuityCard.style.display = 'flex';
+                matinalCard.style.display = 'none';
+                musicaCard.style.display = 'none';
+                movimientoCard.style.display = 'none';
+                picaCard.style.display = 'none';
+                auditorCard.style.display = 'none';
+                if (arcanaCard) arcanaCard.style.display = 'none';
+            } else {
+                continuityCard.style.display = 'none';
+                matinalCard.style.display = 'flex';
+                musicaCard.style.display = 'flex';
+                movimientoCard.style.display = 'flex';
+                picaCard.style.display = 'flex';
+                auditorCard.style.display = 'flex';
+
+                if (isFriday) {
+                    arcanaCard.style.display = 'flex';
+                    timeNocheAuditor.innerText = '20:45 | 22:00 hrs.';
+                } else {
+                    arcanaCard.style.display = 'none';
+                    timeNocheAuditor.innerText = '20:45 | 23:00 hrs.';
+                }
+            }
+
+            let activeCardId = 'prog-trasnoche';
+            let slotKey = 'ts-trasnoche';
+
+            const m0800 = 8 * 60;         
+            const m2300 = 23 * 60;        
+
+            if (isWeekend) {
+                if (totalMinutes >= m0800 && totalMinutes < m2300) {
+                    activeCardId = 'card-continuidad';
+                    slotKey = 'ts-continuidad';
+                } else {
+                    activeCardId = 'prog-trasnoche';
+                    slotKey = 'ts-trasnoche';
+                }
+            } else {
+                const m1130 = 11 * 60 + 30;
+                const m1700 = 17 * 60;
+                const m1900 = 19 * 60;
+                const m2045 = 20 * 60 + 45;
+                const m2200 = 22 * 60;
+
+                if (totalMinutes >= m0800 && totalMinutes < m1130) {
+                    activeCardId = 'prog-matinal';
+                    slotKey = 'ts-matinal';
+                } else if (totalMinutes >= m1130 && totalMinutes < m1700) {
+                    activeCardId = 'prog-musica';
+                    slotKey = 'ts-musica';
+                } else if (totalMinutes >= m1700 && totalMinutes < m1900) {
+                    activeCardId = 'prog-movimiento';
+                    slotKey = 'ts-movimiento';
+                } else if (totalMinutes >= m1900 && totalMinutes < m2045) {
+                    activeCardId = 'prog-pica';
+                    slotKey = 'ts-pica';
+                } else if (isFriday && totalMinutes >= m2045 && totalMinutes < m2200) {
+                    activeCardId = 'prog-auditor';
+                    slotKey = 'ts-auditor';
+                } else if (isFriday && totalMinutes >= m2200 && totalMinutes < m2300) {
+                    activeCardId = 'card-frecuencia-arcana';
+                    slotKey = 'ts-auditor';
+                } else if (!isFriday && totalMinutes >= m2045 && totalMinutes < m2300) {
+                    activeCardId = 'prog-auditor';
+                    slotKey = 'ts-auditor';
+                } else {
+                    activeCardId = 'prog-trasnoche';
+                    slotKey = 'ts-trasnoche';
+                }
+            }
+
+            if (activeCardId !== lastActiveId) {
+                lastActiveId = activeCardId;
+
+                document.querySelectorAll('.program-card').forEach(c => c.classList.remove('active-now'));
+
+                const targetCard = document.getElementById(activeCardId);
+                if (targetCard) {
+                    targetCard.classList.add('active-now');
+
+                    const title = targetCard.querySelector('.program-title').innerText;
+                    const desc = targetCard.querySelector('.program-desc').innerText;
+                    const imgSrc = targetCard.querySelector('.program-img').src;
+
+                    document.getElementById('main-title').innerText = title;
+                    document.getElementById('main-desc').innerText = desc;
+                    document.getElementById('main-art').src = imgSrc;
+
+                    if (window.innerWidth <= 768) {
+                        document.getElementById('player-frame').style.background = `url('${imgSrc}')`;
+                    }
+                }
+            }
+
+            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('active-slot'));
+            const activeSlot = document.getElementById(slotKey);
+            if (activeSlot) {
+                activeSlot.classList.add('active-slot');
+            }
         }
 
-        window.onload = function() {
-            updateDateDisplay();
+        function updateClock() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('es-ES');
+            document.getElementById('live-clock').innerText = `${dateStr} ${timeStr}`;
             
-            // Initial fetch
-            fetchZenoMetadata();
+            syncScheduleWithTime();
+        }
 
-            // Set up 15-second update interval
-            setInterval(fetchZenoMetadata, CONFIG.updateInterval);
-        };
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        const volumeSlider = document.getElementById('volume-slider');
+        const muteButton = document.getElementById('mute-btn');
+        const volumeIcon = document.getElementById('volume-icon');
+        radioAudio.volume = 0.8;
+        let previousVolume = 0.8;
+
+        function updateVolumeUI() {
+            const level = radioAudio.muted ? 0 : radioAudio.volume;
+            volumeSlider.value = Math.round(level * 100);
+            volumeSlider.style.setProperty('--volume-fill', `${level * 100}%`);
+            volumeSlider.title = `Volumen: ${Math.round(level * 100)}%`;
+            volumeIcon.className = level === 0 ? 'fa-solid fa-volume-xmark' :
+                level < 0.5 ? 'fa-solid fa-volume-low' : 'fa-solid fa-volume-high';
+            muteButton.setAttribute('aria-label', level === 0 ? 'Activar sonido' : 'Silenciar radio');
+        }
+
+        volumeSlider.addEventListener('input', () => {
+            radioAudio.volume = Number(volumeSlider.value) / 100;
+            radioAudio.muted = false;
+            if (radioAudio.volume > 0) previousVolume = radioAudio.volume;
+            updateVolumeUI();
+        });
+
+        muteButton.addEventListener('click', () => {
+            if (!radioAudio.muted && radioAudio.volume > 0) {
+                previousVolume = radioAudio.volume;
+                radioAudio.muted = true;
+            } else {
+                if (radioAudio.volume === 0) radioAudio.volume = previousVolume || 0.8;
+                radioAudio.muted = false;
+            }
+            updateVolumeUI();
+        });
+        updateVolumeUI();
+
+        const playButton = document.getElementById('play-btn');
+        const statusLabel = document.querySelector('.tag-start');
+
+        function updatePlayButton() {
+            const playing = !radioAudio.paused;
+            playButton.innerHTML = playing
+                ? '<i class="fa-solid fa-pause"></i>'
+                : '<i class="fa-solid fa-play"></i>';
+            playButton.setAttribute('aria-label', playing ? 'Pausar radio' : 'Reproducir radio');
+            statusLabel.textContent = playing ? 'En vivo' : 'Presiona para iniciar';
+        }
+
+        async function togglePlay() {
+            if (!radioAudio.paused) {
+                radioAudio.pause();
+                return;
+            }
+            statusLabel.textContent = 'Conectando...';
+            try {
+                await radioAudio.play();
+            } catch (error) {
+                console.error('No se pudo reproducir la radio:', error);
+                statusLabel.textContent = 'No se pudo conectar. Intenta nuevamente.';
+                updatePlayButton();
+                statusLabel.textContent = 'Error de conexión. Intenta nuevamente.';
+            }
+        }
+
+        radioAudio.addEventListener('play', updatePlayButton);
+        radioAudio.addEventListener('pause', updatePlayButton);
+        radioAudio.addEventListener('ended', updatePlayButton);
+        radioAudio.addEventListener('error', () => {
+            updatePlayButton();
+            statusLabel.textContent = 'Error de transmisión. Intenta nuevamente.';
+        });
+        updatePlayButton();
+
     </script>
 </body>
-
 </html>

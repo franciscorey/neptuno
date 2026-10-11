@@ -10,8 +10,1075 @@
     <meta name="author" content="Radio Neptuno">
     <title>Radio Neptuno - Transmitiendo en Vivo</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* RESET & VARIABLES GLOBALES */
+        @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&display=swap');
+
+        :root {
+            --bg-color: #0a0e0a;
+            --surface-color: #121a12;
+            --surface-light: #1b261b;
+            --bg-gradient: linear-gradient(0deg, var(--bg-color) 0%, var(--surface-light) 100%);
+            --primary-color: #4CAF50;
+            --primary-hover: #66BB6A;
+            --accent-color: #8B5CF6;
+            --accent-light: #FF3CFF;
+            --accent-gradient: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-light) 100%);
+            --success-color: #2E7D32;
+            --signal-color: #0a0e0a;
+            --primary-light: #A3FF65;
+            --text-color: #e8ede8;
+            --text-muted: #a0b0a0;
+            --border-color: #388E3C;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-title: 'Comfortaa', cursive;
+            --spacing: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .section-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px var(--spacing);
+        }
+
+        .section-title {
+            font-size: 1rem;
+            text-align: left;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: var(--font-title);
+            display: inline-block;
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .section-subtitle {
+            font-size: 0.8rem;
+            text-align: right;
+            color: var(--text-muted);
+            font-family: var(--font-title);
+            margin-bottom: 40px;
+            padding-top: 2px;
+            border-top: 1px solid var(--text-muted);
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            padding: 12px 28px;
+            font-weight: bold;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* HEADER */
+        .site-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px var(--spacing);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-family: var(--font-title);
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .main-nav ul {
+            display: flex;
+            gap: 30px;
+        }
+
+        .main-nav a {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--primary-color);
+        }
+
+        .social-header {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .social-header a {
+            font-size: 1.2rem;
+        }
+
+        .social-header a:hover {
+            color: var(--primary-color);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        /* HERO */
+        .hero-section {
+            position: relative;
+            min-height: 140px;
+            padding: 20px var(--spacing);
+            overflow: hidden;
+        }
+
+        #inicio.view-section {
+            display: none;
+        }
+
+        #inicio.view-section.active {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: rgba(0, 229, 255, 0.08);
+            color: var(--accent-light);
+            border: 1px solid var(--accent-light);
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .hero-section h1 {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            margin: 0 0 6px 0;
+            line-height: 1.1;
+        }
+
+        .hero-section p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .hero-section .btn-primary {
+            flex-shrink: 0;
+            padding: 14px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            background-color: var(--primary-light);
+            color: var(--bg-color);
+            white-space: nowrap;
+        }
+
+        /* BARRA INFORMATIVA */
+        .signal-bar {
+            height: 34px;
+            background: var(--signal-color);
+            color: #fff;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            position: sticky;
+            top: 56px;
+            z-index: 10;
+        }
+
+        .signal-label {
+            height: 100%;
+            padding: 0 14px;
+            background-image: var(--accent-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            font-size: .75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            z-index: 2;
+        }
+
+        .signal-datetime {
+            display: flex;
+            align-items: center;
+            padding: 6px;
+            gap: 16px;
+            margin-left: auto;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .signal-date,
+        .signal-time {
+            color: var(--bg-color);
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            gap: 6px;
+        }
+
+        .signal-date i,
+        .signal-time i {
+            color: var(--primary-color);
+        }
+
+        .signal-content {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%);
+        }
+
+        .signal-track {
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+            user-select: none;
+            height: 34px;
+            animation: ticker 110s linear infinite;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+        }
+
+        .signal-item {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 24px;
+            font-size: .85rem;
+            flex-shrink: 0;
+        }
+
+        .signal-badge {
+            background: var(--primary-color);
+            color: #111;
+            font-size: .68rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-right: 8px;
+            text-transform: uppercase;
+            flex-shrink: 0;
+            letter-spacing: 0.05em;
+        }
+
+        .signal-separator {
+            opacity: .35;
+            margin-right: 18px;
+        }
+
+        @keyframes ticker {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* SECCIONES EXPLORA Y SOBRE RADIO */
+        .explore-section {
+            background-color: var(--surface-color);
+        }
+
+        .explore-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .explore-card {
+            background-color: var(--surface-light);
+            padding: 10px 8px;
+            border-radius: 8px;
+            text-align: left;
+            overflow: hidden;
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .explore-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-color);
+        }
+
+        .explore-card-top {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .explore-card-top h3 {
+            font-family: var(--font-title);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .explore-card-top p {
+            margin: 4px 0 0;
+            font-size: .85rem;
+            color: var(--text-muted);
+        }
+
+        .explore-card-top i {
+            font-size: 2em;
+            color: var(--primary-color);
+        }
+
+        .explore-card-bottom {
+            border-top: 1px solid var(--border-color);
+            padding: 15px;
+            min-height: 90px;
+        }
+
+        .card-label {
+            display: block;
+            font-size: .7rem;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: var(--accent-light);
+        }
+
+        .explore-thumb {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        #explore-news-title {
+            font-family: var(--font-title);
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        .about-section {
+            background-color: var(--surface-light);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-family: var(--font-title);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 3px solid var(--primary-color);
+            width: 60px;
+            margin-bottom: 20px;
+        }
+
+        .about-text p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .about-image {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .radio-illustration {
+            max-width: 200px;
+            height: auto;
+            filter: drop-shadow(0 0 20px rgba(76, 175, 80, 0.3));
+        }
+
+        /* NEPTUNO TV EN INICIO */
+        .neptuno-tv-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px var(--spacing);
+        }
+
+        .neptuno-tv-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .neptuno-tv-card h3 {
+            font-family: var(--font-title);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* PARRILLA DE PROGRAMACIÓN POR DÍAS */
+        .schedule-section {
+            background-color: var(--bg-color);
+        }
+
+        .section-banner {
+            width: 100%;
+            max-height: 300px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .banner-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .days-tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            margin-bottom: 30px;
+            padding-bottom: 5px;
+        }
+
+        .day-tab {
+            background-color: var(--surface-color);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-family: var(--font-title);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .day-tab:hover,
+        .day-tab.active {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            border-color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .schedule-card {
+            background-color: var(--surface-color);
+            padding: 25px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .schedule-card.current {
+            border-color: var(--accent-light);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+        }
+
+        .schedule-card .time {
+            display: block;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .schedule-card h3 {
+            font-family: var(--font-title);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .schedule-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .current-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--accent-light);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* NOTICIAS Y DETALLE */
+        .news-section {
+            background-color: var(--surface-light);
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .news-card {
+            background-color: var(--surface-color);
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-img-placeholder {
+            background-color: var(--surface-light);
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--border-color);
+        }
+
+        .news-body {
+            padding: 25px;
+        }
+
+        .news-tag {
+            color: var(--accent-color);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .news-body h3 {
+            font-family: var(--font-title);
+            margin: 10px 0;
+        }
+
+        .news-body p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .news-link {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .news-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 30px;
+            padding: 10px;
+        }
+
+        .pagination-btn {
+            background-color: var(--surface-light);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: var(--font-title);
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background-color: var(--primary-color);
+            color: #000000;
+            border-color: var(--primary-color);
+        }
+
+        .pagination-btn.active {
+            background-color: var(--accent-color);
+            color: #000000;
+            border-color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .news-detail-section {
+            background-color: var(--surface-light);
+        }
+
+        .news-detail-section .breadcrumb {
+            margin-bottom: 20px;
+            color: var(--text-muted);
+        }
+
+        .news-detail-section .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .news-detail-section .article-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .news-detail-section .article-title {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            line-height: 1.3;
+            margin: 15px 0;
+        }
+
+        .news-detail-section .article-body {
+            line-height: 1.8;
+            font-size: 1.05rem;
+            color: var(--text-color);
+            margin: 30px 0;
+        }
+
+        /* WIDGET FLOTANTE DE RADIO (ZENO) */
+        .radio-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .widget-minimized {
+            width: 80px;
+            height: 60px;
+        }
+
+        .widget-minimized-view {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            padding: 0 10px;
+        }
+
+        .widget-mini-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .widget-mini-icon {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .widget-mini-status {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .widget-expand-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .widget-expanded {
+            width: 320px;
+            max-width: calc(100vw - 40px);
+            height: auto;
+        }
+
+        .widget-expanded-view {
+            display: none;
+            padding: 15px;
+        }
+
+        .widget-minimized .widget-expanded-view { display: none; }
+        .widget-expanded .widget-expanded-view { display: block; }
+        .widget-minimized .widget-minimized-view { display: flex; }
+        .widget-expanded .widget-minimized-view { display: none; }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .widget-show-info { flex: 1; }
+
+        .widget-live-badge {
+            display: inline-block;
+            background-color: var(--bg-color);
+            color: var(--accent-light);
+            border: 1px solid var(--accent-light);
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .widget-show-name {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .widget-show-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .widget-collapse-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .widget-main-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .widget-album-art {
+            background-color: var(--surface-light);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .widget-album-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .widget-track-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .widget-track-title {
+            display: block;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+
+        .widget-track-artist {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .widget-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .widget-btn-play {
+            background-color: var(--primary-color);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--bg-color);
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+            flex-shrink: 0;
+        }
+
+        .widget-btn-play:hover {
+            transform: scale(1.05);
+            background-color: var(--primary-hover);
+        }
+
+        .widget-volume-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .widget-mute-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .widget-volume-container input[type="range"] {
+            flex: 1;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+            height: 4px;
+        }
+
+        /* FOOTER */
+        .site-footer {
+            background-color: #080c11;
+            border-top: 2px solid var(--accent-color);
+            padding: 50px var(--spacing) 20px var(--spacing);
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand h3 {
+            font-family: var(--font-title);
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .footer-brand p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .footer-links h4,
+        .footer-social h4 {
+            margin-bottom: 15px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            color: var(--accent-light);
+        }
+
+        .footer-links ul {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-color);
+        }
+
+        .social-icons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .social-icons a {
+            color: var(--text-muted);
+        }
+
+        .social-icons a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            max-width: 1100px;
+            margin: 0 auto;
+            border-top: 1px solid var(--accent-color);
+            padding-top: 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .view-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .view-section.active {
+            display: block !important;
+        }
+
+        #inicio.view-section.active {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .main-nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: var(--surface-color);
+                border-bottom: 2px solid var(--primary-color);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+            }
+            .main-nav.open { display: block; }
+            .main-nav ul {
+                flex-direction: column;
+                gap: 0;
+                text-align: center;
+                padding: 10px 0;
+            }
+            .main-nav li { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+            .main-nav a { display: block; padding: 15px 20px; font-size: 1.1rem; }
+            .about-grid, .news-grid, .footer-container { grid-template-columns: 1fr; }
+            .hero-content { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .hero-section .btn-primary { width: 100%; text-align: center; }
+            .radio-widget { bottom: 10px; right: 10px; left: 10px; width: auto !important; max-width: none; }
+        }
+    </style>
 </head>
 
 <body>
@@ -19,24 +1086,20 @@
     <header class="site-header">
         <div class="header-container">
             <div class="logo">
-                <a href="/">
-                    <img src="/assets/logo-neptuno.png" alt="Radio Neptuno">
+                <a href="#">
+                    RADIO NEPTUNO
                 </a>
             </div>
             <nav class="main-nav" id="mainNav">
                 <ul>
                     <li><a href="#" data-section="inicio" class="active">Radio</a></li>
                     <li><a href="#" data-section="programacion">Programas</a></li>
-                    <li><a href="#" data-section="sonando">Sonando</a></li>
                     <li><a href="#" data-section="noticias">Noticias</a></li>
-                    <!-- <li><a href="#" data-section="productos">Productos</a></li> -->
                 </ul>
             </nav>
             <div class="social-header">
-                <a href="https://www.instagram.com/radioneptunocl/" target="_blank" aria-label="Instagram"><i
-                        class="fab fa-instagram"></i></a>
-                <a href="https://www.youtube.com/@radioneptuno" target="_blank" aria-label="YouTube"><i
-                        class="fab fa-youtube"></i></a>
+                <a href="https://www.instagram.com/radioneptunocl/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.youtube.com/@radioneptuno" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                 <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -45,14 +1108,14 @@
     </header>
 
     <main>
-
-        <!-- BARRA INFORMATIVA -->
+        <!-- BARRA INFORMATIVA CONECTADA A GOOGLE SHEETS / APPS SCRIPT -->
         <div id="signal-bar" class="signal-bar">
             <div class="signal-label">
                 INFO >
             </div>
             <div class="signal-content">
                 <div id="signal-track" class="signal-track">
+                    <span class="signal-item"><span class="signal-badge">CARGANDO</span> Sintonizando señal de Radio Neptuno...</span>
                 </div>
             </div>
             <div class="signal-datetime">
@@ -60,7 +1123,6 @@
                     <i class="fas fa-calendar-alt"></i>
                     <span id="current-date"></span>
                 </span>
-
                 <span class="signal-time">
                     <i class="fas fa-clock"></i>
                     <span id="current-time"></span>
@@ -84,61 +1146,23 @@
             </div>
         </section>
 
-        <!-- Sección Neptuno TV -->
-        <section id="neptuno-tv" class="neptuno-tv-section view-section">
-            <div class="section-container">
-                <h2 class="section-title">Neptuno TV</h2>
-                <p class="section-subtitle">Nuestra transmisión audiovisual en directo</p>
-
-                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000;"> <iframe src="https://ssh101.com/securelive/index.php?id=radioneptuno25" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" scrolling="no" allowfullscreen> </iframe> </div>
-            </div>
-        </section>
-
-        <!-- Sección Widgets Datos Publicos -->
-        <section id="datos-widgets" class="view-section">
-
-            <div class="section-container widgets-publicos-container">
-
-                <div id="widget-clima" class="data-widget-card"></div>
-                <div id="widget-economico" class="data-widget-card"></div>
-                <div id="widget-hoy-dia" class="data-widget-card"></div>
-
-                <div id="widget-mundial" class="data-widget-card">
-                    <h3><i class="fas fa-trophy"></i> Copa Mundial 2026</h3>
-                    <div class="data-widget-grid">
-
-                        <div class="mundial-seccion">
-                            <span class="data-widget-label"><i class="fas fa-history"></i> Jornada de Ayer</span>
-                            <div id="partidos-ayer" class="lista-partidos">
-                                <p class="no-data-mundial">Cargando archivo de transmisiones...</p>
-                            </div>
-                        </div>
-
-                        <div class="mundial-seccion">
-                            <span class="data-widget-label"><i class="fas fa-calendar-day"></i> Jornada de Hoy</span>
-                            <div id="partidos-hoy" class="lista-partidos">
-                                <p class="no-data-mundial">Sintonizando señal satelital...</p>
-                            </div>
-                        </div>
-
-                        <div class="mundial-seccion">
-                            <span class="data-widget-label"><i class="fas fa-hourglass-half"></i> Jornada de
-                                Mañana</span>
-                            <div id="partidos-manana" class="lista-partidos"></div>
-                        </div>
-
-                        <div class="mundial-seccion no-border">
-                            <div id="tablas-grupos" class="tablas-grupos-contenedor"></div>
-                        </div>
-
-                    </div>
+        <!-- SECCIÓN: NEPTUNO TV (CANAL ONLINE ANTES DE LAS PESTAÑAS) -->
+        <section class="neptuno-tv-wrapper view-section active" id="neptuno-tv-home">
+            <div class="neptuno-tv-card">
+                <h3><i class="fas fa-tv"></i> Neptuno TV - Transmisión en Directo</h3>
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 6px;">
+                    <iframe 
+                        src="https://ssh101.com/securelive/index.php?id=radioneptuno25" 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" 
+                        scrolling="no" 
+                        allowfullscreen>
+                    </iframe>
                 </div>
-
             </div>
         </section>
 
         <!-- Sección Explora (solo visible en inicio) -->
-        <section class="explore-section view-section" id="explora">
+        <section class="explore-section view-section active" id="explora">
             <div class="section-container">
                 <div class="explore-grid">
 
@@ -170,30 +1194,9 @@
                         </div>
                         <div class="explore-card-bottom">
                             <span class="card-label">ÚLTIMA NOTICIA</span>
-                            <img id="explore-news-image" class="explore-thumb" src="assets/default-news.jpg"
-                                alt="Noticia">
+                            <img id="explore-news-image" class="explore-thumb" src="assets/noticias/default.jpg" alt="Noticia" onerror="this.src='assets/default-news.jpg'; this.onerror=null;">
                             <div id="explore-news-title">
                                 Cargando...
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="#" data-section="sonando" class="explore-card">
-                        <div class="explore-card-top">
-                            <div>
-                                <h3>Sonando</h3>
-                                <p>Vota y sugiere música</p>
-                            </div>
-                            <i class="fas fa-music"></i>
-                        </div>
-                        <div class="explore-card-bottom">
-                            <span class="card-label">LO MÁS IMPULSADO</span>
-                            <div class="explore-card-bottom-group"><img id="explore-top-cover" class="explore-thumb"
-                                    src="assets/covers/default.webp" alt="Carátula Top 1"
-                                    onerror="this.src='assets/covers/default.webp'">
-                                <div id="explore-top-track">
-                                    Cargando...
-                                </div>
                             </div>
                         </div>
                     </a>
@@ -203,44 +1206,53 @@
         </section>
 
         <!-- Sección Sobre Radio (solo visible en inicio) -->
-        <section class="about-section view-section" id="sobre-radio">
+        <section class="about-section view-section active" id="sobre-radio">
             <div class="section-container">
                 <div class="about-grid">
                     <div class="about-text">
                         <h2>Sobre Radio Neptuno</h2>
                         <hr class="divider">
-                        <p>En el vasto mar de información, Radio Neptuno emerge como un proyecto joven, autogestionado
-                            dedicado a traer lo mejor de la música de todas las épocas.</p>
-                        <p>Somos la frecuencia donde tu voz también tiene espacio, conectamos relatos, el pulso de la
-                            ciudad con una propuesta auténtica.</p>
+                        <p>En el vasto mar de información, Radio Neptuno emerge como un proyecto joven, autogestionado dedicado a traer lo mejor de la música de todas las épocas.</p>
+                        <p>Somos la frecuencia donde tu voz también tiene espacio, conectamos relatos, el pulso de la ciudad con una propuesta auténtica.</p>
                     </div>
                     <div class="about-image">
-                        <img src="assets/radio.png" alt="Radio Neptuno" class="radio-illustration">
+                        <div class="radio-illustration" style="font-size: 5rem; color: var(--primary-color); text-align: center;"><i class="fas fa-broadcast-tower"></i></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- VISTA: PROGRAMAS -->
+        <!-- VISTA: PROGRAMAS (PARRILLA SEMANAL POR DÍAS) -->
         <section id="programacion" class="schedule-section view-section">
             <div class="section-container">
                 <div class="section-banner">
-                    <img src="assets/programacion.webp" alt="Estudio de Radio Neptuno" class="banner-image">
+                    <img src="assets/programacion.webp" alt="Estudio de Radio Neptuno" class="banner-image" onerror="this.style.display='none'">
                 </div>
                 <h2 class="section-title">Programas</h2>
                 <p class="section-subtitle">Conoce nuestra parrilla de programación y horarios</p>
 
-                <div class="schedule-grid">
-                    <!-- Programas cargados dinámicamente -->
+                <!-- Selector de Días -->
+                <div class="days-tabs" id="daysTabs">
+                    <button class="day-tab active" data-day="lunes">Lunes</button>
+                    <button class="day-tab" data-day="martes">Martes</button>
+                    <button class="day-tab" data-day="miercoles">Miércoles</button>
+                    <button class="day-tab" data-day="jueves">Jueves</button>
+                    <button class="day-tab" data-day="viernes">Viernes</button>
+                    <button class="day-tab" data-day="sabado">Sábado</button>
+                    <button class="day-tab" data-day="domingo">Domingo</button>
+                </div>
+
+                <div class="schedule-grid" id="scheduleGrid">
+                    <!-- Programas cargados dinámicamente según el día -->
                 </div>
             </div>
         </section>
 
-        <!-- VISTA: NOTICIAS newsGrid-->
+        <!-- VISTA: NOTICIAS -->
         <section id="noticias" class="news-section view-section">
             <div class="section-container">
                 <div class="section-banner">
-                    <img src="assets/noticias.webp" alt="Estudio de Radio Neptuno" class="banner-image">
+                    <img src="assets/noticias.webp" alt="Noticias Radio Neptuno" class="banner-image" onerror="this.style.display='none'">
                 </div>
                 <h2 class="section-title">Últimas Noticias</h2>
                 <p class="section-subtitle">Mantente informado</p>
@@ -249,189 +1261,20 @@
                     <!-- Las noticias se cargarán dinámicamente aquí -->
                 </div>
 
-                <div id="news-pagination" class="pagination-container">
-                    <!-- Paginación se genera dinámicamente -->
-                </div>
+                <div id="news-pagination" class="pagination-container"></div>
             </div>
         </section>
 
         <!-- VISTA: DETALLE NOTICIA -->
         <section id="noticia-detalle" class="news-detail-section view-section">
             <div class="section-container" style="padding: 60px 20px;">
-                <div id="article-root">
-                    <!-- El contenido de la noticia se carga dinámicamente -->
-                </div>
+                <div id="article-root"></div>
             </div>
         </section>
-
-        <!-- VISTA: PRODUCTOS -->
-        <section id="productos" class="products-section view-section">
-            <div class="section-container">
-                <div class="section-banner">
-                    <img src="assets/productos.webp" alt="Estudio de Radio Neptuno" class="banner-image">
-                </div>
-                <h2 class="section-title">Productos de la Tienda</h2>
-                <p class="section-subtitle">Sostén este proyecto independiente con nuestra Merch.</p>
-                <div class="products-grid">
-                    <div class="product-card">
-                        <div class="product-visual"><i class="fas fa-tshirt"></i></div>
-                        <div class="product-info">
-                            <h3>Polera Oficial Neptuno</h3>
-                            <p class="price">$15.000</p>
-                            <a href="#" class="btn-product">Comprar</a>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-visual"><i class="fas fa-coffee"></i></div>
-                        <div class="product-info">
-                            <h3>Tazón Cerámico Retro</h3>
-                            <p class="price">$7.500</p>
-                            <a href="#" class="btn-product">Comprar</a>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-visual"><i class="fas fa-compact-disc"></i></div>
-                        <div class="product-info">
-                            <h3>Neptuno Edit: Sesión inmersiva de clásicos</h3>
-                            <p class="price">$1.200</p>
-                            <a href="#" class="btn-product">Descargar Digital</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- VISTA: SONANDO -->
-        <section id="sonando" class="sonando-section view-section">
-            <div class="section-container">
-                <div class="section-banner">
-                    <img src="assets/ranking.webp" alt="Sonando en Radio Neptuno" class="banner-image">
-                </div>
-                <h2 class="section-title">Sonando</h2>
-                <p class="section-subtitle">Lo más sonado y nuevos lanzamientos</p>
-
-                <div id="top-one-container"></div>
-
-                <div class="vote-info">
-                    <h4>¿Cómo funciona la señal?</h4>
-                    <ul>
-                        <li>📡 Señaliza tus canciones favoritas.</li>
-                        <li>📈 Los votos ayudan a mover el ranking semanal.</li>
-                        <li>🕒 Puedes votar una vez cada 24 horas por canción.</li>
-                        <li>🚀 Los nuevos ingresos pueden llegar al Top 10.</li>
-                    </ul>
-                </div>
-
-                <div class="sonando-grid">
-                    <div class="sonando-column">
-                        <h3 class="sonando-column-title">Top 10</h3>
-                        <div id="top10-list" class="top10-list">
-                            <!-- Se carga dinámicamente desde sonando.js -->
-                        </div>
-                    </div>
-                    <div class="sonando-column">
-                        <h3 class="sonando-column-title">Nuevos Impulsos</h3>
-                        <div id="new-list" class="new-list">
-                            <!-- Se carga dinámicamente desde sonando.js -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Formulario de Solicitud de Canciones -->
-                <div class="request-form-container">
-                    <h3 class="sonando-column-title">
-                        Sugierenos tu canción favorita
-                    </h3>
-                    <p class="request-form-intro">
-                        Comparte ese tema que quieres escuchar en nuestra frecuencia.
-                    </p>
-                    <form id="request-form" class="request-form is-open">
-                        <!-- Honeypot -->
-                        <input type="text" id="honeypot-website" name="website" class="honeypot" tabindex="-1"
-                            autocomplete="off" style="display:none;">
-                        <div class="form-group">
-                            <label for="request-name">
-                                Nombre (opcional)
-                            </label>
-                            <input type="text" id="request-name" name="name" placeholder="Tu nombre" maxlength="100">
-                        </div>
-                        <div class="form-group">
-                            <label for="request-email">
-                                Email (opcional)
-                            </label>
-                            <input type="email" id="request-email" name="email" placeholder="tu@email.com"
-                                maxlength="100">
-                        </div>
-                        <div class="form-group">
-                            <label for="request-artist">
-                                Artista *
-                            </label>
-                            <input type="text" id="request-artist" name="artist" required
-                                placeholder="Nombre del artista" maxlength="100">
-                        </div>
-                        <div class="form-group">
-                            <label for="request-song">
-                                Canción *
-                            </label>
-                            <input type="text" id="request-song" name="song" required placeholder="Nombre de la canción"
-                                maxlength="100">
-                        </div>
-                        <div class="form-group">
-                            <label for="request-message">
-                                Mensaje (opcional)
-                            </label>
-                            <textarea id="request-message" name="message" rows="3"
-                                placeholder="Dedicatoria o mensaje especial" maxlength="300"></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-primary">
-                                <i class="fas fa-paper-plane"></i>
-                                Enviar sugerencia
-                            </button>
-                            <button type="reset" class="btn-secondary">
-                                <i class="fas fa-eraser"></i>
-                                Limpiar campos
-                            </button>
-                        </div>
-                    </form>
-                    <p class="request-note">
-                        Las sugerencias son revisadas por Radio Neptuno y pueden incorporarse a futuras programaciones.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECCION: ANUNCIOS -->
-        <section class="ads-section" id="ads-section">
-            <div class="section-container">
-                <div class="ads-header">
-                    <span class="pulse-indicator"></span>
-                    <h2 class="section-subtitle">Anuncios</h2>
-                </div>
-                <a href="https://emisora.cl/" target="_blank"><img
-                        src="https://cdn.webrad.io/images/banners/radios-online-big.png" alt="emisoras.cl" width="250"
-                        height="250"></a>
-            </div>
-        </section>
-
-        <!-- SECCION: ANUNCIOS -->
-        <section class="ads-section" id="ads-section">
-            <div class="section-container">
-                <div class="ads-header">
-                    <span class="pulse-indicator"></span>
-                    <h2 class="section-subtitle">Anunciarte en Neptuno</h2>
-                </div>
-
-                <div class="explore-grid" id="ads-container">
-                </div>
-            </div>
-        </section>
-
     </main>
 
-    <!-- Widget Flotante de Radio -->
+    <!-- Widget Flotante de Radio (Zeno) -->
     <div id="radio-widget" class="radio-widget widget-minimized">
-        <!-- Estado Minimizado -->
         <div class="widget-minimized-view" id="widgetMinimizedView">
             <div class="widget-mini-content">
                 <i class="fas fa-radio widget-mini-icon"></i>
@@ -442,11 +1285,10 @@
             </button>
         </div>
 
-        <!-- Estado Expandido -->
         <div class="widget-expanded-view" id="widgetExpandedView">
             <div class="widget-header">
                 <div class="widget-show-info">
-                    <span class="widget-live-badge" id="widgetLiveBadge">EN VIVO</span>
+                    <span class="widget-live-badge" id="widgetLiveBadge" style="display:none;">EN VIVO</span>
                     <h4 class="widget-show-name" id="widgetShowName">Selecciona un programa</h4>
                     <p class="widget-show-time" id="widgetShowTime">--:-- - --:--</p>
                 </div>
@@ -474,14 +1316,13 @@
                     <button id="widgetMuteBtn" class="widget-mute-btn" aria-label="Silenciar">
                         <i class="fas fa-volume-up" id="widgetVolumeIcon"></i>
                     </button>
-                    <input type="range" id="widgetVolumeSlider" min="0" max="1" step="0.05" value="0.8"
-                        aria-label="Volumen">
+                    <input type="range" id="widgetVolumeSlider" min="0" max="1" step="0.05" value="0.8" aria-label="Volumen">
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Elemento de audio oculto -->
+    <!-- Audio Oculto Zeno Stream -->
     <audio id="zenoAudio" preload="none"></audio>
 
     <footer class="site-footer">
@@ -495,18 +1336,14 @@
                 <ul>
                     <li><a href="#" data-section="inicio">Radio</a></li>
                     <li><a href="#" data-section="programacion">Programas</a></li>
-                    <li><a href="#" data-section="sonando">Sonando</a></li>
                     <li><a href="#" data-section="noticias">Noticias</a></li>
-                    <!-- <li><a href="#" data-section="productos">Productos</a></li> -->
                 </ul>
             </div>
             <div class="footer-social">
                 <h4>Nuestras redes</h4>
                 <div class="social-icons">
-                    <a href="https://www.instagram.com/radioneptunocl/" target="_blank" aria-label="Instagram"><i
-                            class="fab fa-instagram"></i> Instagram</a>
-                    <a href="https://www.youtube.com/@radioneptuno" target="_blank" aria-label="YouTube"><i
-                            class="fab fa-youtube"></i> YouTube</a>
+                    <a href="https://www.instagram.com/radioneptunocl/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="https://www.youtube.com/@radioneptuno" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i> YouTube</a>
                 </div>
             </div>
         </div>
@@ -515,10 +1352,510 @@
         </div>
     </footer>
 
-    <script src="js/sonando.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/widgets.js" defer></script>
-    <script src="js/copamundial.js" defer></script>
+    <script>
+        // CONFIGURACIÓN Y ESTADO GLOBAL
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxMmITY5Bf7euH5iYwFKFACLc_7Dt0GxLDtY_rc6cy_CVqAK1WJZ_ynM955qqWc9Sfl/exec';
+
+        // 🌟 JSON EMBEBIDO CON LA PARRILLA SEMANAL ORGANIZADA POR DÍAS Y HORAS
+        const PARRILLA_SEMANAL_JSON = {
+            "lunes": [
+                { "inicio": "08:00", "fin": "10:00", "nombre": "Mañana Neptuno", "descripcion": "Despierta con la mejor selección musical y actualidad.", "icono": "fa-sun" },
+                { "inicio": "12:00", "fin": "14:00", "nombre": "Mediodía en Órbita", "descripcion": "Sonidos independientes para acompañar tu almuerzo.", "icono": "fa-compact-disc" },
+                { "inicio": "18:00", "fin": "20:00", "nombre": "Corriente Alterna", "descripcion": "Rock, pop y sutilezas sonoras independientes.", "icono": "fa-guitar" },
+                { "inicio": "20:00", "fin": "22:00", "nombre": "Sesiones Nocturnas", "descripcion": "Espacio inmersivo de jazz fusion y vinilos.", "icono": "fa-moon" }
+            ],
+            "martes": [
+                { "inicio": "08:00", "fin": "10:00", "nombre": "Mañana Neptuno", "descripcion": "Despierta con la mejor selección musical y actualidad.", "icono": "fa-sun" },
+                { "inicio": "12:00", "fin": "14:00", "nombre": "Mediodía en Órbita", "descripcion": "Sonidos independientes para acompañar tu almuerzo.", "icono": "fa-compact-disc" },
+                { "inicio": "17:00", "fin": "19:00", "nombre": "Radar Urbano", "descripcion": "Cultura local, entrevistas y panorama de la ciudad.", "icono": "fa-city" },
+                { "inicio": "21:00", "fin": "23:00", "nombre": "Espacio Disco & Funk", "descripcion": "Grooves espaciales y clásicos de la pista.", "icono": "fa-record-vinyl" }
+            ],
+            "miercoles": [
+                { "inicio": "08:00", "fin": "10:00", "nombre": "Mañana Neptuno", "descripcion": "Despierta con la mejor selección musical y actualidad.", "icono": "fa-sun" },
+                { "inicio": "12:00", "fin": "14:00", "nombre": "Mediodía en Órbita", "descripcion": "Sonidos independientes para acompañar tu almuerzo.", "icono": "fa-compact-disc" },
+                { "inicio": "18:00", "fin": "20:00", "nombre": "Corriente Alterna", "descripcion": "Rock, pop y sutilezas sonoras independientes.", "icono": "fa-guitar" },
+                { "inicio": "22:00", "fin": "00:00", "nombre": "Deep Spectrum", "descripcion": "Sesiones de electrónica profunda y ambient.", "icono": "fa-headphones" }
+            ],
+            "jueves": [
+                { "inicio": "08:00", "fin": "10:00", "nombre": "Mañana Neptuno", "descripcion": "Despierta con la mejor selección musical y actualidad.", "icono": "fa-sun" },
+                { "inicio": "12:00", "fin": "14:00", "nombre": "Mediodía en Órbita", "descripcion": "Sonidos independientes para acompañar tu almuerzo.", "icono": "fa-compact-disc" },
+                { "inicio": "17:00", "fin": "19:00", "nombre": "Radar Urbano", "descripcion": "Cultura local, entrevistas y panorama de la ciudad.", "icono": "fa-city" },
+                { "inicio": "20:00", "fin": "22:00", "nombre": "Boom Bap Sessions", "descripcion": "Lo-fi beats, rap clásico y cultura hip hop.", "icono": "fa-drum" }
+            ],
+            "viernes": [
+                { "inicio": "08:00", "fin": "10:00", "nombre": "Mañana Neptuno", "descripcion": "Despierta con la mejor selección musical y actualidad.", "icono": "fa-sun" },
+                { "inicio": "12:00", "fin": "14:00", "nombre": "Mediodía en Órbita", "descripcion": "Sonidos independientes para acompañar tu almuerzo.", "icono": "fa-compact-disc" },
+                { "inicio": "19:00", "fin": "21:00", "nombre": "Previa Neptuno", "descripcion": "Calentando motores para el fin de semana con ritmos vivaces.", "icono": "fa-fire" },
+                { "inicio": "21:00", "fin": "23:59", "nombre": "Neptuno Club Mix", "descripcion": "House, disco y space disco para la noche del viernes.", "icono": "fa-compact-disc" }
+            ],
+            "sabado": [
+                { "inicio": "10:00", "fin": "12:00", "nombre": "Mañana Relax", "descripcion": "Música suave para comenzar el fin de semana.", "icono": "fa-mug-hot" },
+                { "inicio": "15:00", "fin": "17:00", "nombre": "Tarde de Vinilos", "descripcion": "Joyas rescatadas directamente desde el surco analógico.", "icono": "fa-record-vinyl" },
+                { "inicio": "20:00", "fin": "23:00", "nombre": "Groove Goblin Special", "descripcion": "Sesión extendida de ritmos funk, boogie y rare grooves.", "icono": "fa-headphones" }
+            ],
+            "domingo": [
+                { "inicio": "11:00", "fin": "13:00", "nombre": "Domingo Acústico", "descripcion": "Sesiones íntimas y folclore independiente.", "icono": "fa-feather" },
+                { "inicio": "16:00", "fin": "18:00", "nombre": "Caminata Espacial", "descripcion": "Ambientes sonoros y melodías para la tarde dominical.", "icono": "fa-space-shuttle" },
+                { "inicio": "20:00", "fin": "22:00", "nombre": "Clásicos Neptuno", "descripcion": "Un recorrido nostálgico por los hitos musicales de la radio.", "icono": "fa-history" }
+            ]
+        };
+
+        window.appData = {
+            noticias: [],
+            informativos: []
+        };
+
+        window.allNews = [];
+        let currentSection = 'inicio';
+        let currentDay = 'lunes';
+        let currentNewsPage = 1;
+        const newsPerPage = 10;
+
+        const ZENO_CONFIG = {
+            streamUrl: "https://stream.zeno.fm/lqnwrpclo7hvv",
+            stationId: "lqnwrpclo7hvv",
+            updateInterval: 15000
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            async function preloadData() {
+                try {
+                    const response = await fetch(`${API_URL}?action=all`);
+                    const data = await response.json();
+
+                    if (data && data.success) {
+                        window.appData.noticias = data.noticias || [];
+                        window.appData.informativos = data.informativos || [];
+                        window.allNews = data.noticias || [];
+                    }
+
+                    initInformativos();
+                    initDaysTabs();
+                    renderSchedule(getCurrentDayKey());
+                    updateLiveSchedule();
+
+                    if (window.appData.noticias.length > 0) {
+                        const ultimaNoticia = window.appData.noticias[0];
+                        const elNewsTitle = document.getElementById("explore-news-title");
+                        const elNewsImg = document.getElementById("explore-news-image");
+                        if (elNewsTitle) elNewsTitle.textContent = ultimaNoticia.titulo;
+                        if (elNewsImg && ultimaNoticia.imagen) {
+                            elNewsImg.src = /^https?:\/\//i.test(ultimaNoticia.imagen) ? ultimaNoticia.imagen : `assets/noticias/${ultimaNoticia.imagen}`;
+                        }
+                    }
+
+                    if (currentSection === 'noticias') renderNewsList();
+                } catch (error) {
+                    console.error("Error en precarga:", error);
+                    initDaysTabs();
+                    renderSchedule(getCurrentDayKey());
+                    updateLiveSchedule();
+                }
+            }
+
+            function getCurrentDayKey() {
+                const days = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+                const today = days[new Date().getDay()];
+                return PARRILLA_SEMANAL_JSON[today] ? today : 'lunes';
+            }
+
+            function showSection(sectionId, articleId = null) {
+                document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+                const target = document.getElementById(sectionId);
+                if (target) {
+                    target.classList.add('active');
+                    currentSection = sectionId;
+                }
+
+                const aboutSection = document.getElementById('sobre-radio');
+                const exploreSection = document.getElementById('explora');
+                const tvSection = document.getElementById('neptuno-tv-home');
+
+                if (sectionId === 'inicio') {
+                    if (aboutSection) aboutSection.classList.add('active');
+                    if (exploreSection) exploreSection.classList.add('active');
+                    if (tvSection) tvSection.classList.add('active');
+                } else {
+                    if (aboutSection) aboutSection.classList.remove('active');
+                    if (exploreSection) exploreSection.classList.remove('active');
+                    if (tvSection) tvSection.classList.remove('active');
+                }
+
+                updateNavActive(sectionId);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                if (sectionId === 'noticias') {
+                    currentNewsPage = 1;
+                    renderNewsList();
+                }
+                if (sectionId === 'noticia-detalle' && articleId !== null) {
+                    loadArticleDetail(articleId);
+                }
+            }
+
+            window.showSection = showSection;
+
+            function updateNavActive(sectionId) {
+                document.querySelectorAll('.main-nav a').forEach(l => l.classList.remove('active'));
+                const navSec = sectionId === 'noticia-detalle' ? 'noticias' : sectionId;
+                const activeLink = document.querySelector(`.main-nav a[data-section="${navSec}"]`);
+                if (activeLink) activeLink.classList.add('active');
+            }
+
+            document.querySelectorAll('.main-nav a[data-section], .explore-card[data-section], .footer-links a[data-section]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showSection(link.getAttribute('data-section'));
+                });
+            });
+
+            const logoLink = document.querySelector('.logo a');
+            if (logoLink) {
+                logoLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showSection('inicio');
+                });
+            }
+
+            // BARRA INFORMATIVA
+            function initInformativos() {
+                const track = document.getElementById("signal-track");
+                if (!track) return;
+
+                let mensajes = [];
+                const informativos = window.appData.informativos.filter(i => i.activo === true);
+                informativos.forEach(item => {
+                    if (item.texto) {
+                        mensajes.push({ tipo: item.nombre || "INFO", texto: item.texto });
+                    }
+                });
+
+                const actual = getCurrentProgram();
+                if (actual) {
+                    mensajes.unshift({ tipo: "AL AIRE", texto: actual.nombre });
+                }
+
+                if (mensajes.length === 0) {
+                    mensajes.push({ tipo: "RADIO", texto: "Radio Neptuno - Transmitiendo en vivo 24/7" });
+                }
+
+                const contenidoHTML = mensajes.map(msg => `
+                    <span class="signal-item">
+                        <span class="signal-badge">${msg.tipo}</span>
+                        ${msg.texto}
+                    </span>
+                    <span class="signal-separator">●</span>
+                `).join('');
+
+                track.innerHTML = contenidoHTML + contenidoHTML;
+            }
+
+            function updateDateTime() {
+                const now = new Date();
+                const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                const fecha = `${dias[now.getDay()]} ${now.getDate()}, ${meses[now.getMonth()]} ${now.getFullYear()}`;
+                const hora = now.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+
+                const dateEl = document.getElementById('current-date');
+                const timeEl = document.getElementById('current-time');
+                if (dateEl) dateEl.textContent = fecha;
+                if (timeEl) timeEl.textContent = hora;
+            }
+
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            // CONTROL DE PESTAÑAS DE DÍAS Y PARRILLA
+            function initDaysTabs() {
+                const tabs = document.querySelectorAll('.day-tab');
+                const todayKey = getCurrentDayKey();
+
+                tabs.forEach(tab => {
+                    const day = tab.getAttribute('data-day');
+                    if (day === todayKey) {
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        currentDay = day;
+                    }
+
+                    tab.addEventListener('click', () => {
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        currentDay = day;
+                        renderSchedule(currentDay);
+                    });
+                });
+            }
+
+            function renderSchedule(dayKey) {
+                const container = document.getElementById('scheduleGrid');
+                if (!container) return;
+
+                const dayPrograms = PARRILLA_SEMANAL_JSON[dayKey] || [];
+
+                if (dayPrograms.length === 0) {
+                    container.innerHTML = '<p class="no-data">No hay programación registrada para este día.</p>';
+                    return;
+                }
+
+                const todayKey = getCurrentDayKey();
+                const now = new Date();
+                const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+                container.innerHTML = dayPrograms.map((item, index) => {
+                    const [sH, sM] = item.inicio.split(':').map(Number);
+                    const [eH, eM] = item.fin.split(':').map(Number);
+                    const startMin = sH * 60 + sM;
+                    const endMin = eH * 60 + eM;
+
+                    let isLive = (dayKey === todayKey && currentMinutes >= startMin && currentMinutes < endMin);
+
+                    return `
+                        <div class="schedule-card ${isLive ? 'current' : ''}">
+                            ${isLive ? '<span class="current-badge">Al Aire</span>' : ''}
+                            <span class="time"><i class="fas ${item.icono || 'fa-clock'}"></i> ${item.inicio} - ${item.fin}</span>
+                            <h3>${item.nombre}</h3>
+                            <p>${item.descripcion}</p>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            function getCurrentProgram() {
+                const todayKey = getCurrentDayKey();
+                const dayPrograms = PARRILLA_SEMANAL_JSON[todayKey];
+                if (!dayPrograms) return null;
+
+                const now = new Date();
+                const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+                for (let i = 0; i < dayPrograms.length; i++) {
+                    const p = dayPrograms[i];
+                    const [sH, sM] = p.inicio.split(':').map(Number);
+                    const [eH, eM] = p.fin.split(':').map(Number);
+                    const startMin = sH * 60 + sM;
+                    const endMin = eH * 60 + eM;
+
+                    if (currentMinutes >= startMin && currentMinutes < endMin) {
+                        return p;
+                    }
+                }
+                return null;
+            }
+
+            function updateLiveSchedule() {
+                const currentShow = getCurrentProgram();
+                const elTitle = document.getElementById("explore-onair");
+                const elTime = document.getElementById("explore-onair-time");
+                const elDesc = document.getElementById("explore-onair-desc");
+                const widgetShowName = document.getElementById('widgetShowName');
+                const widgetShowTime = document.getElementById('widgetShowTime');
+
+                if (currentShow) {
+                    if (elTitle) elTitle.textContent = currentShow.nombre;
+                    if (elTime) elTime.textContent = `${currentShow.inicio} - ${currentShow.fin}`;
+                    if (elDesc) elDesc.textContent = currentShow.descripcion;
+                    if (widgetShowName) widgetShowName.textContent = currentShow.nombre;
+                    if (widgetShowTime) widgetShowTime.textContent = `${currentShow.inicio} - ${currentShow.fin}`;
+                } else {
+                    if (elTitle) elTitle.textContent = "Música de Continuidad";
+                    if (elTime) elTime.textContent = "--:-- - --:--";
+                    if (elDesc) elDesc.textContent = "Disfruta de la mejor selección musical.";
+                    if (widgetShowName) widgetShowName.textContent = "Radio Neptuno";
+                    if (widgetShowTime) widgetShowTime.textContent = "24/7 Online";
+                }
+
+                if (currentSection === 'programacion') {
+                    renderSchedule(currentDay);
+                }
+            }
+
+            // NOTICIAS
+            function renderNewsList() {
+                const newsGrid = document.getElementById('newsGrid');
+                const paginationContainer = document.getElementById('news-pagination');
+                if (!newsGrid) return;
+
+                if (window.allNews.length === 0) {
+                    newsGrid.innerHTML = '<p class="no-data">No hay noticias disponibles.</p>';
+                    if (paginationContainer) paginationContainer.innerHTML = '';
+                    return;
+                }
+
+                const startIndex = (currentNewsPage - 1) * newsPerPage;
+                const endIndex = startIndex + newsPerPage;
+                const noticiasPagina = window.allNews.slice(startIndex, endIndex);
+
+                newsGrid.innerHTML = noticiasPagina.map(news => {
+                    let rutaImagen = news.imagen ? (/^https?:\/\//i.test(news.imagen) ? news.imagen : `assets/noticias/${news.imagen}`) : '';
+                    const bgStyle = rutaImagen ? `style="background-image: url('${rutaImagen}'); background-size: cover; background-position: center;"` : '';
+
+                    return `
+                        <article class="news-card">
+                            <div class="news-img-placeholder" ${bgStyle}>
+                                ${!rutaImagen ? '<i class="far fa-newspaper"></i>' : ''}
+                            </div>
+                            <div class="news-body">
+                                <span class="news-tag">${news.categoria || 'General'}</span>
+                                ${news.fecha ? `<div class="news-date"><i class="far fa-calendar-alt"></i> ${news.fecha}</div>` : ''}
+                                <h3>${news.titulo || 'Sin Título'}</h3>
+                                <p>${news.extracto || ''}</p>
+                                <a href="#" class="news-link" onclick="event.preventDefault(); showSection('noticia-detalle', ${news.id});">
+                                    Leer artículo completo <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </article>
+                    `;
+                }).join('');
+
+                if (paginationContainer) {
+                    const totalPages = Math.ceil(window.allNews.length / newsPerPage);
+                    if (totalPages <= 1) {
+                        paginationContainer.innerHTML = '';
+                        return;
+                    }
+                    let btns = [];
+                    for (let i = 1; i <= totalPages; i++) {
+                        btns.push(`<button class="pagination-btn ${currentNewsPage === i ? 'active' : ''}" onclick="event.preventDefault(); changeNewsPage(${i})">${i}</button>`);
+                    }
+                    paginationContainer.innerHTML = btns.join('');
+                }
+            }
+
+            window.changeNewsPage = function (p) {
+                currentNewsPage = p;
+                renderNewsList();
+            };
+
+            function loadArticleDetail(articleId) {
+                const articleRoot = document.getElementById('article-root');
+                if (!articleRoot) return;
+
+                const article = window.allNews.find(item => item.id == articleId);
+                if (!article) {
+                    articleRoot.innerHTML = `<nav class="breadcrumb"><a href="#" onclick="event.preventDefault(); showSection('noticias');">← Volver a Noticias</a></nav><p>Artículo no encontrado.</p>`;
+                    return;
+                }
+
+                let rutaImagen = article.imagen ? (/^https?:\/\//i.test(article.imagen) ? article.imagen : `assets/noticias/${article.imagen}`) : '';
+
+                articleRoot.innerHTML = `
+                    <nav class="breadcrumb"><a href="#" onclick="event.preventDefault(); showSection('noticias');">← Volver a Noticias</a></nav>
+                    ${rutaImagen ? `<img src="${rutaImagen}" alt="${article.titulo}" class="article-image">` : ''}
+                    <span class="article-category">${article.categoria || ''}</span>
+                    <h1 class="article-title">${article.titulo}</h1>
+                    <div class="article-body">${article.cuerpo || ''}</div>
+                `;
+            }
+
+            // REPRODUCTOR ZENO
+            const menuToggle = document.getElementById('menuToggle');
+            const mainNav = document.getElementById('mainNav');
+            const audio = document.getElementById('zenoAudio');
+            const radioWidget = document.getElementById('radio-widget');
+            const widgetExpandBtn = document.getElementById('widgetExpandBtn');
+            const widgetCollapseBtn = document.getElementById('widgetCollapseBtn');
+            const widgetPlayBtn = document.getElementById('widgetPlayBtn');
+            const widgetPlayIcon = document.getElementById('widgetPlayIcon');
+            const widgetMiniStatus = document.getElementById('widgetMiniStatus');
+            const widgetLiveBadge = document.getElementById('widgetLiveBadge');
+            const widgetVolumeSlider = document.getElementById('widgetVolumeSlider');
+            const widgetMuteBtn = document.getElementById('widgetMuteBtn');
+            const widgetTrackTitle = document.getElementById('widgetTrackTitle');
+            const widgetTrackArtist = document.getElementById('widgetTrackArtist');
+
+            let isPlaying = false;
+            let isMuted = false;
+            let lastVolume = 0.8;
+            let metadataTimer = null;
+
+            if (audio) {
+                audio.src = ZENO_CONFIG.streamUrl;
+                audio.volume = lastVolume;
+            }
+
+            if (menuToggle && mainNav) {
+                menuToggle.addEventListener('click', () => mainNav.classList.toggle('open'));
+            }
+
+            if (widgetExpandBtn && radioWidget) {
+                widgetExpandBtn.addEventListener('click', () => {
+                    radioWidget.classList.remove('widget-minimized');
+                    radioWidget.classList.add('widget-expanded');
+                });
+            }
+
+            if (widgetCollapseBtn && radioWidget) {
+                widgetCollapseBtn.addEventListener('click', () => {
+                    radioWidget.classList.remove('widget-expanded');
+                    radioWidget.classList.add('widget-minimized');
+                });
+            }
+
+            function togglePlay() {
+                if (!audio) return;
+                if (!isPlaying) {
+                    if (widgetMiniStatus) widgetMiniStatus.textContent = "CONECTANDO...";
+                    audio.play().then(() => {
+                        isPlaying = true;
+                        if (widgetPlayIcon) widgetPlayIcon.classList.replace('fa-play', 'fa-pause');
+                        if (widgetMiniStatus) widgetMiniStatus.textContent = "ON";
+                        if (widgetLiveBadge) widgetLiveBadge.style.display = 'inline-block';
+                        fetchZenoMetadata();
+                        metadataTimer = setInterval(fetchZenoMetadata, ZENO_CONFIG.updateInterval);
+                    }).catch(e => {
+                        console.error("Error reproduciendo:", e);
+                        if (widgetMiniStatus) widgetMiniStatus.textContent = "ERROR";
+                    });
+                } else {
+                    audio.pause();
+                    audio.load();
+                    isPlaying = false;
+                    if (widgetPlayIcon) widgetPlayIcon.classList.replace('fa-pause', 'fa-play');
+                    if (widgetMiniStatus) widgetMiniStatus.textContent = "OFF";
+                    if (widgetLiveBadge) widgetLiveBadge.style.display = 'none';
+                    clearInterval(metadataTimer);
+                }
+            }
+
+            if (widgetPlayBtn) widgetPlayBtn.addEventListener('click', togglePlay);
+            const ctaEscuchar = document.getElementById('ctaEscucharAhora');
+            if (ctaEscuchar) {
+                ctaEscuchar.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (radioWidget.classList.contains('widget-minimized')) {
+                        radioWidget.classList.remove('widget-minimized');
+                        radioWidget.classList.add('widget-expanded');
+                    }
+                    if (!isPlaying) togglePlay();
+                });
+            }
+
+            if (widgetVolumeSlider) {
+                widgetVolumeSlider.addEventListener('input', (e) => {
+                    if (!audio) return;
+                    audio.volume = e.target.value;
+                    lastVolume = e.target.value;
+                    isMuted = (e.target.value == 0);
+                });
+            }
+
+            function fetchZenoMetadata() {
+                fetch(`https://api.zeno.fm/public/v2/store/station/${ZENO_CONFIG.stationId}/current-track`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && (data.title || data.artist)) {
+                            if (widgetTrackTitle) widgetTrackTitle.textContent = data.title || "Radio Neptuno";
+                            if (widgetTrackArtist) widgetTrackArtist.textContent = data.artist || "Señal Online";
+                        }
+                    }).catch(() => {});
+            }
+
+            preloadData();
+            setInterval(updateLiveSchedule, 60000);
+        });
+    </script>
 </body>
 
 </html>
