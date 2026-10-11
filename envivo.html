@@ -2,6 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=35de3714-1888-4cba-8239-5b9a40a3447f
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Radio Neptuno - En Vivo</title>
     <!-- Google Fonts: Montserrat -->
@@ -328,6 +331,17 @@ content: "";
             z-index: 10;
         }
 
+        /* Botón Mostrar: ocupa su propia fila, encima del reproductor.
+           Se aplica a PC, tablet y celular; nunca se superpone al degradado. */
+        .btn-mostrar-plus {
+            position: relative;
+            top: auto;
+            left: auto;
+            align-self: flex-start;
+            flex-shrink: 0;
+            margin-bottom: 12px;
+        }
+
         .btn-mostrar-plus:hover {
             transform: scale(1.08);
         }
@@ -638,6 +652,22 @@ content: "";
                 z-index: 2;
             }
         }
+
+        /* Ajustes exclusivos para celulares: más espacio horizontal */
+        @media (max-width: 768px) {
+            header { height: 52px; min-height: 52px; padding: 0 10px; }
+            .header-social { display: none !important; }
+            .logo-container { gap: 0; }
+            .logo-img { height: 32px; width: auto; max-width: calc(100vw - 20px); object-fit: contain; }
+            .right-panel { padding: 10px 6px; }
+            .player-frame { width: 100%; max-width: none; padding: 20px 12px; }
+            .player-info-block { width: 100%; min-width: 0; }
+            .controls-row { gap: 8px; justify-content: space-between; }
+            .volume-control { min-width: 0; gap: 5px; }
+            #volume-slider { width: clamp(55px, 22vw, 105px); }
+            .btn-main-play { width: 48px; height: 48px; flex-shrink: 0; }
+            .timeline-header-info { padding-left: 8px; padding-right: 8px; }
+        }
     </style>
 </head>
 <body>
@@ -652,9 +682,8 @@ content: "";
         <div class="header-social">
             <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
             <div class="header-divider"></div>
-            <a href="#" class="social-circle-btn"><i class="fa-brands fa-facebook-f"></i></a>
-            <a href="#" class="social-circle-btn"><i class="fa-brands fa-twitter"></i></a>
-            <a href="#" class="social-circle-btn"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://x.com/radioneptunocl" class="social-circle-btn" target="_blank" rel="noopener noreferrer" aria-label="Radio Neptuno en X"><i class="fa-brands fa-twitter"></i></a>
+            <a href="https://www.instagram.com/radioneptunocl/" class="social-circle-btn" target="_blank" rel="noopener noreferrer" aria-label="Radio Neptuno en Instagram"><i class="fa-brands fa-instagram"></i></a>
         </div>
     </header>
 
